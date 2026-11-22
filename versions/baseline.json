@@ -3205,7 +3205,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.6.2",
+      "baseline": "2.6.3",
       "port-version": 0
     },
     "flux": {
