@@ -1,10 +1,9 @@
 {
   "name": "soralog",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Fast and flexible C++ logger with low-overhead logging calls",
   "homepage": "https://github.com/xDimon/soralog",
   "license": "Apache-2.0",
-  "supports": "!windows",
   "dependencies": [
     "fmt",
     {
