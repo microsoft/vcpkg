@@ -2,8 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
     REF hidapi-${VERSION}
-    SHA512 a4ddd13a80a84956872fa52aa861b40e4959f301d8d91afe0feaf9dbd87394561e1fdd20cbf8cf47200845f80a8db8a934bc2e3025fe6f16435e37c17621e7b6
+    SHA512 071d00eab861a18a05664e5a2e81beb332df06fb40feeba72b64e3f70c1e0772e2556f8ae5677e2340a5417fc6109ef450bcb67e74f5529d3984d4a7c10b433e
     HEAD_REF master
+    PATCHES
+        pkgconfig-private-dependencies.patch # https://github.com/libusb/hidapi/pull/861
+        vcpkg-pkgconfig-iconv.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -11,11 +14,20 @@ FEATURES
     "pp-data-dump"           HIDAPI_BUILD_PP_DATA_DUMP
 )
 
+set(iconv_options "")
+# The libusb backend uses libc's iconv except on OpenBSD; Android does not use iconv.
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    list(APPEND iconv_options -DIconv_IS_BUILT_IN=OFF -DVCPKG_LOCK_FIND_PACKAGE_Iconv=ON)
+elseif(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_ANDROID)
+    list(APPEND iconv_options -DIconv_IS_BUILT_IN=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DHIDAPI_BUILD_HIDTEST=OFF
         -DHIDAPI_WITH_TESTS=OFF
+        ${iconv_options}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         # Windows only
@@ -23,6 +35,13 @@ vcpkg_cmake_configure(
         HIDAPI_WITH_TESTS
 )
 vcpkg_cmake_install()
+
+if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libdata/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
+endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()

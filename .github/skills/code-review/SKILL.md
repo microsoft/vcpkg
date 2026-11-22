@@ -1,11 +1,11 @@
 ---
 name: code-review
-description: Review microsoft/vcpkg pull requests in GitHub Copilot code review. Check port correctness, packaging, dependencies, licenses, and consumer integration; validate examples when the review time budget permits.
+description: Review microsoft/vcpkg pull requests in GitHub Copilot code review. Check port correctness, packaging, dependencies, licenses, and consumer integration; validate examples.
 ---
 
 # vcpkg code review
 
-Use this skill for the pull request already being reviewed by Copilot. Infer the PR, base and head revisions, and changed files from the review context. The code review button provides no skill arguments: choose review depth automatically without asking the user for a depth or time budget.
+Use this skill for the pull request already being reviewed by Copilot. Infer the PR, base and head revisions, and changed files from the review context. The code review button provides no skill arguments: do not ask the user for a time budget.
 
 This is the in-band counterpart of `review-vcpkg-pr`, not its maintainer workflow. Do not invoke that skill or import its report, fix-handoff, patch-generation, subagent, or stop requirements. Return findings through the host's normal review output, not a local `report.md`. Do not edit the submitted files, commit, push, or submit a separate review through an API.
 
@@ -59,33 +59,22 @@ Search online to assess provenance. Highlight unusual portfile techniques and se
 3. Apply the review criteria above. For source-dependent claims, inspect upstream at the packaged revision or sources extracted from this PR's port. Prioritize changed dependency/feature mappings, exported targets, installed contents, linkage, platform guards, and licensing. Inspect version metadata for consistency with the port changes; do not invent tree hashes or infer their validity from format alone.
 4. Inspect available CI evidence for the reviewed head. Distinguish expected baseline failures from regressions: raw `BUILD_FAILED` lines alone are not evidence of a defect. For Azure logs, use [the shared log helper](../shared/Get-VcpkgAzureFailureLogs.ps1) when PowerShell and access are available, narrowing scope with `details_url` and `-JobId`; otherwise use accessible check details and logs. Prefer `REGRESSION:` and feature-test `error:` lines. Do not wait for running CI or fetch unrelated artifacts.
 5. Compare suspected defects with the base version and existing review comments when available. Prioritize actionable issues introduced or worsened by this PR; do not turn a routine version update into a list of unrelated pre-existing problems. If the base or upstream evidence is unavailable, disclose the uncertainty rather than claiming a regression.
-6. Choose example validation depth using the policy below, then produce concise findings with the evidence actually obtained.
+6. Validate examples as described below, then produce concise findings with the evidence actually obtained.
 
-## Adaptive review depth
-
-Start at `review-depth = no-examples`: finish the diff, review-criteria, and available-CI review before spending time on builds. This depth does not mean skipping source or packaging inspection.
-
-Then actively consider upgrading to `review-depth = examples` for affected ports. Prefer examples when they can resolve a concrete consumer-integration risk, especially new ports or changes to exported targets, dependencies, linkage, headers, or usage.
-
-- Use any deadline or time budget supplied in the review context or system instructions. Otherwise, make a best-effort judgment about how much validation is practical from the size and complexity of the review, the work remaining, and the likely build cost. An absent explicit budget is not by itself a reason to skip examples.
-- Estimate work from the dependency graph, available caches/installations, toolchain readiness, and observed command durations; do not assume a build will hit a cache. Prefer focused examples that can reasonably finish while leaving time to analyze results and deliver the review.
-- Bound installs and builds with command timeouts sized to the supplied budget or your best-effort estimate, and retain a way to terminate the process tree you started. A tool's initial wait before returning a background process is not a timeout. Do not launch unbounded work or leave builds running after the review.
-- Reassess before each costly step. Stop optional validation when time is low, a toolchain/download is unavailable, or the dependency build is too large. Keep confirmed findings and explicitly identify skipped or incomplete coverage. Never choose `examples-and-patches` in this workflow.
-
-For example, a small port with ready dependencies and a supported native toolchain is a good candidate for a Release/Debug consumer test. A large uncached dependency graph near the deadline is not: review its recipe, upstream build definitions, and CI instead. A host that cannot build the port's supported triplets is a coverage limitation, not a reason to change `supports`.
-
-### Running examples
+## Example validation
 
 Use an environment-owned, isolated scratch workspace at the reviewed head for mutable validation, with a short path on Windows. Do not switch branches or clean the provided checkout. Reuse an installation only when its provenance matches the reviewed port revision, features, and triplet; do not test an unrelated system installation.
 
-Use the repository's vcpkg executable and an available supported triplet. Keep builds, installs, logs, and consumer sources in the isolated workspace. Do not install system packages or change machine configuration just to enable optional validation. Preserve a nonempty `VCPKG_DOWNLOADS` and use that shared cache only through vcpkg; never clean it or put review artifacts there. Otherwise leave the default downloads setting unchanged. Avoid `--clean-after-build` so sources and logs remain available during the review. On Windows, run CMake, Ninja, and the compiler in the VS Developer Prompt environment.
+Use the repository's vcpkg executable and an available supported triplet. Keep builds, installs, logs, and consumer sources in the isolated workspace. Do not install system packages or change machine configuration just to enable validation. Preserve a nonempty `VCPKG_DOWNLOADS` and use that shared cache only through vcpkg; never clean it or put review artifacts there. Otherwise leave the default downloads setting unchanged. Avoid `--clean-after-build` so sources and logs remain available during the review. On Windows, run CMake, Ninja, and the compiler in the VS Developer Prompt environment.
 
-For `review-depth = examples`, validate an example application in Release and Debug through every applicable integration:
+Validate an example application in Release and Debug through every applicable integration:
 1. `find_package` -- when provided upstream or by a vcpkg-specific patch
 2. pkg-config -- when provided upstream or by a vcpkg-specific patch
 3. Direct include/link -- always: use only the installed `<triplet>/include/` as a package include path, without extra build-system macro definitions. On Windows, link every `.lib` in `<triplet>/lib/` for Release or `<triplet>/debug/lib/` for Debug. Elsewhere use the equivalent native libraries and configuration-specific directories. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`.
 
 Ports need not provide every integration; absence of `find_package` or pkg-config support is not a defect.
+
+Bound installs and builds with command timeouts and retain a way to terminate the process tree you started. Do not leave builds running after the review. If a toolchain, download, or dependency build prevents completing the required validation, report the specific limitation and the checks that remain incomplete; do not present partial coverage as complete.
 
 When testing examples, select the required C++ standard (e.g. `/std:` or `-std=`). Needing that switch or lacking downstream standard metadata is not itself a failure or reason to request port changes. pkg-config `.pc` files must not add standard-selection flags because pkg-config cannot reconcile conflicting requirements.
 
@@ -98,7 +87,7 @@ Inspect the installed package and generated usage alongside the consumer result.
 - Follow the host's review format and severity conventions. Anchor each actionable finding to the smallest relevant changed line range. State the defect, the affected configuration, its impact, supporting evidence, and the required outcome; do not prescribe an arbitrary implementation.
 - Use repository file/line references and upstream commit permalinks, not ephemeral local paths. For experimentally confirmed failures, include the essential command, triplet, features, configuration, and decisive error excerpt so the finding stands on its own.
 - Avoid duplicate comments, speculative failures, passing-check lists, and cosmetic preferences presented as correctness bugs. Missing tools, timeout, inaccessible upstream sources, or unavailable CI do not by themselves justify a defect comment.
-- If the host provides a review summary, briefly state the depth and actual validation coverage, including important limitations. Keep coverage limitations out of inline defect comments unless needed to qualify the evidence.
+- If the host provides a review summary, briefly state the actual validation coverage, including important limitations. Keep coverage limitations out of inline defect comments unless needed to qualify the evidence.
 - Complete the review with the evidence available; no report file, patch series, maintainer verdict vocabulary, or separate feedback-writing agent is required. Do not claim approval authority or that untested configurations passed.
 
 For example, report an exported target's missing dependency when the target references it but its config omits the required dependency discovery, citing the target/config and a consumer failure if available. Do not report missing pkg-config support when the project does not provide it, or a broad `supports` expression solely because a transitive dependency currently excludes one triplet.

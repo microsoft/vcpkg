@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-LNK2019.patch
         trim-build.diff
+        no-glu.diff
 )
 
 set(options "")
@@ -35,9 +36,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glew)
 vcpkg_fixup_pkgconfig()
-
-# Burn-in CMake build config
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/GL/glew.h" "ifndef GLEW_NO_GLU" "if 0")
 
 if(NOT VCPKG_BUILD_TYPE)
     set(libname GLEW)

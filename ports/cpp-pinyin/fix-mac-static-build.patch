@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 23d41dc..1a7ab64 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,9 +81,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+     # the build: a library that silently rewrites its host's toolchain rules is worse than one that is not
+     # reproducible inside someone else's tree.
+     if (_cpp_pinyin_top_level)
+-        set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcD <TARGET> <LINK_FLAGS> <OBJECTS>")
+-        set(CMAKE_CXX_ARCHIVE_APPEND "<CMAKE_AR> qD <TARGET> <LINK_FLAGS> <OBJECTS>")
+         if (NOT APPLE)
++            set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcD <TARGET> <LINK_FLAGS> <OBJECTS>")
++            set(CMAKE_CXX_ARCHIVE_APPEND "<CMAKE_AR> qD <TARGET> <LINK_FLAGS> <OBJECTS>")
+             # `ar qcD` on its own IS deterministic; the plain `ranlib` that CMake runs afterwards is NOT -- it
+             # rewrites the symbol index with the current time in the member header, which is where the last
+             # difference between two builds came from (measured 2026-10-20: `ar qcD` twice -> identical,

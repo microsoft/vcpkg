@@ -1,21 +1,8 @@
-diff --git a/configure.ac b/configure.ac
-index 8af26ec..0d52b00 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -127,6 +127,8 @@ AS_IF([test "$enable_embedded_mode" != "yes"],
- ####################################################################
- 
- AC_SUBST([libhwloc_so_version])
-+libhwloc_so_version_current_minus_age=`expr [[ $libhwloc_so_version=~ ([[:digit:]]+):[[:digit:]]+:([[:digit:]]+) ]] && real_so_ver=$(expr ${BASH_REMATCH[1]} - ${BASH_REMATCH[2]})`
-+AC_SUBST(libhwloc_so_version_current_minus_age)
- AC_SUBST([libhwloc_so_name])
- 
- # Setup the hwloc core
 diff --git a/hwloc/Makefile.am b/hwloc/Makefile.am
-index 4b3800a..f96473c 100644
+index fd84f79..2bb54ed 100644
 --- a/hwloc/Makefile.am
 +++ b/hwloc/Makefile.am
-@@ -189,11 +189,10 @@ if HWLOC_HAVE_WINDOWS
+@@ -190,11 +190,10 @@ if HWLOC_HAVE_WINDOWS
  
  LC_MESSAGES=C
  export LC_MESSAGES

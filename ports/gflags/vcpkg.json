@@ -1,6 +1,6 @@
 {
   "name": "gflags",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "A C++ library that implements commandline flags processing",
   "homepage": "https://github.com/gflags/gflags",
   "license": "BSD-3-Clause",

@@ -5,9 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
-    REF f212bcb6ce61029e96cc18b98a4cc05198749ada # v2.20.0
-    SHA512 4a3c27b31a03db90b6b7cbe21adbc9ee519af43c9bce78aba2d9fe624eea1c689fffa71b791b3c0bc0a77a7f70d2f0ba2f2c685235f01498f88a189956fc9722
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 c3728c30c79baaf39553b0ddc46b645ecc598baab3ea40b9544465e8d1d81aaeae27415e8be4637154ea0020f8254b76cea8394e123f51f339ef9b35f1c4e2d3
+    HEAD_REF main
 	PATCHES
 		use-vcpkg-unixodbc.patch
 )

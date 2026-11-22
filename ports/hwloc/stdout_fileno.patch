@@ -1,8 +1,8 @@
 diff --git a/utils/lstopo/lstopo.c b/utils/lstopo/lstopo.c
-index a946581c3..ecbf64aff 100644
+index e1ab6cdaa..366a88202 100644
 --- a/utils/lstopo/lstopo.c
 +++ b/utils/lstopo/lstopo.c
-@@ -58,6 +58,10 @@
+@@ -60,6 +60,10 @@
  # endif
  #endif
  
@@ -10,6 +10,6 @@ index a946581c3..ecbf64aff 100644
 +#define STDOUT_FILENO _fileno( stdout )
 +#endif
 +
- #ifdef ANDROID
+ #ifdef HWLOC_ANDROID_APK
  extern void setJNIEnv();
  #endif

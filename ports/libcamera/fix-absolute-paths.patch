@@ -1,8 +1,8 @@
 diff --git a/src/v4l2/libcamerify.in b/src/v4l2/libcamerify.in
-index c4ea273f..d4e39c1b 100755
+index c4ea273..c23f8df 100755
 --- a/src/v4l2/libcamerify.in
 +++ b/src/v4l2/libcamerify.in
-@@ -32,14 +32,25 @@ while [ $# -gt 0 ]; do
+@@ -32,14 +32,17 @@ while [ $# -gt 0 ]; do
  	shift
  done
  
@@ -15,18 +15,10 @@ index c4ea273f..d4e39c1b 100755
  
  if [ "$LD_PRELOAD" = "" ] ; then
 -   LD_PRELOAD='@LIBCAMERA_V4L2_SO@'
-+   if [ $debug = 0 ] ; then
-+   	LD_PRELOAD="$SCRIPTPATH/../v412-compat.so"
-+   else
-+   	LD_PRELOAD="$SCRIPTPATH/../../v412-compat.so"
-+   fi
++   LD_PRELOAD="$SCRIPTPATH/../libexec/libcamera/v4l2-compat.so"
  else
 -   LD_PRELOAD="$LD_PRELOAD "'@LIBCAMERA_V4L2_SO@'
-+   if [ $debug = 0 ] ; then
-+   	LD_PRELOAD="$LD_PRELOAD " "$SCRIPTPATH/../v412-compat.so"
-+   else
-+   	LD_PRELOAD="$LD_PRELOAD " "$SCRIPTPATH/../../v412-compat.so"
-+   fi
++   LD_PRELOAD="$LD_PRELOAD:$SCRIPTPATH/../libexec/libcamera/v4l2-compat.so"
  fi
  
  export LD_PRELOAD

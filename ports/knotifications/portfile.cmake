@@ -6,14 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         export-qml-modules.patch
+        optional-qml.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        qml          KNOTIFICATIONS_USE_QML
         qml          CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
     INVERTED_FEATURES
-        qml          CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
         translations KF_SKIP_PO_PROCESSING
 )
 

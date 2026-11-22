@@ -1,0 +1,37 @@
+diff --git a/libusb/CMakeLists.txt b/libusb/CMakeLists.txt
+index a4bdddd..e899652 100644
+--- a/libusb/CMakeLists.txt
++++ b/libusb/CMakeLists.txt
+@@ -23,6 +23,7 @@ endif()
+ 
+ find_package(Threads REQUIRED)
+ target_link_libraries(hidapi_libusb PRIVATE Threads::Threads)
++set(HIDAPI_LIBUSB_PC_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
+ 
+ if(HIDAPI_NO_ICONV)
+     target_compile_definitions(hidapi_libusb PRIVATE NO_ICONV)
+@@ -36,6 +37,7 @@ else()
+             if(Iconv_FOUND)
+                 if(NOT Iconv_IS_BUILT_IN)
+                     target_link_libraries(hidapi_libusb PRIVATE Iconv::Iconv)
++                    string(APPEND HIDAPI_LIBUSB_PC_LIBS_PRIVATE " -liconv")
+                     set(CMAKE_REQUIRED_LIBRARIES "Iconv::Iconv")
+                     if(NOT BUILD_SHARED_LIBS)
+                         set(HIDAPI_NEED_EXPORT_ICONV TRUE PARENT_SCOPE)
+@@ -64,6 +66,7 @@ else()
+                 if(Iconv_EXPLICITLY_AT_ENV)
+                     message(STATUS "Iconv Explicitly check '-liconv' - Available")
+                     target_link_libraries(hidapi_libusb PRIVATE iconv)
++                    string(APPEND HIDAPI_LIBUSB_PC_LIBS_PRIVATE " -liconv")
+                 else()
+                     message(FATAL_ERROR "Iconv is not found, make sure to provide it in the build environment")
+                 endif()
+@@ -114,7 +117,7 @@ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     LIBRARY_NAME "hidapi-libusb"
+     BACKEND_TARGET hidapi_libusb
+     REQUIRES_PRIVATE "${HIDAPI_LIBUSB_PC_REQUIRES_PRIVATE}"
+-    LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
++    LIBS_PRIVATE "${HIDAPI_LIBUSB_PC_LIBS_PRIVATE}"
+     DESCRIPTION "C Library for USB HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the libusb implementation."
+ )
+ 
