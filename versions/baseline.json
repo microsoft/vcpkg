@@ -7385,7 +7385,7 @@
       "port-version": 2
     },
     "numcpp": {
-      "baseline": "2.17.0",
+      "baseline": "2.18.0",
       "port-version": 0
     },
     "numkong": {
