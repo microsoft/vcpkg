@@ -39,6 +39,13 @@
     "vulkan": {
       "description": "Vulkan 1.1 backend",
       "dependencies": [
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
         "vulkan-headers",
         "vulkan-loader"
       ]
