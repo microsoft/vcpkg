@@ -1,0 +1,12 @@
+diff --git a/src/libtcod/console_rexpaint.c b/src/libtcod/console_rexpaint.c
+index da44d011..3da8ed2e 100644
+--- a/src/libtcod/console_rexpaint.c
++++ b/src/libtcod/console_rexpaint.c
+@@ -36,6 +36,7 @@
+ #include <errno.h>
+ #include <limits.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <zlib.h>
+ 
+ #include "color.h"

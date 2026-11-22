@@ -5925,7 +5925,7 @@
       "port-version": 3
     },
     "libtcod": {
-      "baseline": "2.3.2",
+      "baseline": "2.3.3",
       "port-version": 0
     },
     "libtess2": {
