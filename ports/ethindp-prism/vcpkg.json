@@ -23,7 +23,8 @@
     },
     {
       "name": "pkgconf",
-      "host": true
+      "host": true,
+      "platform": "linux | freebsd | openbsd"
     },
     "simdutf",
     {
