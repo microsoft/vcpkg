@@ -1,6 +1,6 @@
 {
   "name": "icecream-cpp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A little (single header) library to help with the print debugging in C++11 and forward.",
   "homepage": "https://github.com/renatoGarcia/icecream-cpp",
   "license": "MIT",
