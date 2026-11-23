@@ -9,15 +9,17 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
-if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n   libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxcb-keysyms1-dev libxcb-xkb-dev libxcb-record0-dev")
-endif()
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         translations KF_SKIP_PO_PROCESSING
 )
+
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

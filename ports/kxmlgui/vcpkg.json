@@ -1,6 +1,7 @@
 {
   "name": "kxmlgui",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Framework for managing menu and toolbar actions",
   "homepage": "https://invent.kde.org/frameworks/kxmlgui",
   "documentation": "https://api.kde.org/kxmlgui-index.html",
@@ -19,7 +20,7 @@
     "kcoreaddons",
     {
       "name": "kglobalaccel",
-      "platform": "linux"
+      "platform": "linux | bsd"
     },
     "kguiaddons",
     "ki18n",
@@ -40,7 +41,7 @@
       "features": [
         "dbus"
       ],
-      "platform": "linux"
+      "platform": "linux | bsd"
     },
     {
       "name": "vcpkg-cmake",
