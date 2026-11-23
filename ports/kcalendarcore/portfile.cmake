@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcalendarcore
     REF "v${VERSION}"
-    SHA512 0dce37c9cc2556989bd24690fb4b3e06f290ef49bc338e77755480c3cab6b6ec3337a54cca87a1e129cb7064aa728efe268413e026616ca43532eedce29c7b29
+    SHA512 f1c9d170053444da3b0103d4fd53b9745c0575b1a2f7aa8e558abe5dc20d48c41876d37f1fd2dbcf5791f07ec9582c1a7786a30156137322120208097170dab7
     HEAD_REF master
     PATCHES
         use-libical-config.patch
-        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
