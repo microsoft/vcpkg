@@ -49,7 +49,14 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(READ "${SOURCE_PATH}/src/to_chars.cpp" TO_CHARS_SOURCE)
+string(REGEX MATCH "/\\*![^*]*Zmij:[^*]*Copyright[^*]*\\*/" ZMIJ_NOTICE "${TO_CHARS_SOURCE}")
+if(NOT ZMIJ_NOTICE)
+    message(FATAL_ERROR "Could not find the Zmij notice in src/to_chars.cpp")
+endif()
+
 vcpkg_install_copyright(
+    COMMENT "${ZMIJ_NOTICE}"
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/LICENSE-MIT"
