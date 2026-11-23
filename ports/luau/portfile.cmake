@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config-export.patch
+        fix-stackpusher-header.patch
+        exclude-unused-isocline.patch
 )
 
 vcpkg_check_features(
