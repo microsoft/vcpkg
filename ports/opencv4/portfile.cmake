@@ -1,3 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 set(USE_QT_VERSION "6")
 
 vcpkg_from_github(
@@ -36,7 +37,8 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+# arm64ec code is compiled as AArch64 (NEON) but must not fall back to the 32-bit x86 branch below.
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm64(ec)?$")
   set(TARGET_IS_AARCH64 1)
   if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # cf. https://github.com/opencv/opencv/issues/25052, https://github.com/opencv/opencv/pull/27897
