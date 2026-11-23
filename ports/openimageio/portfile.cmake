@@ -23,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 49dfbc38350403cec072a6c976544d10e4402c2c416677acb1048537f67288f4cf5f458f2c3adeea26eb8c92f59e039a62f6c23ef75f61fc62534fdb439b40f6
+    SHA512 6d7b6fbbf2fe25c13d14dc3c0d89f73fba8a2f0b326b67ab4cf453d246cba4e447e10c7d1064ce5f47b28ffe759bce9cd032ebc17741428d09b42a450da0a378
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -132,7 +132,10 @@ endif()
 
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.md"
+    "${SOURCE_PATH}/src/include/OpenImageIO/function_view.h"
+)
 file(READ "${SOURCE_PATH}/THIRD-PARTY.md" third_party)
 string(REGEX REPLACE
     "^.*The remainder of this file"
