@@ -109,13 +109,21 @@ build_ffmpeg() {
 
     sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ --arch=${BUILD_ARCH} ${!OPTION_VARIABLE} $@
 
+    # FFmpeg 9.1 uses a host-built mscl helper for MSVC -showIncludes tracking.
+    # Windows ARM64 cross-builds lack a native host C compiler (default: gcc).
+    # vcpkg uses fresh build directories, so skip dependency-file generation.
+    MAKE_DEPFLAGS=""
+    if [ "@VCPKG_DETECTED_MSVC@" = "1" ] && [ "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" ]; then
+        MAKE_DEPFLAGS="CC_DEPFLAGS= CXX_DEPFLAGS= OBJCC_DEPFLAGS= AS_DEPFLAGS= HOSTCC_DEPFLAGS="
+    fi
+
     echo "=== BUILDING ==="
 
-    $MAKE_BINARY -j${JOBS} V=1
+    $MAKE_BINARY -j${JOBS} V=1 $MAKE_DEPFLAGS
 
     echo "=== INSTALLING ==="
 
-    $MAKE_BINARY install
+    $MAKE_BINARY install $MAKE_DEPFLAGS
 }
 
 cd "$PATH_TO_BUILD_DIR"
