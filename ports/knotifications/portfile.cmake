@@ -6,19 +6,26 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         export-qml-modules.patch
+        optional-qml.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        qml          KNOTIFICATIONS_USE_QML
         qml          CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
     INVERTED_FEATURES
-        qml          CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
         translations KF_SKIP_PO_PROCESSING
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

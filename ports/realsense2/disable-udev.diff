@@ -1,0 +1,14 @@
+diff --git a/src/linux/CMakeLists.txt b/src/linux/CMakeLists.txt
+index db116b97f..bd375c68a 100644
+--- a/src/linux/CMakeLists.txt
++++ b/src/linux/CMakeLists.txt
+@@ -1,7 +1,8 @@
+ # License: Apache 2.0. See LICENSE file in root directory.
+ # Copyright(c) 2019 RealSense, Inc. All Rights Reserved.
+ 
+-include(${CMAKE_CURRENT_LIST_DIR}/find_udev.cmake)
++# Use the polling watcher consistently, regardless of host-installed udev.
++set(UDEV_FOUND FALSE)
+ 
+ # Exported to the parent scope so wrappers/python can build the legacy pybackend2 target from the
+ # same list instead of repeating a subset of it.

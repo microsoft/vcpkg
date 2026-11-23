@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO miniupnp/miniupnp
     REF "miniupnpc_${MINIUPNPC_VERSION}"
-    SHA512 f8c79d2fb19de0ec3d053200320abf2ce3f7552b04f8f3f0b175577ee93e6c0bfb5c18a863197216436ebe9d44dd429fba407e0da83a1270dd3d46b380ac6ee1
+    SHA512 04a4a19d21088390cecbec931657b6c45a927f06e938a5b48fa8743e619b4047d9fb9bbc068f837c474ce4dd61ead9634d729fa86a2b6923278aebbdcd312005
     HEAD_REF master
 )
 
@@ -25,14 +25,27 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "/lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/external-ip.sh"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/external-ip.sh"
+)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/miniupnpc/miniupnpc_declspec.h"
+        "!defined(MINIUPNP_STATICLIB)" "0")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
 else()
     file(GLOB RELEASE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
     if(${RELEASE_TOOLS})
         vcpkg_copy_tools(TOOL_NAMES ${RELEASE_TOOLS} AUTO_CLEAN)
     endif()
 endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

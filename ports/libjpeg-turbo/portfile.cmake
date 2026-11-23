@@ -40,7 +40,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg7 WITH_JPEG7
         jpeg8 WITH_JPEG8
         tools WITH_TOOLS
+        turbojpeg WITH_TURBOJPEG
 )
+
+if("turbojpeg" IN_LIST FEATURES)
+    vcpkg_list(SET SYSTEM_DEPENDENCY_OPTIONS -DWITH_SYSTEM_SPNG=ON -DWITH_SYSTEM_ZLIB=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -48,8 +53,7 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
-        -DWITH_SYSTEM_SPNG=ON
-        -DWITH_SYSTEM_ZLIB=ON
+        ${SYSTEM_DEPENDENCY_OPTIONS}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
     MAYBE_UNUSED_VARIABLES
@@ -77,11 +81,15 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libjpeg-turbo)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
+        if("turbojpeg" IN_LIST FEATURES)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
+        endif()
     endif()
     if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
+        if("turbojpeg" IN_LIST FEATURES)
+            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
+        endif()
     endif()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

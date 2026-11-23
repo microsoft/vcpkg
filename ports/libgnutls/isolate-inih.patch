@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index 2e5138558..060cfc589 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1489,6 +1489,10 @@ AC_DEFINE([INI_ALLOW_INLINE_COMMENTS], 1, [whether to allowin inline comments])
+ AC_DEFINE([INI_STOP_ON_FIRST_ERROR], 1, [whether to stop on first error])
+ AC_DEFINE_UNQUOTED([INI_INLINE_COMMENT_PREFIXES], [";#"], [The inline comment prefixes])
+ AC_DEFINE_UNQUOTED([INI_START_COMMENT_PREFIXES], [";#"], [The comment prefixes])
++AC_DEFINE([ini_parse], [_gnutls_ini_parse], [static lib rename])
++AC_DEFINE([ini_parse_file], [_gnutls_ini_parse_file], [static lib rename])
++AC_DEFINE([ini_parse_stream], [_gnutls_ini_parse_stream], [static lib rename])
++AC_DEFINE([ini_parse_string], [_gnutls_ini_parse_string], [static lib rename])
+ 
+ AH_VERBATIM([gnutls_lib_no_replace_fchdir], [
+ /* Work around build failure on mingw caused by mis-interactions

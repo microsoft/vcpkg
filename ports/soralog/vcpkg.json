@@ -1,0 +1,19 @@
+{
+  "name": "soralog",
+  "version": "0.4.0",
+  "description": "Fast and flexible C++ logger with low-overhead logging calls",
+  "homepage": "https://github.com/xDimon/soralog",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "fmt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ]
+}

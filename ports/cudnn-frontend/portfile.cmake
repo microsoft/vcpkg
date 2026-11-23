@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cudnn-frontend
     REF "v${VERSION}"
-    SHA512 a2ea1873aafa7a61a334a560d67d816056c151ad9b83789f412c61f15541da4652413d4e0d91930dadd00ef509f97c8ab473ed89da24ef6c2cde737e282303a6
+    SHA512 c34eb98dd6f58348c06d602295201a516100a8f035487649281683e1bd1506df2fb1e693e2f063d98e8d4fe48afeeceb6f73685b875fd1c8ca7ee51fef78d36f
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        version.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
 

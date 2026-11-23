@@ -1,64 +1,94 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO PCRE2Project/pcre2
-    REF "pcre2-${VERSION}"
-    SHA512 8257285809a9a4afb441869936740ae5ff04cc4bd95f86c8e4b9fd41f3b6a194e88d0aaa1c2cfc01b8845984993736fa5e77201c82021842acc87451d8f62f8b
-    HEAD_REF main
+set(head_extract_options "")
+
+if(VCPKG_USE_HEAD_VERSION)
+    set(repository "https://github.com/PCRE2Project/pcre2.git")
+    set(snapshot_name "PCRE2Project-pcre2-main")
+    set(submodule_options "")
+    if("jit" IN_LIST FEATURES)
+        string(APPEND snapshot_name "-jit")
+        # Check out the SLJIT commit recorded by PCRE2.
+        set(submodule_options --recurse-submodules=deps/sljit --shallow-submodules)
+    endif()
+
+    set(version_file "${DOWNLOADS}/${snapshot_name}.git-version")
+    if(_VCPKG_NO_DOWNLOADS)
+        if(NOT EXISTS "${version_file}")
+            message(FATAL_ERROR "Downloads are disabled, but '${version_file}' does not exist.")
+        endif()
+        file(STRINGS "${version_file}" VCPKG_HEAD_VERSION LIMIT_COUNT 1)
+    else()
+        vcpkg_find_acquire_program(GIT)
+        set(checkout "${CURRENT_BUILDTREES_DIR}/src/pcre2-checkout-${TARGET_TRIPLET}")
+        file(REMOVE_RECURSE "${checkout}")
+        vcpkg_execute_required_process(
+            ALLOW_IN_DOWNLOAD_MODE
+            COMMAND "${GIT}" -c core.autocrlf=false -c core.longpaths=true
+                clone --depth 1 --branch main ${submodule_options} "${repository}" "${checkout}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME git-clone-${TARGET_TRIPLET}
+        )
+        vcpkg_execute_required_process(
+            ALLOW_IN_DOWNLOAD_MODE
+            COMMAND "${GIT}" rev-parse HEAD
+            WORKING_DIRECTORY "${checkout}"
+            LOGNAME git-rev-parse-${TARGET_TRIPLET}
+            OUTPUT_VARIABLE VCPKG_HEAD_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    endif()
+
+    set(archive "${DOWNLOADS}/${snapshot_name}-${VCPKG_HEAD_VERSION}.tar.gz")
+    if(NOT _VCPKG_NO_DOWNLOADS)
+        string(RANDOM LENGTH 16 temporary_suffix)
+        file(MAKE_DIRECTORY "${DOWNLOADS}")
+        if(NOT EXISTS "${archive}")
+            # Archive the populated checkout so the usual extraction and patching flow can be used.
+            file(REMOVE_RECURSE "${checkout}/.git")
+            file(REMOVE "${checkout}/deps/sljit/.git")
+            set(temporary_archive "${archive}.${temporary_suffix}.part")
+            vcpkg_execute_required_process(
+                ALLOW_IN_DOWNLOAD_MODE
+                COMMAND "${CMAKE_COMMAND}" -E tar czf "${temporary_archive}" --format=gnutar .
+                WORKING_DIRECTORY "${checkout}"
+                LOGNAME archive-head-${TARGET_TRIPLET}
+            )
+            file(RENAME "${temporary_archive}" "${archive}" NO_REPLACE RESULT rename_result)
+            if(NOT rename_result STREQUAL "0" AND NOT rename_result STREQUAL "NO_REPLACE")
+                message(FATAL_ERROR "Could not store PCRE2 HEAD snapshot: ${rename_result}")
+            endif()
+            file(REMOVE "${temporary_archive}")
+        endif()
+        file(REMOVE_RECURSE "${checkout}")
+
+        # Publish the commit pointer after its snapshot is available for --no-downloads.
+        file(WRITE "${version_file}.${temporary_suffix}.part" "${VCPKG_HEAD_VERSION}\n")
+        file(RENAME "${version_file}.${temporary_suffix}.part" "${version_file}")
+    elseif(NOT EXISTS "${archive}")
+        message(FATAL_ERROR "Downloads are disabled, but '${archive}' does not exist.")
+    endif()
+
+    set(head_extract_options BASE_DIRECTORY "src/head" NO_REMOVE_ONE_LEVEL SKIP_PATCH_CHECK)
+    z_vcpkg_add_spdx_resource(
+        NAME "PCRE2Project/pcre2"
+        DOWNLOAD_LOCATION "git+${repository}@${VCPKG_HEAD_VERSION}"
+    )
+else()
+    # The official release tarball includes the matching SLJIT sources.
+    vcpkg_download_distfile(archive
+        URLS "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${VERSION}/pcre2-${VERSION}.tar.gz"
+        FILENAME "pcre2-${VERSION}.tar.gz"
+        SHA512 6cfd9f824837078bea959ea89c1494950987892ec9b8546691b1aa94fde37c60429c4711c55f9a629c8a6a86bb6ebae738b3a0ebf6e42c70ab008ec6c394aca0
+    )
+endif()
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${archive}"
+    ${head_extract_options}
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
         fix-msvc-pdb-install.patch
 )
-
-if("jit" IN_LIST FEATURES)
-    # GitHub source snapshots omit gitlinks; .gitmodules only records paths and URLs.
-    if(VCPKG_USE_HEAD_VERSION)
-        set(pcre2_ref "${VCPKG_HEAD_VERSION}")
-        set(sljit_gitlink_hash SKIP_SHA512)
-    else()
-        set(pcre2_ref "pcre2-${VERSION}")
-        set(sljit_gitlink_hash SHA512 719fa1d8d8e1e749ce6f7370db32818268f84b1376ed9367fd5290ab440d8bea7a6a25a68e55045a45da68b0ce7a55daa0d7acd2f1b11774319b50268c02441c)
-    endif()
-
-    # The key here is that our portfile is hardcoding SHA validation hashes, but not hardcoding the sljit commit
-    # to fetch. The 'pcre2-${VERSION}' tag chooses the sljit commit that ought to be fetched.
-    # This ensures that a vcpkg maintainer only has to update the SHA hashes until everything passes, when bumping
-    # to a new PCRE2 tag. There should be no risk of accidentally specifying mismatched pcre2 and sljit commits.
-    vcpkg_download_distfile(sljit_gitlink
-        URLS "https://api.github.com/repos/PCRE2Project/pcre2/contents/deps/sljit?ref=${pcre2_ref}"
-        FILENAME "pcre2-${pcre2_ref}-sljit-gitlink.json"
-        ${sljit_gitlink_hash}
-    )
-    file(READ "${sljit_gitlink}" sljit_gitlink_contents)
-    string(JSON sljit_ref GET "${sljit_gitlink_contents}" sha)
-    string(JSON sljit_url GET "${sljit_gitlink_contents}" submodule_git_url)
-    string(LENGTH "${sljit_ref}" sljit_ref_length)
-    if(NOT sljit_ref MATCHES "^[0-9a-f]+$" OR NOT sljit_ref_length EQUAL 40
-        OR NOT sljit_url STREQUAL "https://github.com/zherczeg/sljit.git")
-        message(FATAL_ERROR "Unexpected deps/sljit gitlink in PCRE2 ${pcre2_ref}: ${sljit_url} at ${sljit_ref}")
-    endif()
-
-    if(VCPKG_USE_HEAD_VERSION)
-        # Fetch PCRE2's resolved gitlink, not an independently moving SLJIT HEAD.
-        vcpkg_download_distfile(sljit_archive
-            URLS "https://github.com/zherczeg/sljit/archive/${sljit_ref}.tar.gz"
-            FILENAME "zherczeg-sljit-${sljit_ref}.tar.gz"
-            SKIP_SHA512
-        )
-        vcpkg_extract_source_archive(SLJIT_SOURCE_PATH ARCHIVE "${sljit_archive}")
-    else()
-        vcpkg_from_github(
-            OUT_SOURCE_PATH SLJIT_SOURCE_PATH
-            REPO zherczeg/sljit
-            REF "${sljit_ref}"
-            SHA512 e5cc01f941877558f19859aedc9079c155f752a92e6d94fc5fb716e483b8fcb3a8495a5974bbb545d6d9a947ca97ebb36bfe278c4dc083afeb48b8ccab36895b
-        )
-    endif()
-
-    file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sljit")
-    file(MAKE_DIRECTORY "${SOURCE_PATH}/deps")
-    file(RENAME "${SLJIT_SOURCE_PATH}" "${SOURCE_PATH}/deps/sljit")
-endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_MSVC_PDB)

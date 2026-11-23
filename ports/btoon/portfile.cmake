@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BTOON-project/btoon-core
     REF "v${VERSION}"
-    SHA512 65b2b6106c87e690a8d13dbfe5f5d36c39373492d47b90a890b908e33a7439b6b22738fe92178e54b5e69135b63f8bea593e1b798ebd1d982f467cd62d399e08
+    SHA512 adb97d6f5ebb81b15955cc036b190de2689f7d864c3b600c83abd8cc2a27ae8aa6bd938c80d751403f803f339995f2e9901fd35f1f82b57ff62b632620d89833
     HEAD_REF main
 )
 # Only the command-line tools use the vendored nlohmann/json; make sure nothing else can.

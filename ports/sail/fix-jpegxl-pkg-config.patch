@@ -1,5 +1,5 @@
 diff --git a/src/sail-codecs/jpegxl/CMakeLists.txt b/src/sail-codecs/jpegxl/CMakeLists.txt
-index b78e1c39..a7a87d84 100644
+index b78e1c3..a42b970 100644
 --- a/src/sail-codecs/jpegxl/CMakeLists.txt
 +++ b/src/sail-codecs/jpegxl/CMakeLists.txt
 @@ -1,53 +1,110 @@
@@ -66,7 +66,7 @@ index b78e1c39..a7a87d84 100644
 -if (MSVC)
 -    list(REMOVE_ITEM JPEGXL_LINK_LIBRARIES m -lm)
 +if (JPEGXL_CMS_LIBRARY AND NOT LCMS2_LIBRARY)
-+    nessage(FATAL_ERROR "LCMS2 library is required")
++    message(FATAL_ERROR "LCMS2 library is required")
  endif()
  
 -# Static libjxl requires JXL_STATIC_DEFINE and friends to disable dllimport declarations.

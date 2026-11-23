@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
     REF "v${VERSION}"
-    SHA512 8b0043a93c4f8b45fbfc1886aa3cd0c00730413e36c806c7780031d6955553e963670a3f816fb0e64b76eb70d84b2b2fd02f1113ee88cc78b42af0e9dbae2406
+    SHA512 40f5ed5eca3b1174e1408e7178380769f293d3b8ebcd0113a185bdc4832190fae67b31a5f5437201fd16d8659803c2d5dd20c11f01b62e6d92ab888937f2771a
     HEAD_REF master
     PATCHES
         fix-bin-install-path.patch
@@ -28,4 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/celero/Export.h" "#ifdef CELERO_STATIC" "#define CELERO_STATIC\n#ifdef CELERO_STATIC")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/license.txt"
+    "${SOURCE_PATH}/include/celero/CommandLine.h"
+)

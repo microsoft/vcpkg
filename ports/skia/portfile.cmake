@@ -30,54 +30,59 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/dawn")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
-declare_external_from_git(d3d12allocator
-    URL "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
+declare_external_from_source(d3d12allocator
+    REPO "GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator"
     REF "169895d529dfce00390a20e69c2f516066fe7a3b"
+    SHA512 cd4bf4b22c9a26fcc81587bb7ea6394a9a64bfe625235d54680fe936309fc702ab2098dcb5ded7a83a7e8acff578a68239d6537df88bd59a88e137c14482ee42
     LICENSE_FILE LICENSE.txt
 )
-declare_external_from_git(dng_sdk
+declare_external_from_source(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
     REF "dbe0a676450d9b8c71bf00688bb306409b779e90"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(jinja2
+declare_external_from_source(jinja2
     URL "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
     REF "c3027d884967773057bf74b957e3fea87e5df4d7"
     LICENSE_FILE LICENSE.rst
 )
-declare_external_from_git(markupsafe
+declare_external_from_source(markupsafe
     URL "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
     REF "4256084ae14175d38a3ff7d739dca83ae49ccec6"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(partition_alloc
+declare_external_from_source(partition_alloc
     URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
     REF "b8c0688f577c1bbce6c2c1ce4753cd685ca0f634"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(piex
+declare_external_from_source(piex
     URL "https://android.googlesource.com/platform/external/piex.git"
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(spirv-cross
-    URL "https://github.com/KhronosGroup/SPIRV-Cross"
+declare_external_from_source(spirv-cross
+    REPO "KhronosGroup/SPIRV-Cross"
     REF "b8fcf307f1f347089e3c46eb4451d27f32ebc8d3"
+    SHA512 2aab4de5a02cfe7fce53e955ee4be6447c402b45498bc0a0bb43bf035eea0f648c358d5f5f208da309f1a18f26193a066adfbd342a1c48bea41574e9cb199776
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(spirv-headers
-    URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
+declare_external_from_source(spirv-headers
+    REPO "KhronosGroup/SPIRV-Headers"
     REF "6dd7ba990830f7c15ac1345ff3b43ef6ffdad216"
+    SHA512 4f6ae3af7e75e8a9d045024aac378395d08f42a8fe3c2a35142c23a40e3e5f4d6fdc46c537251d6174ee89581daf1ad63746c3c48a7a9d2a690271e6d94f08fc
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(spirv-tools
-    URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
+declare_external_from_source(spirv-tools
+    REPO "KhronosGroup/SPIRV-Tools"
     REF "2d14d2e76aa7de72404b17078eda15c20a6a0389"
+    SHA512 dfca6dba8b5e2ad37df314e77be66f4cd1d01cebfee36973c39dbf81e07f6655dd32ca36f8f8c5e4d4dea09b386acb440cf7d2c8c62e3cbb373a04279ca707c5
     LICENSE_FILE LICENSE
 )
-declare_external_from_git(wuffs
-    URL "https://github.com/google/wuffs-mirror-release-c.git"
+declare_external_from_source(wuffs
+    REPO "google/wuffs-mirror-release-c"
     REF "e3f919ccfe3ef542cfc983a82146070258fb57f8"
+    SHA512 c64ad40aa60e833a183d67e473a006827513a09e651c9b787aec9e1ade0983d4b1adf0179bcdd340f74e62ae549471c6b7fe1818a10055c02346f685a228a5cd
     LICENSE_FILE LICENSE
 )
 
@@ -89,7 +94,7 @@ declare_external_from_pkgconfig(gl)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 declare_external_from_pkgconfig(icu MODULES icu-uc)
 declare_external_from_pkgconfig(libavif)
-declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
+declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libjpeg)
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
 declare_external_from_pkgconfig(zlib)

@@ -1,0 +1,26 @@
+diff --git a/src/3rdparty/chromium/content/browser/cookie_store/cookie_store_manager.cc b/src/3rdparty/chromium/content/browser/cookie_store/cookie_store_manager.cc
+index 3b514fc..758829f 100644
+--- a/src/3rdparty/chromium/content/browser/cookie_store/cookie_store_manager.cc
++++ b/src/3rdparty/chromium/content/browser/cookie_store/cookie_store_manager.cc
+@@ -233,7 +233,9 @@ void CookieStoreManager::AddSubscriptions(
+ 
+     auto existing_subscription_it = std::ranges::find(
+         subscriptions, *new_subscription,
+-        &std::unique_ptr<CookieChangeSubscription>::operator*);
++        [](const auto& subscription) -> const CookieChangeSubscription& {
++          return *subscription;
++        });
+     if (existing_subscription_it == subscriptions.end())
+       subscriptions.push_back(std::move(new_subscription));
+   }
+@@ -331,7 +333,9 @@ void CookieStoreManager::RemoveSubscriptions(
+   for (auto& subscription : all_subscriptions) {
+     auto target_subscription_it = std::ranges::find(
+         target_subscriptions, *subscription,
+-        &std::unique_ptr<CookieChangeSubscription>::operator*);
++        [](const auto& target) -> const CookieChangeSubscription& {
++          return *target;
++        });
+     if (target_subscription_it == target_subscriptions.end()) {
+       // The subscription is not marked for deletion.
+       live_subscriptions.push_back(std::move(subscription));

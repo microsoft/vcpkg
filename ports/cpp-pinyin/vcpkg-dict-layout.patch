@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 23d41dc..8d9f6f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -318,7 +318,7 @@ endif ()
+ # when CPP_PINYIN2_INSTALL is ON, and this record must exist in every build that can be shipped.
+ include(GNUInstallDirs)
+ target_compile_definitions(${PROJECT_NAME} PRIVATE
+-        CPP_PINYIN2_DICT_SUBDIR="${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/dict")
++        CPP_PINYIN2_DICT_SUBDIR="$<$<CONFIG:Debug>:../>${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/dict")
+ 
+ # ----------------------------------
+ # Symbol visibility (D10 / plan doc section 6.7.8, measured 2026-10-01)

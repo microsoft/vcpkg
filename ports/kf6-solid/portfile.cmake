@@ -48,13 +48,18 @@ vcpkg_check_features(
         translations KF_SKIP_PO_PROCESSING
 )
 
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
-        -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
 )
 

@@ -9,10 +9,3 @@ libupnp provides CMake targets:
   target_link_libraries(main PRIVATE UPNP::Shared)
   -- or --
   target_link_libraries(main PRIVATE UPNP::Static)
-
-libixml provides CMake targets:
-
-  find_package(IXML CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE IXML::Shared)
-  -- or --
-  target_link_libraries(main PRIVATE IXML::Static)

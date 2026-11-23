@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 07a0e25..6327418 100644
+index b448a7a..a513fa3 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -154,17 +154,17 @@ libXfont2_la_SOURCES +=			\
+@@ -148,17 +148,17 @@ libXfont2_la_SOURCES +=			\
  	src/fc/fstrans.c
  endif
  
@@ -26,7 +26,7 @@ index 07a0e25..6327418 100644
  
  # Security regression tests
  TESTS =
-@@ -248,11 +248,11 @@ clean-local:
+@@ -258,16 +258,16 @@ clean-local:
  	-rmdir $(TEST_FONT_DIRS) test/data 2>/dev/null || true
  endif HAVE_PYTHON
  
@@ -34,12 +34,21 @@ index 07a0e25..6327418 100644
 -	      test/gen_evil_pcf_props.py		\
 -	      test/gen_evil_pcf_bitmapscale.py	\
 -	      test/gen_evil_pcf_encoding.py	\
--	      test/gen_evil_pcf_norepad.py
+-	      test/gen_evil_pcf_norepad.py	\
+-	      test/gen_evil_pcf_negskip.py
 +# EXTRA_DIST += test/gen_evil_pcf_repad.py		\
 +#	      test/gen_evil_pcf_props.py		\
 +#	      test/gen_evil_pcf_bitmapscale.py	\
 +#	      test/gen_evil_pcf_encoding.py	\
-+#	      test/gen_evil_pcf_norepad.py
++#	      test/gen_evil_pcf_norepad.py	\
++#	      test/gen_evil_pcf_negskip.py
+ 
+-EXTRA_DIST += test/data/ft-strike-index/strike-test.bdf	\
+-	      test/data/ft-strike-index/strike-test.pfb	\
+-	      test/data/ft-strike-index/fonts.dir
++# EXTRA_DIST += test/data/ft-strike-index/strike-test.bdf	\
++#	      test/data/ft-strike-index/strike-test.pfb	\
++#	      test/data/ft-strike-index/fonts.dir
  
  
  MAINTAINERCLEANFILES = ChangeLog INSTALL

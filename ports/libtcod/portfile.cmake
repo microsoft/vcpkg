@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF ${VERSION}
-    SHA512 e10d6d83e6057336efcc3f2a45dd7d2e287217c3c42f99f594a357668bac89dd8a235d8498d879168418c3b5fc1a3cb5ae2c9e0acadf4e3f95e247da3ab4de40
+    REF "${VERSION}"
+    SHA512 84d6ffd9003ceca331245f53d11c7e8b888c4bd9162b6503f239160d7b75998cf1b134caca5d6fc54aa554995ee1f7883ed42d40f5eb8348cd2a1d565caa7d12
     HEAD_REF main
+    PATCHES
+        missing_include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,6 +38,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
