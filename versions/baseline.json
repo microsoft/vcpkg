@@ -9773,7 +9773,7 @@
       "port-version": 0
     },
     "soralog": {
-      "baseline": "0.3.2",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "sord": {
