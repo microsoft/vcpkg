@@ -1,5 +1,5 @@
 diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
-index cddb4e0..3b06a87 100644
+index cddb4e095c..3b06a87d14 100644
 --- a/cmake/macros/Private.cmake
 +++ b/cmake/macros/Private.cmake
 @@ -1200,8 +1200,10 @@ function(_pxr_library NAME)
@@ -90,10 +90,10 @@ index cddb4e0..3b06a87 100644
              )
          endif()
 diff --git a/cmake/macros/Public.cmake b/cmake/macros/Public.cmake
-index 5f6a545..83ff7d2 100644
+index 4e0d407780..997547f631 100644
 --- a/cmake/macros/Public.cmake
 +++ b/cmake/macros/Public.cmake
-@@ -1068,6 +1068,17 @@ function(pxr_setup_plugins)
+@@ -1173,6 +1173,17 @@ function(pxr_setup_plugins)
      # top-level plugin area
      _get_resources_dir_name(resourcesDir)
  
@@ -111,7 +111,7 @@ index 5f6a545..83ff7d2 100644
      # Add extra plugInfo.json include paths to the top-level plugInfo.json,
      # relative to that top-level file.
      set(extraIncludes "")
-@@ -1075,7 +1086,7 @@ function(pxr_setup_plugins)
+@@ -1180,7 +1191,7 @@ function(pxr_setup_plugins)
      foreach(dirName ${PXR_EXTRA_PLUGINS})
          file(RELATIVE_PATH
              relDirName
@@ -120,7 +120,7 @@ index 5f6a545..83ff7d2 100644
              "${CMAKE_INSTALL_PREFIX}/${dirName}"
          )
          set(extraIncludes "${extraIncludes},\n        \"${relDirName}/\"")
-@@ -1086,7 +1097,7 @@ function(pxr_setup_plugins)
+@@ -1191,7 +1202,7 @@ function(pxr_setup_plugins)
           "${plugInfoContents}")
      install(
          FILES "${CMAKE_CURRENT_BINARY_DIR}/plugins_plugInfo.json"

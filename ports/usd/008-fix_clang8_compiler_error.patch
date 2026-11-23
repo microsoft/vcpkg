@@ -1,5 +1,5 @@
 diff --git a/pxr/usd/pcp/primIndex.h b/pxr/usd/pcp/primIndex.h
-index dbf1208a26..aa8269a1d3 100644
+index df05c8134b..b143d9ce35 100644
 --- a/pxr/usd/pcp/primIndex.h
 +++ b/pxr/usd/pcp/primIndex.h
 @@ -70,7 +70,7 @@ public:
