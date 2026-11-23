@@ -22,6 +22,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/yaml.h" "defined(YAML_DECLARE_STATIC)" "1")
+endif()
+
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME yaml CONFIG_PATH share/yaml)

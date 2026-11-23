@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4f81148..8006536 100644
+index 48a4be9..7163597 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -158,3 +158,11 @@ install(
@@ -11,6 +11,6 @@ index 4f81148..8006536 100644
 +set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 +set(includedir ${CMAKE_INSTALL_PREFIX}/include)
 +set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
-+set(PACKAGE_VERSION 0.1)
++set(PACKAGE_VERSION "${YAML_VERSION_STRING}")
 +configure_file(yaml-0.1.pc.in ${PROJECT_BINARY_DIR}/yaml-0.1.pc @ONLY)
 +install(FILES ${PROJECT_BINARY_DIR}/yaml-0.1.pc DESTINATION lib/pkgconfig)
