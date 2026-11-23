@@ -50,6 +50,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(READ "${SOURCE_PATH}/src/to_chars.cpp" TO_CHARS_SOURCE)
+# Example: the Zmij notice starts with "/*!" and includes "Copyright (c) 2025 - present, Victor Zverovich".
 string(REGEX MATCH "/\\*![^*]*Zmij:[^*]*Copyright[^*]*\\*/" ZMIJ_NOTICE "${TO_CHARS_SOURCE}")
 if(NOT ZMIJ_NOTICE)
     message(FATAL_ERROR "Could not find the Zmij notice in src/to_chars.cpp")
