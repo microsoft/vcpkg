@@ -19,7 +19,7 @@ vcpkg_from_github(
         0050-fix-test-ld-absolute-lib-paths.patch
         0051-fix-msvc-undef-flags.patch
         0052-fix-disable-unstable-swscale-link.patch
-        0053-fix-resource-directory-race.patch
+        0053-fix-resource-directory-race.patch # https://github.com/FFmpeg/FFmpeg/commit/95799831978b3cda47ce51722f8d8a980423e546
 )
 
 if(SOURCE_PATH MATCHES " ")

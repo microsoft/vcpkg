@@ -1,11 +1,15 @@
-diff --git a/fftools/resources/Makefile b/fftools/resources/Makefile
-index 3c93648..54154af 100644
---- a/fftools/resources/Makefile
-+++ b/fftools/resources/Makefile
-@@ -16,4 +16,6 @@ RESOBJS +=                         \
- $(RESOBJS): CCDEP       =
- $(RESOBJS): CC_DEPFLAGS =
+diff --git a/ffbuild/common.mak b/ffbuild/common.mak
+index 13f61d1..2e7c8da 100644
+--- a/ffbuild/common.mak
++++ b/ffbuild/common.mak
+@@ -110,8 +110,8 @@ COMPILE_LASX = $(call COMPILE,CC,LASXFLAGS)
+ 	$(Q)echo '#include "$*.h"' >$@
  
-+$(RESOBJS:.o=.c) $(RESOBJS:%.css.o=%.css.min) $(RESOBJS:%.css.o=%.css.min.gz) $(RESOBJS:%.html.o=%.html.gz): | fftools/resources
-+
- .SECONDARY: $(RESOBJS:.o=.gz) $(RESOBJS:.o=.c) $(RESOBJS:%.css.o=%.css.min) $(RESOBJS:%.css.o=%.css.min.gz) $(RESOBJS:%.html.o=%.html.gz) $(RESOBJS:.o=)
+ RUN_BIN2C = $(BIN2C) $(patsubst $(SRC_PATH)/%,$(SRC_LINK)/%,$<) $@ $(subst .,_,$(basename $(notdir $@)))
+-RUN_GZIP  = $(M)gzip -nc9 $(patsubst $(SRC_PATH)/%,$(SRC_LINK)/%,$<) >$@
+-RUN_MINIFY = $(M)sed 's!/\\*.*\\*/!!g' $< | tr '\n' ' ' | tr -s ' ' | sed 's/^ //; s/ $$//' > $@
++RUN_GZIP  = $(M)mkdir -p $(dir $@) && gzip -nc9 $(patsubst $(SRC_PATH)/%,$(SRC_LINK)/%,$<) >$@
++RUN_MINIFY = $(M)mkdir -p $(dir $@) && sed 's!/\\*.*\\*/!!g' $< | tr '\n' ' ' | tr -s ' ' | sed 's/^ //; s/ $$//' > $@
+ %.gz: TAG = GZIP
+ %.min: TAG = MINIFY
+ 
