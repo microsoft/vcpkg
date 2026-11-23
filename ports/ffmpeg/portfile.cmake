@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 21bf3fbcdfd2f41ea6edeab40433fecfe362b09ecaa177a652471b54f9357011b4f74dab18245ab1c26f1a473b94205490baecb42289afd2effd603cd0b22b59
+    SHA512 07f011a15b40b3620dddd438be595952858c10868c799a50fda2adc14dbf605a47fe2819db387d9bf6fbf960b7182b6f1648bd933b5bf62f6f6db7153a0fe822
     HEAD_REF master
     PATCHES
         0003-fix-windowsinclude.patch
@@ -14,11 +14,9 @@ vcpkg_from_github(
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
-        0047-fix-msvc-utf8.patch
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
         0051-fix-msvc-undef-flags.patch
-        0052-fix-disable-unstable-swscale-link.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -439,12 +437,6 @@ if("opencl" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
     set(WITH_OPENCL OFF)
-endif()
-
-if("opengl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-opengl")
-else()
-    set(OPTIONS "${OPTIONS} --disable-opengl")
 endif()
 
 if("openh264" IN_LIST FEATURES)
