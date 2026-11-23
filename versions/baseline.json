@@ -281,7 +281,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "15.6.2",
+      "baseline": "15.8.0",
       "port-version": 0
     },
     "arp1it-minecraft-server-status": {
