@@ -1,0 +1,18 @@
+{
+  "name": "networkmanager-headers",
+  "version": "1.58.1",
+  "description": [
+    "Headers of libnm-core, part of the NetworkManager client library: settings, D-Bus API enums and version, to talk to the system NetworkManager daemon over D-Bus.",
+    "Headers only: the daemon and libnm are not built, and the libnm-client headers are not installed."
+  ],
+  "homepage": "https://networkmanager.dev",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux",
+  "dependencies": [
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    }
+  ]
+}
