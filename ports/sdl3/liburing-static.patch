@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f7c1528..453c958 100644
+index f7c15287b2e488aacf706412ad85d83af7651489..453c9586267461adfbba6384f352499a14be3c06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1982,11 +1982,17 @@ elseif(UNIX AND NOT APPLE AND NOT RISCOS AND NOT HAIKU)
@@ -23,7 +23,7 @@ index f7c1528..453c958 100644
          endif()
        endif()
 diff --git a/src/io/io_uring/SDL_asyncio_liburing.c b/src/io/io_uring/SDL_asyncio_liburing.c
-index a15218a..aa0c898 100644
+index a15218a1e3aef4c6b295f8443431ac8e9f3fcd7d..87183e3ada630f7bf2c30e763557a210a199961a 100644
 --- a/src/io/io_uring/SDL_asyncio_liburing.c
 +++ b/src/io/io_uring/SDL_asyncio_liburing.c
 @@ -41,7 +41,7 @@ static bool (*CreateAsyncIOQueue)(SDL_AsyncIOQueue *queue);
