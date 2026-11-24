@@ -6253,8 +6253,8 @@
       "port-version": 1
     },
     "libyaml": {
-      "baseline": "0.2.5",
-      "port-version": 5
+      "baseline": "0.2.6",
+      "port-version": 0
     },
     "libyuv": {
       "baseline": "1916",
