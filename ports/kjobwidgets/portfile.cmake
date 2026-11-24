@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kjobwidgets
     REF "v${VERSION}"
-    SHA512 3ca684865fb3556974b4d8862e617068785a5106c474353ceb914cafa1419b0df71ab2acd8f1758e4bdaa27b067084fa278e9051f159c11f577750e57c99763b
+    SHA512 5f39574dc8589a5ef87fce979da2c9cbde1c275c6bbba0c094983f4bce6ade574f498612da534216b1f34ccfe18596d75857cafb36f049bdb77c5bacf6d807b0
     HEAD_REF master
     PATCHES
         001_fix_static_dependencies.patch

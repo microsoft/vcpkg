@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kholidays
     REF "v${VERSION}"
-    SHA512 1547173481b496ac2fbcda060e42ae8fd806a45ac59b675897c53d66808bbf2c00a643da13e756799fe876508d4c355acb8cfc0c448acce728d6fadfb2083519
+    SHA512 0fce532be081dc2a241b36d42f865fc1a5be2702ffc2cd21c6f618d581bfffa7073582fff2bc138c2f3b00e658061cdac85a04b2ef8bfbfab080f0299507d54d
     HEAD_REF master
     PATCHES
         optional-qml.patch

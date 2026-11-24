@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwallet
     REF "v${VERSION}"
-    SHA512 e22e5c35e3e519df560db7d39b8aac71b9cf53f64543baa07e46a2317f51d50c88d9b4e0bbe275cf6c651618afbfb049e9e7d94dc9843a8e945692722ca042d1
+    SHA512 2d5741600518a7d295be64e2c767092383ce0f0993c1166b7fe017aaaa65cbfcf3542f06d4887aafc6a47535ac740910231108aadbe86cd66f86ae8895f7ea68
     HEAD_REF master
     PATCHES
         fix-static-dependencies.patch

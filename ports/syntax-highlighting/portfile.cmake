@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/syntax-highlighting
     REF "v${VERSION}"
-    SHA512 e64a1140239496dc8680fa01e6e61ca4f3aa33db0cb75ee3fdec4fb48cb64e1885779c2625cf6875828640d675a4a44d51689b2a8f68e13f651bbd79927b22d5
+    SHA512 318c1d047d16b3223752da3fd62a587322c5defadaa5e7a40985ddc35e91b00cd1447add314be225c0236116bc138cb2c2d2b911a13dceec6612618996206b71
     HEAD_REF master
     PATCHES
         export-qml-modules.patch

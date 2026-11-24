@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 | Input | Required | Meaning |
 |---|---|---|
-| `investigation-root` | No | Directory for workspaces and intermediate artifacts: sources, builds, installs, logs, and examples. If omitted, infer a short same-drive path when clear; otherwise ask. Never use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Directory for PR worktrees and intermediate artifacts: sources, builds, installs, logs, and examples. Defaults to `.worktrees` at the root of the caller's working tree, which is the path printed by `git rev-parse --show-toplevel` in the caller's original directory. Never use the Copilot session directory or an arbitrary long temp path. |
 
 ### Example invocations
 
@@ -21,15 +21,15 @@ disable-model-invocation: true
 3. Fetch each candidate's changed files; identify ports from `ports/<portname>/`.
 4. Prepare isolated workspaces as below. Review every candidate independently with a `general-purpose` worker using its default high-capability model; do not override it with a fast or lightweight model. Require it to read the entire guide and follow every instruction. Group competition only in the index. Pass each worker:
    - PR number (`{{PR_NUMBER}}`).
-   - Absolute workspace and worker-local `investigation-root`.
+   - Absolute worktree (`pr-{{PR_NUMBER}}` under `investigation-root`) and worker-local `investigation-root` (`pr-{{PR_NUMBER}}-artifacts` under `investigation-root`).
    - Absolute `{{REPORT_DIR}}` (`pr-{{PR_NUMBER}}` under `reviews-root`).
    - Absolute guide path.
 5. As each review completes, write its report and immediately update `index.md` with that result before waiting for another review. The coordinator is the sole index writer; workers must not write it. Keep the index accurate as results arrive, including pending, skipped, and failed PRs, and update it when a review is skipped or fails. After all reviews finish, reconcile the index against the final per-PR results and port-specific competition groups.
 
 ## Parallel execution safety
 
-1. Give each concurrent worker its own writable detached worktree or equivalent detached-HEAD workspace and intermediate artifacts under `investigation-root`. Never share a writable repository path between workers.
-2. Create all isolated workspaces before launching workers. Copy the caller's `vcpkg.exe` (Windows) or `vcpkg` (non-Windows) into each workspace root.
+1. Give each concurrent worker its own linked worktree of the caller's repository, not a clone or copy. Never share a writable repository path between workers. Invoking this skill explicitly requests these worktrees.
+2. Create all worktrees at their PR heads with `git worktree add --detach` before launching workers. If one already exists, detach it at the PR head instead; preserve its branches and commits, and ask before discarding uncommitted changes whose origin is unclear. Copy the caller's `vcpkg.exe` (Windows) or `vcpkg` (non-Windows) into each worktree root.
 3. Use the caller's working tree only when exactly one worker is active and the user explicitly allows it.
 4. If `VCPKG_DOWNLOADS` is already nonempty, preserve it for all workers and review commands. Use that shared directory only through vcpkg; never clean or delete it. Otherwise, do not set it.
 

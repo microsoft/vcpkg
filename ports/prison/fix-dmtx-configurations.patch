@@ -1,8 +1,8 @@
 diff --git a/cmake/FindDmtx.cmake b/cmake/FindDmtx.cmake
-index 6175cd2..dd64c6c 100644
+index 7dc4181..9b934ca 100644
 --- a/cmake/FindDmtx.cmake
 +++ b/cmake/FindDmtx.cmake
-@@ -34,23 +34,37 @@
+@@ -34,22 +34,36 @@
  
  find_path(Dmtx_INCLUDE_DIRS dmtx.h)
  
@@ -19,7 +19,6 @@ index 6175cd2..dd64c6c 100644
  include(FindPackageHandleStandardArgs)
  
  find_package_handle_standard_args(Dmtx
-     FOUND_VAR Dmtx_FOUND
 -    REQUIRED_VARS Dmtx_LIBRARIES Dmtx_INCLUDE_DIRS
 +    REQUIRED_VARS Dmtx_LIBRARY Dmtx_INCLUDE_DIRS
  )
