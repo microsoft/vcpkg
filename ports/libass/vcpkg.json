@@ -1,6 +1,7 @@
 {
   "name": "libass",
   "version": "0.17.5",
+  "port-version": 1,
   "description": "libass is a portable subtitle renderer for the ASS/SSA (Advanced Substation Alpha/Substation Alpha) subtitle format",
   "homepage": "https://github.com/libass/libass",
   "license": "ISC",
@@ -16,5 +17,13 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "unibreak": {
+      "description": "Enable Unicode line breaking using libunibreak",
+      "dependencies": [
+        "libunibreak"
+      ]
+    }
+  }
 }
