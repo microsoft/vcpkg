@@ -43,6 +43,17 @@ index a15218a..aa0c898 100644
  
  #define SDL_LIBURING_FUNCS \
      SDL_LIBURING_FUNC(int, io_uring_queue_init, (unsigned entries, struct io_uring *ring, unsigned flags)) \
+@@ -65,8 +66,8 @@ SDL_ELF_NOTE_DLOPEN(
+     SDL_LIBURING_FUNC(void, io_uring_prep_write,(struct io_uring_sqe *sqe, int fd, const void *buf, unsigned nbytes, __u64 offset)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_close, (struct io_uring_sqe *sqe, int fd)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_fsync, (struct io_uring_sqe *sqe, int fd, unsigned fsync_flags)) \
+-    SDL_LIBURING_FUNC(void, io_uring_prep_cancel, (struct io_uring_sqe *sqe, void *user_data, int flags)) \
+-    SDL_LIBURING_FUNC(void, io_uring_prep_timeout, (struct io_uring_sqe *sqe, struct __kernel_timespec *ts, unsigned count, unsigned flags)) \
++    SDL_LIBURING_FUNC(void, io_uring_prep_cancel, (struct io_uring_sqe *sqe, const void *user_data, int flags)) \
++    SDL_LIBURING_FUNC(void, io_uring_prep_timeout, (struct io_uring_sqe *sqe, const struct __kernel_timespec *ts, unsigned count, unsigned flags)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_nop, (struct io_uring_sqe *sqe)) \
+     SDL_LIBURING_FUNC(void, io_uring_sqe_set_data, (struct io_uring_sqe *sqe, void *data)) \
+     SDL_LIBURING_FUNC(void, io_uring_sqe_set_flags, (struct io_uring_sqe *sqe, unsigned flags)) \
 @@ -103,21 +104,27 @@ typedef struct LibUringAsyncIOQueueData
  
  static void UnloadLibUringLibrary(void)
