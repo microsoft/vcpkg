@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 95ee4e0be3c524867bf14ecbe438ab3bca08fd939e4ce79ca35b66055ff2cca8e61779eb8ad16ba0f3b2eb86b469f0e82cc0e7bff286f0797607a26c2c2b6e58
+    SHA512 fc4e1ae2b640e8439fb8ca490cfaa27461e74ee44abc1798d49a97a97f1de7fec5cc776b7dedf58e72eb0ccbb5bf0edaf92e4db8052980667567ef6e783b4b39
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -34,6 +34,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/common.hpp" "#ifdef RTC_STATIC" "#if 1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef RTC_STATIC" "#if 1")
 endif()
+
+foreach(header IN ITEMS common.hpp rtc.h)
+    if(NOT "srtp" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/${header}" "#define RTC_ENABLE_MEDIA 1" "#define RTC_ENABLE_MEDIA 0")
+    endif()
+    if(NOT "ws" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/${header}" "#define RTC_ENABLE_WEBSOCKET 1" "#define RTC_ENABLE_WEBSOCKET 0")
+    endif()
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
