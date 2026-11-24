@@ -24,6 +24,10 @@ if("gdk-speech" IN_LIST FEATURES)
 endif()
 if(VCPKG_TARGET_IS_XBOX)
   # GDK speech is the only speech backend on Xbox, so it is always required there.
+  # ms-gdkx ensures the GDK with Xbox Extensions is installed; the Xbox toolchain
+  # puts its console headers and libraries (including xgameruntime.lib) on the
+  # search paths, and Prism links xgameruntime by name so consumers resolve it
+  # the same way.
   list(APPEND FEATURE_OPTIONS -DPRISM_ENABLE_GDK_SPEECH_BACKEND=ON)
 endif()
 vcpkg_cmake_configure(

@@ -1,8 +1,81 @@
 diff --git a/cmake/PrismBackends.cmake b/cmake/PrismBackends.cmake
-index fee07a6..88236cf 100644
+index fee07a6..5b5010b 100644
 --- a/cmake/PrismBackends.cmake
 +++ b/cmake/PrismBackends.cmake
-@@ -486,7 +486,9 @@ if(PRISM_GDK_SPEECH_LINKS AND NOT PRISM_ENABLE_GDK_SPEECH_BACKEND STREQUAL
+@@ -381,14 +381,32 @@ if(WIN32 OR PRISM_XBOX)
+           PATH
+           "Root of a Microsoft GDK edition to build the GDK speech backend against"
+     )
+-    set(_prism_gdk_hints
+-        "${PRISM_GDK_ROOT}" "$ENV{PRISM_GDK_ROOT}" "$ENV{GameDKCoreLatest}"
+-        "$ENV{GameDKLatest}" "$ENV{GRDKLatest}")
++    if(PRISM_XBOX)
++      # Prefer the console layout of the GDK with Xbox Extensions so that a
++      # desktop GDK installed alongside it is not picked up for console builds.
++      # CMake checks every suffix of a hint before moving to the next hint.
++      set(_prism_gdk_hints
++          "${PRISM_GDK_ROOT}"
++          "$ENV{PRISM_GDK_ROOT}"
++          "$ENV{GameDKXboxLatest}"
++          "$ENV{GXDKLatest}"
++          "$ENV{GameDKCoreLatest}"
++          "$ENV{GameDKLatest}"
++          "$ENV{GRDKLatest}")
++      set(_prism_gdk_include_suffixes
++          xbox/include GameKit/Include windows/include GRDK/GameKit/Include
++          Include)
++    else()
++      set(_prism_gdk_hints
++          "${PRISM_GDK_ROOT}" "$ENV{PRISM_GDK_ROOT}" "$ENV{GameDKCoreLatest}"
++          "$ENV{GameDKLatest}" "$ENV{GRDKLatest}")
++      set(_prism_gdk_include_suffixes windows/include GRDK/GameKit/Include
++                                      GameKit/Include Include)
++    endif()
+     find_path(
+       PRISM_GDK_INCLUDE_DIR XSpeechSynthesizer.h
+       HINTS ${_prism_gdk_hints}
+-      PATH_SUFFIXES windows/include GRDK/GameKit/Include GameKit/Include
+-                    Include)
++      PATH_SUFFIXES ${_prism_gdk_include_suffixes})
+     if(PRISM_ARCH_CLASS STREQUAL "arm64")
+       set(_prism_gdk_arch arm64)
+       set(_prism_gdk_thunk_suffixes windows/bin/arm64)
+@@ -403,6 +421,7 @@ if(WIN32 OR PRISM_XBOX)
+         NAMES xgameruntime
+         HINTS ${_prism_gdk_hints}
+         PATH_SUFFIXES
++          xbox/lib/x64
+           windows/lib/${_prism_gdk_arch}
+           GRDK/GameKit/Lib/amd64
+           GameKit/Lib/amd64
+@@ -422,7 +441,10 @@ if(WIN32 OR PRISM_XBOX)
+       include(CheckCXXSourceCompiles)
+       set(_prism_saved_required_includes "${CMAKE_REQUIRED_INCLUDES}")
+       set(_prism_saved_required_libraries "${CMAKE_REQUIRED_LIBRARIES}")
+-      set(CMAKE_REQUIRED_INCLUDES "${PRISM_GDK_INCLUDE_DIR}")
++      # Keep the toolchain's include directories: console headers such as
++      # xaudio2.h may come from a console-generation directory it provides.
++      set(CMAKE_REQUIRED_INCLUDES "${PRISM_GDK_INCLUDE_DIR}"
++                                  ${_prism_saved_required_includes})
+       if(PRISM_XBOX)
+         set(CMAKE_REQUIRED_LIBRARIES "${PRISM_GDK_RUNTIME_LIBRARY}")
+       else()
+@@ -457,14 +479,6 @@ int main() {
+         STATUS
+           "Prism: GDK speech backend unavailable (SDK headers or required console library)"
+       )
+-    else()
+-      if(PRISM_XBOX AND NOT TARGET prism_gdk_runtime)
+-        add_library(prism_gdk_runtime UNKNOWN IMPORTED)
+-        set_target_properties(
+-          prism_gdk_runtime
+-          PROPERTIES IMPORTED_LOCATION "${PRISM_GDK_RUNTIME_LIBRARY}"
+-                     INTERFACE_INCLUDE_DIRECTORIES "${PRISM_GDK_INCLUDE_DIR}")
+-      endif()
+     endif()
+   endif()
+ endif()
+@@ -486,10 +500,21 @@ if(PRISM_GDK_SPEECH_LINKS AND NOT PRISM_ENABLE_GDK_SPEECH_BACKEND STREQUAL
    if(TARGET prism_backend_gdk_speech)
      target_include_directories(prism_backend_gdk_speech
                                 PRIVATE "${PRISM_GDK_INCLUDE_DIR}")
@@ -11,8 +84,22 @@ index fee07a6..88236cf 100644
 +      target_link_libraries(prism PRIVATE xmllite ole32)
 +    endif()
      if(PRISM_XBOX)
-       target_link_libraries(prism_backend_gdk_speech PRIVATE prism_gdk_runtime)
-       target_link_libraries(prism PRIVATE prism_gdk_runtime)
+-      target_link_libraries(prism_backend_gdk_speech PRIVATE prism_gdk_runtime)
+-      target_link_libraries(prism PRIVATE prism_gdk_runtime)
++      # Link the runtime by name, like other console SDK libraries, so that the
++      # installed link interface of a static Prism names xgameruntime.lib
++      # instead of a build-only target or this machine's SDK path. Consumers
++      # resolve it from their own GDK library path, as the Xbox toolchains
++      # provide. The directory found here is only used inside this build tree.
++      get_filename_component(_prism_gdk_runtime_dir
++                             "${PRISM_GDK_RUNTIME_LIBRARY}" DIRECTORY)
++      target_link_directories(prism PUBLIC
++                              "$<BUILD_INTERFACE:${_prism_gdk_runtime_dir}>")
++      target_link_libraries(prism PRIVATE xgameruntime)
++      unset(_prism_gdk_runtime_dir)
+     else()
+       if(PRISM_GDK_THUNKS_DLL)
+         message(STATUS "Prism: GDK thunk library: ${PRISM_GDK_THUNKS_DLL}")
 diff --git a/cmake/PrismPlatformXbox.cmake b/cmake/PrismPlatformXbox.cmake
 index 7588f75..1530dbf 100644
 --- a/cmake/PrismPlatformXbox.cmake
