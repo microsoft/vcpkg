@@ -1,0 +1,27 @@
+diff --git a/KF6NetworkManagerQtConfig.cmake.in b/KF6NetworkManagerQtConfig.cmake.in
+index 59835f4..b2f5317 100644
+--- a/KF6NetworkManagerQtConfig.cmake.in
++++ b/KF6NetworkManagerQtConfig.cmake.in
+@@ -4,6 +4,9 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
+ find_dependency(Qt6DBus @REQUIRED_QT_VERSION@)
+ find_dependency(Qt6Network @REQUIRED_QT_VERSION@)
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++endif()
+ 
+ find_package(PkgConfig)
+ pkg_search_module(NetworkManager REQUIRED IMPORTED_TARGET libnm>=1.4.0)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 214e11e..b3a00e8 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -273,7 +273,7 @@ ecm_generate_headers(NetworkManagerQt_SETTINGS_CamelCase_HEADERS
+ ecm_add_qml_module(networkmanagerqtqml URI org.kde.networkmanager GENERATE_PLUGIN_SOURCE)
+ target_sources(networkmanagerqtqml PRIVATE qmltypes.h)
+ target_link_libraries(networkmanagerqtqml PRIVATE Qt6::Qml KF6NetworkManagerQt)
+-ecm_finalize_qml_module(networkmanagerqtqml)
++ecm_finalize_qml_module(networkmanagerqtqml EXPORT KF6NetworkManagerQtTargets)
+ ecm_generate_qdoc(KF6NetworkManagerQt networkmanager-qt.qdocconf)
+ 
+ install(TARGETS KF6NetworkManagerQt EXPORT KF6NetworkManagerQtTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
