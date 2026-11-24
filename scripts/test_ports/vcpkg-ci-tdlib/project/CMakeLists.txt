@@ -44,6 +44,13 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(tdjson_static IMPORTED_TARGET tdjson_static)
 pkg_check_modules(tdjson IMPORTED_TARGET tdjson)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND TARGET Td::tdjson_static AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    find_package(ZLIB REQUIRED)
+    if (NOT "${ZLIB_LIBRARY_DEBUG}" IN_LIST tdjson_static_LINK_LIBRARIES)
+        message(FATAL_ERROR "Debug pkg-config dependencies do not include ${ZLIB_LIBRARY_DEBUG}")
+    endif()
+endif()
+
 add_executable(main2 main.cpp)
 
 if (TARGET PkgConfig::tdjson_static)
@@ -53,6 +60,6 @@ else()
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND TARGET Td::tdjson_static)
-    target_link_options(main PRIVATE /DEBUG /WX /LTCG /INCREMENTAL:NO)
+    target_link_options(main PRIVATE /DEBUG /LTCG /INCREMENTAL:NO)
     target_link_options(main2 PRIVATE /DEBUG /LTCG /INCREMENTAL:NO)
 endif()

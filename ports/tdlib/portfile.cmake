@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-cross-compile.patch
         # Exclude uninstalled benchmarks/CLI from default builds and disable ambient PHP documentation generation.
         fix-packaging.patch
+        fix-pkgconfig-configurations.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
@@ -132,6 +133,7 @@ vcpkg_cmake_configure(
         -DTD_INSTALL_STATIC_LIBRARIES=${BUILD_STATIC_LIBRARIES}
         -DTD_ENABLE_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DTD_ENABLE_DOTNET=OFF
+        -DTD_WITH_ABSEIL=OFF
         -DTD_GENERATE_SOURCE_FILES=OFF
         -DTD_E2E_ONLY=OFF
         -DTD_ENABLE_LTO=${CMAKE_HOST_WIN32}
