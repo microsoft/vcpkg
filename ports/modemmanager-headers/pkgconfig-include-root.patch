@@ -1,0 +1,10 @@
+diff --git a/data/ModemManager.pc.in b/data/ModemManager.pc.in
+index 85e06a5..b6e4ebd 100644
+--- a/data/ModemManager.pc.in
++++ b/data/ModemManager.pc.in
+@@ -6,4 +6,4 @@ includedir=@includedir@
+ Name: ModemManager
+ Description: Common headers provided by ModemManager
+ Version: @VERSION@
+-Cflags: -I${includedir}/ModemManager
++Cflags: -I${includedir}/ModemManager -I${includedir}
