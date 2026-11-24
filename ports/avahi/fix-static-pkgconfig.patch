@@ -1,0 +1,54 @@
+diff --git a/Makefile.am b/Makefile.am
+index 352cdcf..aeafa64 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -171,6 +171,9 @@ pkgconfigdir = $(libdir)/pkgconfig
+ 	$(AM_V_GEN)sed -e 's,@prefix\@,$(prefix),g' \
+ 	    -e 's,@libdir\@,$(libdir),g' \
+ 	    -e 's,@HOWL_COMPAT_VERSION\@,$(HOWL_COMPAT_VERSION),g' \
++	    -e 's,@PTHREAD_CFLAGS\@,$(PTHREAD_CFLAGS),g' \
++	    -e 's,@PTHREAD_LIBS\@,$(PTHREAD_LIBS),g' \
++	    -e 's,@DL_LIBS\@,$(DL_LIBS),g' \
+ 	    -e 's,@PACKAGE_VERSION\@,$(PACKAGE_VERSION),g' $< > $@
+ 
+ pkgconfig_DATA = avahi-core.pc
+diff --git a/avahi-client.pc.in b/avahi-client.pc.in
+index da8bf57..12bbc33 100644
+--- a/avahi-client.pc.in
++++ b/avahi-client.pc.in
+@@ -6,6 +6,7 @@ includedir=${prefix}/include
+ Name: avahi-client
+ Description: Avahi Multicast DNS Responder (Client Support)
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -lavahi-common -lavahi-client
++Libs: -L${libdir} -lavahi-client -lavahi-common
++Libs.private: @PTHREAD_CFLAGS@ @PTHREAD_LIBS@ @DL_LIBS@
+ Cflags: -D_REENTRANT -I${includedir}
+ Requires.private: dbus-1
+diff --git a/avahi-core.pc.in b/avahi-core.pc.in
+index 52491b4..9a21a53 100644
+--- a/avahi-core.pc.in
++++ b/avahi-core.pc.in
+@@ -6,5 +6,6 @@ includedir=${prefix}/include
+ Name: avahi-core
+ Description: Avahi Multicast DNS Responder (Embeddable Stack)
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -lavahi-common -lavahi-core
++Libs: -L${libdir} -lavahi-core -lavahi-common
++Libs.private: @PTHREAD_CFLAGS@ @PTHREAD_LIBS@
+ Cflags: -D_REENTRANT -I${includedir}
+diff --git a/configure.ac b/configure.ac
+index 0779a21..c58b8f9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -394,8 +394,10 @@ fi
+ AC_CHECK_LIB(dl, dlopen, [ AC_CHECK_HEADERS(dlfcn.h, HAVE_DLOPEN=yes, HAVE_DLOPEN=no) ], HAVE_DLOPEN=no)
+ if test "x$HAVE_DLOPEN" = "xyes" ; then
+     AC_DEFINE([HAVE_DLOPEN],1,[Have dlopen()])
++    DL_LIBS=-ldl
+ fi
+ AM_CONDITIONAL(HAVE_DLOPEN, test "x$HAVE_DLOPEN" = "xyes")
++AC_SUBST(DL_LIBS)
+ 
+ have_inotify=no
+ AC_MSG_CHECKING(for inotify)
