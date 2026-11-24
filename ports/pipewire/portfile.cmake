@@ -7,14 +7,20 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
+if("avahi" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Davahi=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Davahi=disabled)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -Dalsa=disabled
         -Daudioconvert=enabled
         -Daudiomixer=disabled
         -Daudiotestsrc=disabled
-        -Davahi=disabled
         -Dbluez5-backend-hfp-native=disabled
         -Dbluez5-backend-hsp-native=disabled
         -Dbluez5-backend-hsphfpd=disabled

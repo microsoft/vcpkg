@@ -1,6 +1,7 @@
 {
   "name": "pipewire",
   "version": "1.6.7",
+  "port-version": 1,
   "description": "Low-latency audio/video router and processor. This port only builds the client library, not the server.",
   "homepage": "https://pipewire.org",
   "license": "MIT",
@@ -11,5 +12,13 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "avahi": {
+      "description": "Build the zeroconf (mDNS/DNS-SD) modules: zeroconf-discover, raop-discover and zeroconf-publish of protocol-pulse",
+      "dependencies": [
+        "avahi"
+      ]
+    }
+  }
 }
