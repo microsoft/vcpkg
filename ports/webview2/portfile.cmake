@@ -1,5 +1,7 @@
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    # The prebuilt NuGet DLLs, including the WinRT component, lack the AppContainer flag.
+    set(VCPKG_POLICY_SKIP_APPCONTAINER_CHECK enabled)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
@@ -46,8 +48,5 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-webview2-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-webview2")
-
-# The import libraries for webview fail with "Could not find proper second linker member"
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
