@@ -202,8 +202,17 @@ function(qt_cmake_configure)
         list(APPEND _qarg_OPTIONS_MAYBE_UNUSED QT_ANDROID_API_USED_FOR_JAVA)
     endif()
 
+    # SBOM formats other than SPDX tag:value depend on Python packages found on the build machine.
+    # Keep them off by default; triplets can opt in via VCPKG_CMAKE_CONFIGURE_OPTIONS.
+    list(APPEND _qarg_OPTIONS
+        "-DQT_SBOM_GENERATE_CYDX_V1_6:BOOL=OFF"
+        "-DQT_SBOM_GENERATE_SPDX_V2_JSON:BOOL=OFF"
+    )
+
     if(NOT PORT MATCHES "qtbase")
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
+        # For CycloneDX opt-in: qtbase moves qt_cyclonedx_generator.py to tools/Qt6/bin
+        list(APPEND _qarg_OPTIONS "-DQT_CYCLONE_DX_GENERATOR_SCRIPT_PATH:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt_cyclonedx_generator.py")
     endif()
 
     if(NOT DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -264,6 +273,7 @@ function(qt_cmake_configure)
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
             QT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX
+            QT_CYCLONE_DX_GENERATOR_SCRIPT_PATH # Only used when CycloneDX SBOM generation is enabled
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype
