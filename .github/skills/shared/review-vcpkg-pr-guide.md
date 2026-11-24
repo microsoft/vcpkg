@@ -75,9 +75,9 @@ Read the PR description and conversation. Treat them as explanations, motivation
 Validate an example application in Release and Debug through every applicable integration:
 1. `find_package` -- when provided upstream or by a vcpkg-specific patch
 2. pkg-config -- when provided upstream or by a vcpkg-specific patch
-3. Direct include/link -- always: use only the installed `<triplet>/include/` as a package include path, without extra build-system macro definitions. On Windows, link every `.lib` in `<triplet>/lib/` for Release or `<triplet>/debug/lib/` for Debug. Elsewhere use the equivalent native libraries and configuration-specific directories. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`.
+3. Direct include/link -- always: use only the include directories the installed package declares for consumers, without extra build-system macro definitions. Take them from its installed CMake or pkg-config metadata, such as exported targets' `INTERFACE_INCLUDE_DIRECTORIES` or `-I` flags in `.pc` `Cflags`, together with those its dependencies declare; for a package with neither, use only `<triplet>/include/`. On Windows, link every `.lib` in `<triplet>/lib/` for Release or `<triplet>/debug/lib/` for Debug. Elsewhere use the equivalent native libraries and configuration-specific directories. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`.
 
-Ports need not provide every integration; absence of `find_package` or pkg-config support is not a defect.
+Ports need not provide every integration; absence of `find_package` or pkg-config support is not a defect. Likewise, headers that need an include subdirectory declared by the package's CMake or pkg-config metadata, such as `<triplet>/include/opencv4`, are not a defect; do not report that they fail to compile with only `<triplet>/include/`.
 
 When testing examples, select the required C++ standard (e.g. `/std:` or `-std=`). Needing that switch or lacking downstream standard metadata is not itself a failure or reason to request port changes. pkg-config `.pc` files must not add standard-selection flags because pkg-config cannot reconcile conflicting requirements.
 
