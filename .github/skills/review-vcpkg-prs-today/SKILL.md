@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 | Input | Required | Meaning |
 |---|---|---|
-| `investigation-root` | No | Directory for PR worktrees and intermediate artifacts: sources, builds, installs, logs, and examples. Defaults to `.worktrees` in the main worktree, which is the first `worktree` path printed by `git worktree list --porcelain` in the caller's directory. Never use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Directory for PR worktrees and intermediate artifacts: sources, builds, installs, logs, and examples. Defaults to `.worktrees` at the root of the caller's working tree, which is the path printed by `git rev-parse --show-toplevel` in the caller's original directory. Never use the Copilot session directory or an arbitrary long temp path. |
 
 ### Example invocations
 
