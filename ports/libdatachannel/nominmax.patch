@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 724762f..1f56680 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -61,8 +61,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ if(WIN32)
+ 	add_definitions(-DWIN32_LEAN_AND_MEAN)
++	add_definitions(-DNOMINMAX)
+ 	if(MSVC)
+-		add_definitions(-DNOMINMAX)
+ 		add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ 	endif()
+ endif()

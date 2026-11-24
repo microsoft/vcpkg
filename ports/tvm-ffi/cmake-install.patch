@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2cd9dcf..c3b07cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,10 +53,8 @@ target_include_directories(
+   tvm_ffi_header INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                            $<INSTALL_INTERFACE:include>
+ )
+-target_include_directories(
+-  tvm_ffi_header INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dlpack/include>
+-                           $<INSTALL_INTERFACE:include>
+-)
++find_package(dlpack CONFIG REQUIRED)
++target_link_libraries(tvm_ffi_header INTERFACE dlpack::dlpack)
+ 
+ # ######### Target: `tvm_ffi_objs` ##########
+ 
+@@ -130,6 +128,12 @@ endif ()
+ tvm_ffi_add_msvc_flags(tvm_ffi_objs)
+ tvm_ffi_add_target_from_obj(tvm_ffi tvm_ffi_objs)
+ target_compile_definitions(tvm_ffi_static INTERFACE TVM_FFI_EXPORTS)
++set_target_properties(tvm_ffi_testing PROPERTIES EXCLUDE_FROM_ALL ON)
++if (BUILD_SHARED_LIBS)
++  set_target_properties(tvm_ffi_static PROPERTIES EXCLUDE_FROM_ALL ON)
++else ()
++  set_target_properties(tvm_ffi_shared PROPERTIES EXCLUDE_FROM_ALL ON)
++endif ()
+ 
+ if (TVM_FFI_USE_THREADS)
+   find_package(Threads REQUIRED)
+@@ -389,16 +393,13 @@ install(
+   DESTINATION include/tvm/ffi/
+   COMPONENT tvm_ffi
+ )
+-install(
+-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dlpack/include/
+-  DESTINATION include/
+-  COMPONENT tvm_ffi
+-)
+-install(
+-  TARGETS tvm_ffi_shared
+-  DESTINATION lib
+-  COMPONENT tvm_ffi
+-)
++if (BUILD_SHARED_LIBS)
++  install(
++    TARGETS tvm_ffi_shared
++    DESTINATION lib
++    COMPONENT tvm_ffi
++  )
++endif ()
+ # if tvm_ffi_testing is built, we also install it
+ if (TARGET tvm_ffi_testing)
+   install(
+@@ -418,7 +419,7 @@ if (APPLE)
+   )
+ endif ()
+ 
+-if (NOT TVM_FFI_BUILD_PYTHON_MODULE)
++if (NOT TVM_FFI_BUILD_PYTHON_MODULE AND NOT BUILD_SHARED_LIBS)
+   # when building wheel, we do not ship static as we already ships source and dll
+   install(
+     TARGETS tvm_ffi_static

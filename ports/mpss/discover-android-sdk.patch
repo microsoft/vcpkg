@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6efc54c..febd092 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -229,16 +229,32 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+         message(FATAL_ERROR "A shared mpss-openssl library requires a shared mpss core library on Android.")
+     endif()
+ 
+-    set(MPSS_ANDROID_COMPILE_API "36" CACHE STRING
+-        "Android API level used to compile the MPSS Java sources.")
+-    if(NOT MPSS_ANDROID_COMPILE_API MATCHES "^[0-9]+$"
++    if(NOT DEFINED MPSS_ANDROID_COMPILE_API)
++        file(GLOB mpss_ANDROID_PLATFORM_JARS
++            "$ENV{ANDROID_HOME}/platforms/android-*/android.jar")
++        list(FILTER mpss_ANDROID_PLATFORM_JARS INCLUDE
++            REGEX "/android-[0-9]+(\\.[0-9]+)?/android\\.jar$")
++        list(SORT mpss_ANDROID_PLATFORM_JARS COMPARE NATURAL ORDER DESCENDING)
++        if(NOT mpss_ANDROID_PLATFORM_JARS)
++            message(FATAL_ERROR
++                "Android compile SDK not found. Set ANDROID_HOME and install an Android SDK platform.")
++        endif()
++        list(GET mpss_ANDROID_PLATFORM_JARS 0 mpss_ANDROID_PLATFORM_JAR)
++        get_filename_component(mpss_ANDROID_PLATFORM_DIR "${mpss_ANDROID_PLATFORM_JAR}" DIRECTORY)
++        get_filename_component(mpss_ANDROID_PLATFORM_NAME "${mpss_ANDROID_PLATFORM_DIR}" NAME)
++        string(REGEX REPLACE "^android-" "" mpss_ANDROID_COMPILE_API "${mpss_ANDROID_PLATFORM_NAME}")
++        set(MPSS_ANDROID_COMPILE_API "${mpss_ANDROID_COMPILE_API}" CACHE STRING
++            "Android API level used to compile the MPSS Java sources.")
++    endif()
++    if(NOT MPSS_ANDROID_COMPILE_API MATCHES "^[0-9]+(\\.[0-9]+)?$"
+         OR MPSS_ANDROID_COMPILE_API VERSION_LESS mpss_ANDROID_MIN_API)
+         message(FATAL_ERROR
+             "MPSS_ANDROID_COMPILE_API must be a numeric API level greater "
+             "than or equal to the Android minimum API level.")
+     endif()
+ 
+-    set(MPSS_ANDROID_BUILD_TOOLS_VERSION "${MPSS_ANDROID_COMPILE_API}.0.0"
++    string(REGEX MATCH "^[0-9]+" mpss_ANDROID_COMPILE_API_MAJOR "${MPSS_ANDROID_COMPILE_API}")
++    set(MPSS_ANDROID_BUILD_TOOLS_VERSION "${mpss_ANDROID_COMPILE_API_MAJOR}.0.0"
+         CACHE STRING "Android SDK Build Tools version used by the test host.")
+     if(NOT MPSS_ANDROID_BUILD_TOOLS_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+         message(FATAL_ERROR

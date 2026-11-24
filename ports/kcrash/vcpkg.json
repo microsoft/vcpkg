@@ -1,7 +1,7 @@
 {
   "name": "kcrash",
   "version": "6.31.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "KCrash provides support for intercepting and handling application crashes.",
   "homepage": "https://invent.kde.org/frameworks/kcrash",
   "documentation": "https://api.kde.org/kcrash-index.html",

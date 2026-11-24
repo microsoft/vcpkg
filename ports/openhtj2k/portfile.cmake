@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osamu620/OpenHTJ2K
     REF "v${VERSION}"
-    SHA512 b9f43dc9a36e24fd26b4e4200557a45905055859418cfd18e8f950c6fb269265397dff4f6518ac7cd415e04f13b094c00165d699c9503cea0d6f119f66d85fdb
+    SHA512 bad38c7f8f2f2375c19ce412d2871a6e8e380a563c2b4fc3a92f86213fba31277fb0ebb2607620f6eedc05474f008351e228b8239519cce133b4025eb2a65571
     HEAD_REF main
 )
 
@@ -50,7 +50,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES open_htj2k_dec open_htj2k_enc AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES open_htj2k_dec open_htj2k_enc open_htj2k_transcode AUTO_CLEAN)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

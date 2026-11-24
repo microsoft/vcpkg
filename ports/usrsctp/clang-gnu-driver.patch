@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ba935f5..fa37152 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -155,7 +155,8 @@ endif ()
+ #################################################
+ 
+ # Determine if compiler is Visual Studio compiler or Clang in MSVC compatible mode
+-if (CMAKE_C_COMPILER_ID MATCHES "MSVC" OR CMAKE_C_SIMULATE_ID MATCHES "MSVC")
++# (clang-cl, not clang targeting the MSVC ABI through its GNU-style driver)
++if (CMAKE_C_COMPILER_ID MATCHES "MSVC" OR (CMAKE_C_SIMULATE_ID MATCHES "MSVC" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "GNU"))
+   set(C_COMPILER_IS_MSVC_LIKE TRUE)
+ endif()
+ 

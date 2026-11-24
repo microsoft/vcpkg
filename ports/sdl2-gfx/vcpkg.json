@@ -1,8 +1,9 @@
 {
   "name": "sdl2-gfx",
-  "version": "1.0.4",
-  "port-version": 11,
+  "version": "1.1.0",
   "description": "Graphics primitives (line, circle, rectangle etc.) with AA support, rotozoomer and other drawing related support functions wrapped up in a C based add-on library for the Simple Direct Media (SDL) cross-platform API layer.",
+  "homepage": "https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "sdl2",

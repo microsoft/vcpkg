@@ -2,3 +2,5 @@ godot-cpp provides CMake targets:
 
   find_package(unofficial-godot-cpp CONFIG REQUIRED)
   target_link_libraries(main PRIVATE unofficial::godot::cpp)
+
+The prebuilt bindings target the Godot 4.4 API and require Godot 4.4 or later.

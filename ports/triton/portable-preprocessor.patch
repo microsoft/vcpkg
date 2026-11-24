@@ -1,0 +1,60 @@
+diff --git a/src/libtriton/includes/triton/aarch64.spec b/src/libtriton/includes/triton/aarch64.spec
+index a5bcabd..6a4cba6 100644
+--- a/src/libtriton/includes/triton/aarch64.spec
++++ b/src/libtriton/includes/triton/aarch64.spec
+@@ -1,6 +1,6 @@
+ #pragma warning(disable:4067)
+ 
+-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
++#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+ #error REG_SPEC have to be specified before including specs
+ #endif
+ 
+diff --git a/src/libtriton/includes/triton/arm32.spec b/src/libtriton/includes/triton/arm32.spec
+index 4b446fc..1bfa95b 100644
+--- a/src/libtriton/includes/triton/arm32.spec
++++ b/src/libtriton/includes/triton/arm32.spec
+@@ -1,6 +1,6 @@
+ #pragma warning(disable:4067)
+ 
+-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
++#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+ #error REG_SPEC have to be specified before including specs
+ #endif
+ 
+diff --git a/src/libtriton/includes/triton/riscv32.spec b/src/libtriton/includes/triton/riscv32.spec
+index 15b7d5a..2ee97f2 100644
+--- a/src/libtriton/includes/triton/riscv32.spec
++++ b/src/libtriton/includes/triton/riscv32.spec
+@@ -1,6 +1,6 @@
+ #pragma warning(disable:4067)
+ 
+-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
++#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+ #error REG_SPEC have to be specified before including specs
+ #endif
+ 
+diff --git a/src/libtriton/includes/triton/riscv64.spec b/src/libtriton/includes/triton/riscv64.spec
+index d742262..9c245b0 100644
+--- a/src/libtriton/includes/triton/riscv64.spec
++++ b/src/libtriton/includes/triton/riscv64.spec
+@@ -1,6 +1,6 @@
+ #pragma warning(disable:4067)
+ 
+-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
++#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+ #error REG_SPEC have to be specified before including specs
+ #endif
+ 
+diff --git a/src/libtriton/includes/triton/x86.spec b/src/libtriton/includes/triton/x86.spec
+index 270b76c..9835c76 100644
+--- a/src/libtriton/includes/triton/x86.spec
++++ b/src/libtriton/includes/triton/x86.spec
+@@ -1,6 +1,6 @@
+ #pragma warning(disable:4067)
+ 
+-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
++#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+ #error REG_SPEC have to be specified before including specs
+ #endif
+ 

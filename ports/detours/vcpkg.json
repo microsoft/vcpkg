@@ -1,6 +1,6 @@
 {
   "name": "detours",
-  "version-date": "2025-06-20",
+  "version-date": "2026-09-29",
   "description": "Detours is a software package for monitoring and instrumenting API calls on Windows.",
   "homepage": "https://github.com/microsoft/Detours",
   "license": "MIT",

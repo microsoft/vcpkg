@@ -1,10 +1,9 @@
 {
   "name": "libcamera",
-  "version": "0.5.0",
-  "port-version": 1,
+  "version": "0.8.0",
   "description": "A complex camera support library for Linux, Android, and ChromeOS",
-  "homepage": "https://git.libcamera.org/libcamera/libcamera.git/",
-  "license": "LGPL-2.1-or-later",
+  "homepage": "https://gitlab.freedesktop.org/camera/libcamera/",
+  "license": "LGPL-2.1-or-later AND GPL-2.0-or-later AND BSD-2-Clause AND CC0-1.0",
   "supports": "linux",
   "dependencies": [
     "elfutils",

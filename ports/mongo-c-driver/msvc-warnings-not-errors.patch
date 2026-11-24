@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b68be1..852e7f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -295,7 +295,7 @@ if(ENABLE_MAINTAINER_FLAGS)
+       gnu-like:-Wno-missing-braces
+       # Sign-comparison-mismatch:
+       gnu-like:-Wsign-compare
+-      msvc:/we4018
++      msvc:/w34018
+    )
+ endif()
+ 
+diff --git a/build/cmake/MongoC-Warnings.cmake b/build/cmake/MongoC-Warnings.cmake
+index 8577c39..f18b29c 100644
+--- a/build/cmake/MongoC-Warnings.cmake
++++ b/build/cmake/MongoC-Warnings.cmake
+@@ -68,23 +68,23 @@ set (is_c_lang "$<COMPILE_LANGUAGE:C>")
+ 
+ set (mongoc-warning-options "")
+ 
+-# These below warnings should always be unconditional hard errors, as the code is
+-# almost definitely broken
++# Keep MSVC diagnostics enabled without promoting them to errors: newer
++# compilers also diagnose valid C pointer-to-bool conversions with C4047.
+ mongoc_add_warning_options (
+      # Implicit function or variable declarations
+-     gnu-like:lang-c:-Werror=implicit msvc:/we4013 msvc:/we4431
++     gnu-like:lang-c:-Werror=implicit msvc:/w34013 msvc:/w34431
+      # Missing return types/statements
+-     gnu-like:-Werror=return-type msvc:/we4716
++     gnu-like:-Werror=return-type msvc:/w34716
+      # Incompatible pointer types
+-     gnu-like:lang-c:not-gcc-lt5:-Werror=incompatible-pointer-types msvc:/we4113
++     gnu-like:lang-c:not-gcc-lt5:-Werror=incompatible-pointer-types msvc:/w34113
+      # Integral/pointer conversions
+-     gnu-like:lang-c:not-gcc-lt5:-Werror=int-conversion msvc:/we4047
++     gnu-like:lang-c:not-gcc-lt5:-Werror=int-conversion msvc:/w34047
+      # Discarding qualifiers
+      gnu:lang-c:not-gcc-lt5:-Werror=discarded-qualifiers
+      clang:lang-c:-Werror=ignored-qualifiers
+-     msvc:/we4090
++     msvc:/w34090
+      # Definite use of uninitialized value
+-     gnu-like:-Werror=uninitialized msvc:/we4700
++     gnu-like:-Werror=uninitialized msvc:/w34700
+ 
+      # Format strings.
+      gnu-like:-Werror=format

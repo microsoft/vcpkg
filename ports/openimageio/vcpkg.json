@@ -1,6 +1,7 @@
 {
   "name": "openimageio",
   "version": "3.2.1.2",
+  "port-version": 1,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/AcademySoftwareFoundation/OpenImageIO",
   "license": "Apache-2.0",
@@ -33,7 +34,9 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "avresample"
+            "avcodec",
+            "avformat",
+            "swscale"
           ]
         }
       ]

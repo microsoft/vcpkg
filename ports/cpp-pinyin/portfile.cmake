@@ -1,26 +1,44 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfgitpr/cpp-pinyin
-    REF  "${VERSION}"
-    SHA512 5ad5425f5c804607c90c801fac722971a6ddac39914807b9a0885dfcdcc0c2afc577893956164af4c2e1d8f87a3a63be884215d84be37e861abc25b98ab565ec
-    HEAD_REF main
+    REF  "v${VERSION}"
+    SHA512 e406b11601455e761eaf060ef064fba6310de33224e0f13751bd8a2557e0693680a9cfc221251bba9cfadd1e8fa02e87c0e733790833956e8217ae183deda5ee
+    HEAD_REF v2
+    PATCHES
+        fix-mac-static-build.patch # https://github.com/wolfgitpr/cpp-pinyin/pull/14
+        vcpkg-dict-layout.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CPP_PINYIN_BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DCPP_PINYIN_BUILD_STATIC=${CPP_PINYIN_BUILD_STATIC}
-        -DCPP_PINYIN_BUILD_TESTS=FALSE
-        -DCPP_PINYIN_VCPKG_DICT_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/cpp-pinyin2" PACKAGE_NAME cpp-pinyin2)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cpp-pinyin2d.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cpp-pinyin2.pc"
+        "-lcpp-pinyin2" "-lcpp-pinyin2d")
+endif()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpp-pinyin2/core/PinyinGlobal.h"
+        "#ifdef CPP_PINYIN2_STATIC" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpp-pinyin2/core/PinyinGlobal.h"
+        "#ifdef CPP_PINYIN2_STATIC" "#if 0")
+endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
+    "${SOURCE_PATH}/data/dialects/mandarin/License.txt"
+    "${SOURCE_PATH}/data/dialects/cantonese/License.txt"
+)

@@ -8,12 +8,12 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
     REF "mesa-${VERSION}"
-    SHA512 0e638a9351053df9e824860dc8680567c40dd6b3569c803d82cb4bfcf18b6151740eb03f6955ea596f86abbb062a64b4a893695b651b9c40d06be293f78537fc
+    SHA512 6fb28eac175d007f95aa2b4d790e01af2e14d6c73b1ef4e9e58849cce022e82eb79a71ee2cdae67285d61cea0c2a80de4c12a5aa888beaded273c0ac4d9cd949
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
     PATCHES
         001-windows-gles-dispatch.patch
-        001-workaround-we4189.patch # https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16530
+        001-warnings-not-errors.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
@@ -202,4 +202,6 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/licenses/BSL-1.0"
         "${SOURCE_PATH}/licenses/MIT"
         "${SOURCE_PATH}/licenses/SGI-B-2.0"
+        "${SOURCE_PATH}/src/util/softfloat.h"
+        "${SOURCE_PATH}/src/util/xxhash.h"
 )

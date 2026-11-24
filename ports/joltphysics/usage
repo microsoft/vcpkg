@@ -1,0 +1,7 @@
+joltphysics provides CMake targets:
+
+    find_package(Jolt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Jolt::Jolt)
+
+When linking manually, use Jolt from lib for Release or Joltd from debug/lib
+for Debug. Define JPH_DEBUG when compiling against Joltd only.

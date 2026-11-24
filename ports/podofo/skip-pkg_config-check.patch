@@ -1,0 +1,14 @@
+diff --git a/src/podofo/CMakeLists.txt b/src/podofo/CMakeLists.txt
+index 8bb1beac..28ec16b6 100644
+--- a/src/podofo/CMakeLists.txt
++++ b/src/podofo/CMakeLists.txt
+@@ -128,8 +128,7 @@ target_compile_features(${PODOFO_TARGET} PUBLIC cxx_std_17)
+ 
+ # Create a pkg-config file.
+ # Add a version to the file name corresponding to the API compatibility.
+-find_program(PKG_CONFIG_FOUND pkg-config pkgconf)
+-if(PKG_CONFIG_FOUND)
++if(1)
+     configure_file(
+         "libpodofo.pc.in"
+         "${PROJECT_BINARY_DIR}/libpodofo.pc"

@@ -1,7 +1,7 @@
 {
   "name": "bitserializer",
-  "version": "0.85",
-  "description": "Multi-format serialization library (JSON, XML, YAML, CSV, MsgPack)",
+  "version": "0.91",
+  "description": "C++17 serialization to JSON/JSONC, XML, YAML, CSV and MsgPack via one API, with self-contained built-in formats and optional fast_float acceleration.",
   "homepage": "https://github.com/PavelKisliak/BitSerializer",
   "license": "MIT",
   "dependencies": [
@@ -14,9 +14,21 @@
       "host": true
     }
   ],
+  "default-features": [
+    "fast-float"
+  ],
   "features": {
     "csv-archive": {
       "description": "Module for support CSV"
+    },
+    "fast-float": {
+      "description": "Use fast_float for faster floating-point parsing",
+      "dependencies": [
+        "fast-float"
+      ]
+    },
+    "json-archive": {
+      "description": "Module for support JSON (built-in implementation)"
     },
     "msgpack-archive": {
       "description": "Module for support MsgPack"
@@ -28,7 +40,7 @@
       ]
     },
     "rapidjson-archive": {
-      "description": "Module for support JSON (implementation based on the RapidJson library)",
+      "description": "Module for support JSON (deprecated; use json-archive instead)",
       "dependencies": [
         "rapidjson"
       ]

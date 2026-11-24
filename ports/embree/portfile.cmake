@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RenderKit/embree
     REF v${VERSION}
-    SHA512 5700d6e16b3e9e5f0d087e421c831e14f054769dfa30edb45791fee3ab33c698355d8fad86791cea6bf200ebe7ce64f0394063d29dd927afe93d345c2cd6897a
+    SHA512 eaa3bb1ea684d23cad954bc1e95c60e82da08fc4dab059001eb346cf891d248a6ec6933983475cc8e92f99484c26c667e4e17fc75cd3cf6516fb04c0efbf0815
     HEAD_REF master
     PATCHES
         avoid-library-conflicts.diff
@@ -15,11 +15,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" static EMBREE_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        backface-culling      EMBREE_BACKFACE_CULLING 
-        compact-polys         EMBREE_COMPACT_POLYS   
-        filter-function       EMBREE_FILTER_FUNCTION  
-        ray-mask              EMBREE_RAY_MASK 
-        ray-packets           EMBREE_RAY_PACKETS 
+        backface-culling      EMBREE_BACKFACE_CULLING
+        compact-polys         EMBREE_COMPACT_POLYS
+        filter-function       EMBREE_FILTER_FUNCTION
+        ray-mask              EMBREE_RAY_MASK
+        ray-packets           EMBREE_RAY_PACKETS
 
         geometry-triangle     EMBREE_GEOMETRY_TRIANGLE
         geometry-quad         EMBREE_GEOMETRY_QUAD
@@ -56,7 +56,12 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    list(APPEND FEATURE_OPTIONS "-DCOMPILER_SUPPORTS_AVX512=OFF")
+    list(APPEND FEATURE_OPTIONS
+        "-DCOMPILER_SUPPORTS_AVX512=OFF"
+        "-DEMBREE_ISA_AVX512=OFF"
+        "-DCOMPILER_SUPPORTS_APX=OFF"
+        "-DEMBREE_ISA_APX=OFF"
+    )
 endif()
 
 vcpkg_cmake_configure(

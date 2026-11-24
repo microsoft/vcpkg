@@ -1,0 +1,4 @@
+soralog provides CMake targets:
+
+  find_package(soralog CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE soralog::soralog soralog::yaml)

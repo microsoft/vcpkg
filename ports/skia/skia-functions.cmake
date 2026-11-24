@@ -1,22 +1,33 @@
-# Declare a named external dependency for download with vcpkg_from_git,
-# and validate against upstream's DEPS.
-function(declare_external_from_git name)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URL;REF;LICENSE_FILE" "")
+# Declare a named external source and validate against upstream's DEPS.
+function(declare_external_from_source name)
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URL;REPO;REF;SHA512;LICENSE_FILE" "")
+    if(arg_REPO)
+        if(arg_URL)
+            message(FATAL_ERROR "Specify REPO or URL, not both.")
+        endif()
+        set(arg_URL "https://github.com/${arg_REPO}")
+    endif()
     if(NOT arg_URL OR NOT arg_REF OR NOT arg_LICENSE_FILE)
-        message(FATAL_ERROR "Arguments URL, REF and LICENSE_FILE are required.")
+        message(FATAL_ERROR "Arguments URL or REPO, REF and LICENSE_FILE are required.")
     endif()
     set(actual "${arg_URL}@${arg_REF}")
+    string(REPLACE ".git@" "@" actual "${actual}")
     file(STRINGS "${SOURCE_PATH}/DEPS" upstream REGEX "\"third_party/externals/${name}\"")
     string(REPLACE "https://chromium.googlesource.com/external/github.com" "https://github.com" upstream "${upstream}")
     string(REPLACE "https://skia.googlesource.com/external/github.com" "https://github.com" upstream "${upstream}")
-    string(FIND "${upstream}" "${arg_URL}@${arg_REF}" pos)
+    string(REPLACE ".git@" "@" upstream "${upstream}")
+    string(FIND "${upstream}" "${actual}" pos)
     if(pos STREQUAL "-1")
         string(REGEX REPLACE "^[^:]*:  *" "" upstream "${upstream}")
         message(WARNING "Dependency ${name} diverges from upstream. Upstream: ${upstream} Actual: \"${actual}\"")
     endif()
     set(skia_external_license_${name} "${arg_LICENSE_FILE}" PARENT_SCOPE)
     list(REMOVE_ITEM ARGN "LICENSE_FILE" "${arg_LICENSE_FILE}")
-    set(skia_external_git_${name} "${ARGN}" PARENT_SCOPE)
+    if(arg_REPO)
+        set(skia_external_github_${name} "${ARGN}" PARENT_SCOPE)
+    else()
+        set(skia_external_git_${name} "${ARGN}" PARENT_SCOPE)
+    endif()
 endfunction()
 
 # Declare a named external dependencies to be resolved via pkgconfig.
@@ -37,12 +48,12 @@ function(get_externals)
     file(MAKE_DIRECTORY "${licenses_dir}")
 
     list(REMOVE_DUPLICATES ARGN)
-    set(from_git "")
+    set(from_source "")
     set(from_pkgconfig "")
     set(from_vcpkg "")
     foreach(name IN LISTS ARGN)
-        if(DEFINED "skia_external_git_${name}")
-            list(APPEND from_git "${name}")
+        if(DEFINED "skia_external_github_${name}" OR DEFINED "skia_external_git_${name}")
+            list(APPEND from_source "${name}")
         elseif(DEFINED "skia_external_pkgconfig_${name}")
             list(APPEND from_pkgconfig "${name}")
         elseif(DEFINED "skia_external_vcpkg_${name}")
@@ -51,7 +62,7 @@ function(get_externals)
             message(FATAL_ERROR "Unknown external dependency '${name}'")
         endif()
     endforeach()
-    foreach(name IN LISTS from_git)
+    foreach(name IN LISTS from_source)
         set(dir "third_party/externals/${name}")
         if(EXISTS "${SOURCE_PATH}/${dir}")
             message(STATUS "Using existing ${dir}")
@@ -59,10 +70,17 @@ function(get_externals)
         endif()
         message(STATUS "Creating ${dir}")
         file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/externals")
-        vcpkg_from_git(
-            OUT_SOURCE_PATH staging_dir
-            ${skia_external_git_${name}}
-        )
+        if(DEFINED "skia_external_github_${name}")
+            vcpkg_from_github(
+                OUT_SOURCE_PATH staging_dir
+                ${skia_external_github_${name}}
+            )
+        else()
+            vcpkg_from_git(
+                OUT_SOURCE_PATH staging_dir
+                ${skia_external_git_${name}}
+            )
+        endif()
         file(RENAME "${staging_dir}" "${SOURCE_PATH}/${dir}")
 
         set(license_file "${SOURCE_PATH}/${dir}/${skia_external_license_${name}}")
@@ -117,13 +135,13 @@ function(third_party_from_pkgconfig gn_group)
             # At least icu must be newer than in Windows SDK
             foreach(name IN LISTS ldflags)
                 set(filepath NOTFOUND)
-                
+
                 set(possible_names "${name}")
                 string(REGEX REPLACE "\\.lib$" ".dll.lib" dll_lib_name "${name}")
                 if(NOT dll_lib_name STREQUAL name)
                     list(APPEND possible_names "${dll_lib_name}")
                 endif()
-                
+
                 find_file(filepath NAMES ${possible_names} PATHS ${lib_dirs} NO_DEFAULT_PATH NO_CACHE)
                 if(filepath)
                     list(APPEND libs_with_path "${filepath}")

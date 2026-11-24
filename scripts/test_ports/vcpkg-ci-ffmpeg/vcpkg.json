@@ -185,14 +185,6 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(arm64 & windows) & !android"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
             "qsv"
           ],
           "platform": "(x64 | x86) & (windows | linux) & !uwp"

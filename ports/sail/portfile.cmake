@@ -2,18 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 ffb9b0c089e8b0acd10df8cee0675e0b41b8e9ccb11f9efb74d91d9c9acf04c4e61fa97abff1948d2b6495398848418f34105aad6cbd01494cec624d306892af
+    SHA512 66d1147f51cc4db7dd794c1a5772416d73aea3f96d6f1c852c3c6f7c3297ba5e31b7e08eeea0308edf521bee8a328ae59cd9a49be75961825f072f624ba8b27b
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff
-        fix-android-log.patch
-        fix-ffmpeg-opencl.patch
         fix-heif.patch
         fix-include-directory.patch
-        fix-jpegxl-pkg-config.patch # https://github.com/microsoft/vcpkg/issues/54477
-        fix-libraw-cmake.patch # https://github.com/microsoft/vcpkg/issues/54471
-        fix-release-only-triplet.patch
-        fix-swscale-link-order.patch
+        fix-jpegxl-pkg-config.patch
+        fix-libraw-cmake.patch
 )
 
 # Enable selected codecs

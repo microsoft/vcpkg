@@ -1,8 +1,9 @@
-vcpkg_from_git(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.libcamera.org/libcamera/libcamera.git
-    REF 058f589ae36170935e537910f2c303b1c3ea03b3
-    FETCH_REF "v${VERSION}"
+    REPO camera/libcamera
+    REF "v${VERSION}"
+    SHA512 21ada092a1944c3476e0a254fe82d2775d2eb833d931dd051bd551a9f12ae596b3cd57f3792335d4ad86479e2247d23056d30e2631aa620897d067002c88e060
     HEAD_REF master
     PATCHES
         fix-absolute-paths.patch
@@ -25,6 +26,11 @@ else()
     list(APPEND options "-Dtracing=disabled")
 endif()
 
+set(pipelines "simple,uvcvideo")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(pipelines "ipu3,${pipelines}")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -33,8 +39,11 @@ vcpkg_configure_meson(
         -Ddocumentation=disabled
         -Dgstreamer=enabled
         -Dlc-compliance=disabled # Test appplication
+        -Dpipelines=${pipelines}
         -Dpycamera=disabled # experimental feature, going to leave for later
         -Dqcam=disabled # Test application
+        -Drpi-awb-nn=disabled
+        -Dsoftisp-gpu=disabled
         -Dtest=false # Unit tests
         -Dv4l2=enabled
         -Dudev=enabled
@@ -43,7 +52,17 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.rst")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.rst"
+    "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt"
+    "${SOURCE_PATH}/LICENSES/GPL-2.0-or-later.txt"
+    "${SOURCE_PATH}/LICENSES/BSD-2-Clause.txt"
+    "${SOURCE_PATH}/src/ipa/libipa/colours.h"
+    "${SOURCE_PATH}/src/ipa/libipa/histogram.h"
+    "${SOURCE_PATH}/LICENSES/CC0-1.0.txt"
+)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wirestead/wirestead
     REF v${VERSION}
-    SHA512 ae1534f53a78c94b82c57a5470aafb996b982ca3331c2e4e6eb4a0e966e5fc9e05178327be41c37f2a4ddd2775fea4d702a1b821f31fc2a94bada1701e9c50e7
+    SHA512 1a0c0855ec5ffc6c65c77ca5312dfc04cecf6118a8169a6c5f0c54aed91f01699d7eda251dd588bb09126be1feeb81d284ceaae8b428199a56766f6f1e398d37
     HEAD_REF main
 )
 
