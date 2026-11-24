@@ -1,6 +1,6 @@
 {
   "name": "sdl-painter",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Modern C++17 2D drawing library for SDL3 with interchangeable OpenGL 3.3 and Vulkan 1.1 backends.",
   "homepage": "https://github.com/yazilimperver/sdl-painter",
   "license": "MIT",

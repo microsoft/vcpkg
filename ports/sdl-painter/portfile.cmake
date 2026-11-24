@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yazilimperver/sdl-painter
     REF "v${VERSION}"
-    SHA512 7f05eafbf4bed7162290739c17f45f9b6f34692a78d6c3026475ae3418ee77def88b6e4f088554fed269b3ac2de9cb6813d118663e4cadb908138b7c9228a779
+    SHA512 fb4bfc044183cf5411a8c5d023f70208eaab0844ffac6f0cf18b1c321aa59a86ae6623c36c782aea7fef82f0a6ab0340c249e94e4a00dede1da61f060cab5f66
     HEAD_REF main
 )
 
