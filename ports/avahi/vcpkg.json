@@ -1,0 +1,19 @@
+{
+  "name": "avahi",
+  "version": "0.9-rc5",
+  "description": "Avahi client libraries, a zeroconf (mDNS/DNS-SD) implementation.",
+  "homepage": "https://avahi.org",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux | bsd",
+  "dependencies": [
+    "dbus",
+    {
+      "name": "gettext",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
