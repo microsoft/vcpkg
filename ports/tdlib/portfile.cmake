@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tdlib/td
-    REF 23383aef218a3123f02b744bfa91bde21056a814
+    REF f10611ee1f03f91ddae8185483a1ccfd3d664668
     HEAD_REF master
-    SHA512 3e1b73d9ead53868905d33fc3739a94885dd7a3c24df169a3d93f49a114642a0458db2e651894786b21b3566641c08a6574ad923709482549c1b7680b8d02902
+    SHA512 683bbce0ce41ca38bfc60da28b8eaff4e5c4d50093b581a29ad722d80f92498da8ce6012667a83b259af721c081d811042a073735ccae97d9b67f4c2eaa3907f
     PATCHES
         fix-cross-compile.patch
         # Exclude uninstalled benchmarks/CLI from default builds and disable ambient PHP documentation generation.
         fix-packaging.patch
+        fix-pkgconfig-configurations.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
@@ -111,13 +112,28 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBRARIES)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBRARIES)
 
+set(msvc_pdb_options "")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # Keep compiler detection from changing the existing configure options.
+    function(tdlib_get_msvc_pdb_options out_var)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+            set("${out_var}" "-DCMAKE_PROJECT_TDLib_INCLUDE=${CMAKE_CURRENT_FUNCTION_LIST_DIR}/cmake-project-include.cmake" PARENT_SCOPE)
+        endif()
+    endfunction()
+    tdlib_get_msvc_pdb_options(msvc_pdb_options)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${msvc_pdb_options}
         -DTD_INSTALL_SHARED_LIBRARIES=${BUILD_DYNAMIC_LIBRARIES}
         -DTD_INSTALL_STATIC_LIBRARIES=${BUILD_STATIC_LIBRARIES}
         -DTD_ENABLE_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DTD_ENABLE_DOTNET=OFF
+        -DTD_WITH_ABSEIL=OFF
         -DTD_GENERATE_SOURCE_FILES=OFF
         -DTD_E2E_ONLY=OFF
         -DTD_ENABLE_LTO=${CMAKE_HOST_WIN32}
@@ -135,6 +151,27 @@ vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
 vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_cmake_install()
+if(msvc_pdb_options AND BUILD_STATIC_LIBRARIES)
+    function(tdlib_copy_compile_pdbs config build_suffix destination)
+        file(GLOB libraries LIST_DIRECTORIES false "${destination}/*.lib")
+        if(NOT libraries)
+            message(FATAL_ERROR "No TDLib static libraries found in ${destination}")
+        endif()
+        foreach(library IN LISTS libraries)
+            get_filename_component(name "${library}" NAME_WE)
+            set(pdb "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${build_suffix}/compiler-pdb/${config}/${name}.pdb")
+            if(NOT EXISTS "${pdb}")
+                message(FATAL_ERROR "Compiler PDB for ${library} not found: ${pdb}")
+            endif()
+            file(INSTALL "${pdb}" DESTINATION "${destination}")
+        endforeach()
+    endfunction()
+
+    tdlib_copy_compile_pdbs("Release" "rel" "${CURRENT_PACKAGES_DIR}/lib")
+    if(NOT VCPKG_BUILD_TYPE)
+        tdlib_copy_compile_pdbs("Debug" "dbg" "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Td")
 vcpkg_copy_pdbs()
