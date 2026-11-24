@@ -28,7 +28,6 @@
             "avdevice",
             "avfilter",
             "avformat",
-            "avresample",
             "bzip2",
             "freetype",
             "gpl",
