@@ -1,8 +1,8 @@
 diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
-index f01a8a0..e1c24eb 100644
+index 57d57758..9006b8a9 100644
 --- a/opensubdiv/CMakeLists.txt
 +++ b/opensubdiv/CMakeLists.txt
-@@ -122,6 +122,7 @@ if (NOT NO_LIB)
+@@ -106,6 +106,7 @@ if (NOT NO_LIB)
  
      #---------------------------------------------------------------------------
  
@@ -10,7 +10,7 @@ index f01a8a0..e1c24eb 100644
      # Build static libs ------------------------------------
      add_library(osd_static_cpu
          STATIC
-@@ -169,6 +170,7 @@ if (NOT NO_LIB)
+@@ -163,6 +164,7 @@ if (NOT NO_LIB)
  
          install( TARGETS osd_static_gpu EXPORT opensubdiv-targets DESTINATION "${CMAKE_LIBDIR_BASE}" )
      endif()
@@ -18,7 +18,7 @@ index f01a8a0..e1c24eb 100644
  
  
      # Build dynamic libs  ----------------------------------
-@@ -284,6 +286,7 @@ if (NOT NO_LIB)
+@@ -288,6 +290,7 @@ if (NOT NO_LIB)
          list(APPEND PUBLIC_HEADER_FILES "version.h")
  
          #static framework
@@ -26,7 +26,7 @@ index f01a8a0..e1c24eb 100644
          add_library(osd_static_framework
              STATIC
              version.cpp
-@@ -330,6 +333,7 @@ if (NOT NO_LIB)
+@@ -334,6 +337,7 @@ if (NOT NO_LIB)
              "Versions/Current/Headers"
              "$<TARGET_FILE_DIR:osd_static_framework>/../../Headers"
          )

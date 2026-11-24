@@ -1,11 +1,10 @@
 {
   "name": "opensubdiv",
-  "version-semver": "3.5.0",
-  "port-version": 3,
+  "version-semver": "3.8.0",
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
-  "license": "Apache-2.0",
-  "supports": "!(arm & android) & !uwp",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -19,12 +18,14 @@
   "features": {
     "cuda": {
       "description": "Enable CUDA backend",
+      "supports": "!x86",
       "dependencies": [
         "cuda"
       ]
     },
     "dx": {
       "description": "Enable DirectX support",
+      "supports": "windows",
       "dependencies": [
         {
           "name": "directxsdk",
@@ -34,20 +35,22 @@
         }
       ]
     },
-    "examples": {
-      "description": "Build examples"
-    },
     "glew": {
       "description": "Enable GLEW wrapper library",
       "dependencies": [
-        "glew"
+        "glew",
+        {
+          "name": "opensubdiv",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
-    "glfw": {
-      "description": "Build components depending on GLFW",
-      "dependencies": [
-        "glfw3"
-      ]
+    "metal": {
+      "description": "Enable Metal backend",
+      "supports": "osx | ios"
     },
     "omp": {
       "description": "Enable OpenMP backend"
@@ -60,15 +63,13 @@
     },
     "opengl": {
       "description": "Enable OpenGL backend",
+      "supports": "!(android | ios)",
       "dependencies": [
         "opengl"
       ]
     },
-    "ptex": {
-      "description": "Enable Ptex support",
-      "dependencies": [
-        "ptex"
-      ]
+    "patch-shader-source": {
+      "description": "Enable patch shader source support"
     },
     "tbb": {
       "description": "Enable TBB backend",
@@ -78,9 +79,6 @@
     },
     "true-deriv-eval": {
       "description": "Enable true derivative evaluation for Gregory basis patches"
-    },
-    "tutorials": {
-      "description": "Enable tutorials build"
     }
   }
 }

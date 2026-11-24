@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b69912ae..dcde4297 100644
+index d6bcf4b7..0cc378cd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -218,7 +218,7 @@ elseif(MSVC)
+@@ -221,7 +221,7 @@ elseif(MSVC)
  
      list(APPEND OSD_COMPILER_FLAGS
                      /W3     # Use warning level recommended for production purposes.
@@ -11,3 +11,18 @@ index b69912ae..dcde4297 100644
  
                      # warning C4005: macro redefinition
                      /wd4005
+@@ -263,12 +263,14 @@ elseif(MSVC)
+     if(MSVC_STATIC_CRT)
+         message(STATUS "Using static MSVC CRT")
+         # http://stackoverflow.com/a/32128977/486990
++        if(0) # vcpkg sets CMAKE_MSVC_RUNTIME_LIBRARY
+         add_compile_options(
+             "$<$<CONFIG:Debug>:/MTd>"
+             "$<$<CONFIG:RelWithDebInfo>:/MT>"
+             "$<$<CONFIG:Release>:/MT>"
+             "$<$<CONFIG:MinSizeRel>:/MT>"
+         )
++        endif()
+     else()
+         # Turn off a duplicate LIBCMT linker warning
+         set(CMAKE_EXE_LINKER_FLAGS

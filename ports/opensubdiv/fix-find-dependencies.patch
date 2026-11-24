@@ -1,0 +1,87 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d6bcf4b7..313ba860 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -345,33 +345,28 @@ endif()
+ 
+ # Check for dependencies
+ if(NOT NO_OMP)
+-    find_package(OpenMP)
++    find_package(OpenMP REQUIRED)
+ endif()
+ if(NOT NO_TBB)
+-    find_package(TBB 2018 CONFIG COMPONENTS tbb)
++    find_package(TBB 2018 CONFIG REQUIRED COMPONENTS tbb)
+ endif()
+ if (NOT NO_OPENGL)
+-    find_package(OpenGL)
++    find_package(OpenGL REQUIRED)
+ endif()
+-find_package(OpenGLES)
++# find_package(OpenGLES)
+ if(NOT NO_OPENCL)
+     if(NOT NO_CLEW)
+         find_package(CLEW)
+     endif()
+     if (NOT CLEW_FOUND)
+-        find_package(OpenCL 1.1)
++        find_package(OpenCL 1.1 REQUIRED)
+     else()
+         set(OPENCL_FOUND TRUE)
+     endif()
+ endif()
+ if(NOT NO_CUDA)
+-    # Check that we have a CUDA compiler before enabling the CUDA language.
+-    include(CheckLanguage)
+-    check_language(CUDA)
+-    if(CMAKE_CUDA_COMPILER)
+-        enable_language(CUDA)
+-        find_package(CUDAToolkit 4.0)
+-    endif()
++    enable_language(CUDA)
++    find_package(CUDAToolkit 4.0 REQUIRED)
+ endif()
+ if(NOT NO_GLFW AND NOT NO_OPENGL AND NOT ANDROID AND NOT IOS)
+     find_package(GLFW 3.0.0)
+@@ -381,7 +376,7 @@ if(NOT NO_PTEX)
+    find_package(ZLIB 1.2)
+ endif()
+ if(APPLE AND NOT NO_METAL)
+-    find_package(Metal)
++    find_package(Metal REQUIRED)
+ endif()
+ if (OPENGL_FOUND AND NOT IOS)
+     add_definitions(
+@@ -402,7 +397,7 @@ if (OPENGL_FOUND AND NOT IOS)
+ endif()
+ 
+ if (WIN32 AND NOT NO_DX)
+-   find_package(DXSDK)
++   find_package(DXSDK REQUIRED)
+ endif()
+ 
+ if (NOT NO_DOC)
+diff --git a/opensubdiv-config.cmake.in b/opensubdiv-config.cmake.in
+index 08a005aa..caf16b70 100644
+--- a/opensubdiv-config.cmake.in
++++ b/opensubdiv-config.cmake.in
+@@ -1,5 +1,19 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++if("@OPENMP_FOUND@")
++    find_dependency(OpenMP COMPONENTS CXX)
++endif()
++if("@TBB_FOUND@")
++    find_dependency(TBB CONFIG)
++endif()
++if("@CUDAToolkit_FOUND@")
++    find_dependency(CUDAToolkit)
++endif()
++if("@GLEW_FOUND@")
++    find_dependency(OpenGL)
++endif()
++
+ set_and_check(OpenSubdiv_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+ set_and_check(OpenSubdiv_LIB_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@")
+ 

@@ -1,0 +1,30 @@
+diff --git a/opensubdiv/CMakeLists.txt b/opensubdiv/CMakeLists.txt
+index 57d57758..97beee81 100644
+--- a/opensubdiv/CMakeLists.txt
++++ b/opensubdiv/CMakeLists.txt
+@@ -26,9 +26,7 @@ if (NOT NO_LIB)
+ 
+     #---------------------------------------------------------------------------
+     if( OPENMP_FOUND )
+-        if (CMAKE_COMPILER_IS_GNUCXX)
+-            list(APPEND PLATFORM_CPU_LIBRARIES gomp)
+-        endif()
++        list(APPEND PLATFORM_CPU_LIBRARIES OpenMP::OpenMP_CXX)
+     endif()
+ 
+     if( TBB_FOUND )
+diff --git a/opensubdiv/osd/CMakeLists.txt b/opensubdiv/osd/CMakeLists.txt
+index b23f4b46..ee6b2914 100644
+--- a/opensubdiv/osd/CMakeLists.txt
++++ b/opensubdiv/osd/CMakeLists.txt
+@@ -126,9 +126,7 @@ if(OPENMP_FOUND )
+ 
+     list(APPEND PUBLIC_HEADER_FILES ${OPENMP_PUBLIC_HEADERS})
+ 
+-    if (CMAKE_COMPILER_IS_GNUCXX)
+-        list(APPEND PLATFORM_CPU_LIBRARIES gomp)
+-    endif()
++    list(APPEND PLATFORM_CPU_LIBRARIES OpenMP::OpenMP_CXX)
+ endif()
+ 
+ list(APPEND DOXY_HEADER_FILES ${OPENMP_PUBLIC_HEADERS})
