@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ac8f60d..c70d304 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -111,7 +111,7 @@ set_target_properties(KF6ModemManagerQt PROPERTIES VERSION ${MODEMMANAGERQT_VERS
+ target_include_directories(KF6ModemManagerQt PUBLIC ${MODEMMANAGER_INCLUDE_DIRS})
+ 
+ ########### static lib for tests  ###############
+-add_library(KF6ModemManagerQt_static STATIC ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
++add_library(KF6ModemManagerQt_static STATIC EXCLUDE_FROM_ALL ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
+ set_target_properties(KF6ModemManagerQt_static PROPERTIES COMPILE_FLAGS -DMMQT_STATIC=1)
+ 
+ target_link_libraries(KF6ModemManagerQt_static PUBLIC Qt6::Core Qt6::DBus Qt6::Xml)

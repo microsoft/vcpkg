@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-static-library.patch
         fix-static-dependencies.patch
+        exclude-test-only-target.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
