@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         fix-wer-define.patch
         fix-usage-runtime.patch
         fix-cmake4.patch
+        fix-static-zlib-lookup.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
@@ -73,7 +74,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/sentry.h"
         "#define SENTRY_H_INCLUDED"
-        "#define SENTRY_H_INCLUDED\n\n#define SENTRY_BUILD_STATIC"
+        "#define SENTRY_H_INCLUDED\n\n#ifndef SENTRY_BUILD_STATIC\n#define SENTRY_BUILD_STATIC 1\n#endif"
     )
 endif()
 
