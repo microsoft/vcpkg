@@ -1,0 +1,14 @@
+networkmanager-headers provides pkg-config modules:
+
+  # libnm-core headers of the NetworkManager client library (headers only)
+  libnm
+
+Only the headers are installed, without the library: the constants and types
+of the NetworkManager D-Bus API can be used, but not the libnm functions.
+In CMake, use the module for compiling only, never for linking:
+
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(LIBNM REQUIRED IMPORTED_TARGET libnm)
+  target_link_libraries(main PRIVATE $<COMPILE_ONLY:PkgConfig::LIBNM>)
+
+Installed CMake package configuration files MUST NOT find_dependency() it.
