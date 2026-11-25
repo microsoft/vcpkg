@@ -6517,7 +6517,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.9.8",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "magma": {
