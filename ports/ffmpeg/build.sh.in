@@ -113,7 +113,7 @@ build_ffmpeg() {
     # Windows ARM64 cross-builds lack a native host C compiler (default: gcc).
     # vcpkg uses fresh build directories, so skip dependency-file generation.
     MAKE_DEPFLAGS=""
-    if [ "@VCPKG_DETECTED_MSVC@" = "1" ] && [ "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" ]; then
+    if [ "@VCPKG_DETECTED_MSVC@" = "1" ] && { [ "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" ] || [ "@VCPKG_TARGET_ARCHITECTURE@" = "arm64ec" ]; }; then
         MAKE_DEPFLAGS="CC_DEPFLAGS= CXX_DEPFLAGS= OBJCC_DEPFLAGS= AS_DEPFLAGS= HOSTCC_DEPFLAGS="
     fi
 
