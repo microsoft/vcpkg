@@ -1,7 +1,7 @@
 {
   "name": "ogre",
   "version": "14.5.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
@@ -12,10 +12,6 @@
       "default-features": false
     },
     "pugixml",
-    {
-      "name": "sdl2",
-      "platform": "!android"
-    },
     "stb",
     {
       "name": "vcpkg-cmake",
