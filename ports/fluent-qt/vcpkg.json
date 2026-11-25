@@ -1,0 +1,37 @@
+{
+  "name": "fluent-qt",
+  "version-semver": "1.12.3",
+  "description": "Fluent UI components for native Qt Widgets desktop applications.",
+  "homepage": "https://github.com/calvinhxx/Fluent-Qt",
+  "license": "MIT AND OFL-1.1",
+  "supports": "(windows & !uwp) | osx | linux",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "pcre2",
+        "png",
+        "thread",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "fontconfig",
+        "xcb"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

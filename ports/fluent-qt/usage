@@ -1,0 +1,4 @@
+Link the FluentQt Widgets library in your CMake application.
+
+    find_package(FluentQt CONFIG REQUIRED)
+    target_link_libraries(my_app PRIVATE FluentQt::FluentQt)
