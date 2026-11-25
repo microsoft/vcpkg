@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 978b61f..c31cf65 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -170,7 +170,7 @@ target_include_directories(KF6NetworkManagerQt INTERFACE "$<INSTALL_INTERFACE:${
+ # for examples to build
+ target_include_directories(KF6NetworkManagerQt PUBLIC "$<BUILD_INTERFACE:${NetworkManagerQt_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}/settings>")
+ 
+-target_link_libraries(KF6NetworkManagerQt PUBLIC Qt6::Core Qt6::Network Qt6::DBus PkgConfig::NetworkManager PkgConfig::Gio)
++target_link_libraries(KF6NetworkManagerQt PUBLIC Qt6::Core Qt6::Network Qt6::DBus $<COMPILE_ONLY:PkgConfig::NetworkManager> $<COMPILE_ONLY:PkgConfig::Gio>)
+ 
+ set_target_properties(KF6NetworkManagerQt PROPERTIES VERSION ${NETWORKMANAGERQT_VERSION}
+                                                    SOVERSION ${NETWORKMANAGERQT_SOVERSION}
