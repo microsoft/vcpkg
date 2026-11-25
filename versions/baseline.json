@@ -3200,6 +3200,10 @@
       "baseline": "1.3.11",
       "port-version": 1
     },
+    "fluent-qt": {
+      "baseline": "1.12.3",
+      "port-version": 0
+    },
     "fluidlite": {
       "baseline": "2023-04-18",
       "port-version": 0
