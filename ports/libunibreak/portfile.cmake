@@ -26,4 +26,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/libunibreak-config.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/libunibreak-config.cmake" @ONLY)
 
 vcpkg_fixup_pkgconfig()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENCE"
+    COMMENT "The compiled Unicode data tables are licensed under Unicode-3.0. The upstream release does not include the full notice; see https://www.unicode.org/license.txt."
+)
