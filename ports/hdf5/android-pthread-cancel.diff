@@ -1,0 +1,13 @@
+diff --git a/src/H5private.h b/src/H5private.h
+--- a/src/H5private.h
++++ b/src/H5private.h
+@@ -1150,7 +1150,7 @@
+ #ifdef H5_HAVE_THREADS
+
+-/* Thread cancellation is only possible w/pthreads */
+-#if defined(H5_HAVE_PTHREAD_H)
++/* Android's pthread implementation does not support thread cancellation. */
++#if defined(H5_HAVE_PTHREAD_H) && !defined(__ANDROID__)
+
+ /* Local variable for saving cancellation state */
+ #define H5CANCEL_DECL_REAL int oldstate = 0;

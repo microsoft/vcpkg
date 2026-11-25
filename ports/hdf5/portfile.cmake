@@ -12,6 +12,7 @@ vcpkg_from_github(
         mpi-flags.diff
         win-compile-flags.diff
         arm64-msvc-ice.diff
+        android-pthread-cancel.diff
 )
 
 set(HDF5_ALLOW_UNSUPPORTED OFF)
