@@ -35,6 +35,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef RTC_STATIC" "#if 1")
 endif()
 
+if("stdcall" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef CAPI_STDCALL" "#if 1")
+endif()
+
 foreach(header IN ITEMS common.hpp rtc.h)
     if(NOT "srtp" IN_LIST FEATURES)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/${header}" "#define RTC_ENABLE_MEDIA 1" "#define RTC_ENABLE_MEDIA 0")

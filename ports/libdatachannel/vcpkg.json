@@ -7,7 +7,6 @@
   "supports": "!xbox",
   "dependencies": [
     "libjuice",
-    "nlohmann-json",
     "openssl",
     "plog",
     "usrsctp",
