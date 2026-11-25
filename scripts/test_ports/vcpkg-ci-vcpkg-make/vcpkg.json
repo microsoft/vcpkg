@@ -28,7 +28,6 @@
     "z-vcpkg-make-determine-target-triplet",
     "z-vcpkg-make-get-configure-triplets",
     "z-vcpkg-make-prepare-compile-flags",
-    "z-vcpkg-configure-make-process-flags",
     "z-vcpkg-make-z-adapt-lib-link-names"
   ],
   "features": {
@@ -58,9 +57,6 @@
     },
     "z-vcpkg-make-prepare-compile-flags": {
       "description": "Test the z_vcpkg_make_prepare_compile_flags function"
-    },
-    "z-vcpkg-configure-make-process-flags": {
-      "description": "Test MSVC linker flags with installed paths containing spaces"
     },
     "z-vcpkg-make-z-adapt-lib-link-names": {
       "description": "Test the z_vcpkg_make_z_adapt_lib_link_names function"
