@@ -1,0 +1,26 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 15931d2..7373121 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -158,6 +158,7 @@ if (AVCPP_NOT_SUBPROJECT)
+                 if (LIB_BEGIN STREQUAL "-l")
+                     list(APPEND PLIBLIST "${LIB}")
+                 else()
++                    string(REGEX REPLACE "\\.[Ll][Ii][Bb]$" "" LIB "${LIB}")
+                     list(APPEND PLIBLIST "-l${LIB}")
+                 endif()
+             endif()
+diff --git a/src/avcpp/libavcpp.pc.in b/src/avcpp/libavcpp.pc.in
+index 7594083..091d95e 100644
+--- a/src/avcpp/libavcpp.pc.in
++++ b/src/avcpp/libavcpp.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${prefix}/@LIB_INSTALL_DIR@
+-includedir=${prefix}/@INC_INSTALL_DIR@
++libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+ Name: libavcpp
+ Description: FFmpeg libraries C++ interface

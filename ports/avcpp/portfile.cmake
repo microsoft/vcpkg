@@ -11,6 +11,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-av_init_packet_deprecation.patch
+        0003-use-ffmpeg-pkgconfig.patch # https://github.com/h4tr3d/avcpp/pull/185
+        0004-fix-pkgconfig-libs.patch
+        0005-install-filter-headers.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AVCPP_ENABLE_STATIC)
