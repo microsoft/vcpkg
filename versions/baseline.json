@@ -7353,7 +7353,7 @@
       "port-version": 4
     },
     "nonstd-bit-lite": {
-      "baseline": "2.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "nonstd-scope-lite": {
