@@ -55,9 +55,15 @@ vcpkg_check_features(
         systemd     gRPC_USE_SYSTEMD
 )
 
+set(msvc_pdb_options "")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(msvc_pdb_options "-DCMAKE_PROJECT_grpc_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
+        ${msvc_pdb_options}
         -DgRPC_INSTALL=ON
         -DgRPC_BUILD_TESTS=OFF
         -DgRPC_STATIC_LINKING=${gRPC_STATIC_LINKING}
