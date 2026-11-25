@@ -148,14 +148,37 @@ Error was: ${head_version_err}
     # Explicit mappings override automatic detection and the Boost special case.
     if(DEFINED arg_RAW_INCLUDE_MAPPING)
         set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
-    else()
-        # Special-case checks
-        if("${org_name}" STREQUAL "boostorg" AND IS_DIRECTORY "${SOURCE_PATH}/include/boost/${repo_name}")
-            # Special case for boost instead of adding overrides to the huge number of repos under that umbrella
-            # - Note that this intentionally omits the top-level convenience headers because they
-            #   are of lower importance while debugging and add unnecessary complexity
-            list(APPEND raw_include_mapping "boost/${repo_name}/*" "include/boost/${repo_name}/*")
-        endif()
+    elseif("${org_name}" STREQUAL "boostorg" AND IS_DIRECTORY "${SOURCE_PATH}/include/boost")
+        # These top-level Boost namespaces are shared by multiple module repositories. Avoid overlapping
+        # wildcards at their root; map immediate subdirectories where they are unambiguous.
+        set(shared_boost_namespaces detail exception functional graph numeric pending property_map utility)
+        # This subtree is present in both graph and iterator; leave it unmapped rather than emit duplicate keys.
+        set(shared_boost_subdirectories pending/detail)
+        file(GLOB boost_entries LIST_DIRECTORIES true RELATIVE "${SOURCE_PATH}/include/boost"
+            "${SOURCE_PATH}/include/boost/*")
+        foreach(entry IN LISTS boost_entries)
+            if(IS_DIRECTORY "${SOURCE_PATH}/include/boost/${entry}")
+                if(entry STREQUAL repo_name OR NOT entry IN_LIST shared_boost_namespaces)
+                    list(APPEND raw_include_mapping "boost/${entry}/*" "include/boost/${entry}/*")
+                else()
+                    file(GLOB boost_subdirectories LIST_DIRECTORIES true
+                        RELATIVE "${SOURCE_PATH}/include/boost/${entry}"
+                        "${SOURCE_PATH}/include/boost/${entry}/*")
+                    foreach(subdirectory IN LISTS boost_subdirectories)
+                        set(boost_subdirectory "${entry}/${subdirectory}")
+                        if(IS_DIRECTORY "${SOURCE_PATH}/include/boost/${boost_subdirectory}" AND
+                            NOT boost_subdirectory IN_LIST shared_boost_subdirectories)
+                            list(APPEND raw_include_mapping
+                                "boost/${boost_subdirectory}/*"
+                                "include/boost/${boost_subdirectory}/*")
+                        endif()
+                    endforeach()
+                endif()
+            else()
+                # Only loose files at the root need exact keys; directory wildcards cover nested headers.
+                list(APPEND raw_include_mapping "boost/${entry}" "include/boost/${entry}")
+            endif()
+        endforeach()
     endif()
 
     vcpkg_write_sourcelink_file(

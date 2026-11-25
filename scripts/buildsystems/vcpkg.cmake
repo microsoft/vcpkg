@@ -573,6 +573,31 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     endif()
 endif()
 
+# Exports do not include scripts/cmake/z_vcpkg_spdx.cmake, and this runs for every mapping of every target,
+# so it has its own encoder that only scans for control characters when one is present.
+function(z_vcpkg_sourcelink_json_string out_var value)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.3")
+        string(JSON value STRING_ENCODE "${value}")
+        set("${out_var}" "${value}" PARENT_SCOPE)
+        return()
+    endif()
+    string(REPLACE "\\" "\\\\" value "${value}")
+    string(REPLACE "\"" "\\\"" value "${value}")
+    string(ASCII 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 control_characters)
+    if(value MATCHES "[${control_characters}]")
+        foreach(code RANGE 1 31)
+            string(ASCII "${code}" character)
+            math(EXPR hexadecimal "${code}" OUTPUT_FORMAT HEXADECIMAL)
+            string(SUBSTRING "${hexadecimal}" 2 -1 hexadecimal)
+            if(code LESS 16)
+                set(hexadecimal "0${hexadecimal}")
+            endif()
+            string(REPLACE "${character}" "\\u00${hexadecimal}" value "${value}")
+        endforeach()
+    endif()
+    set("${out_var}" "\"${value}\"" PARENT_SCOPE)
+endfunction()
+
 set(Z_VCPKG_SOURCELINK_JSON "${CMAKE_BINARY_DIR}/CMakeFiles/vcpkg.sourcelink.json" CACHE INTERNAL "")
 function(vcpkg_add_sourcelink_link_options target)
     if(NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND
@@ -595,28 +620,26 @@ function(vcpkg_add_sourcelink_link_options target)
         #   There is insufficient information at this point in the build to directly reduce to the minimum set
         #   of sourcelink entries for each individual port.  This does leak some of the unrelated dependency
         #   information into the embedded sourcelink contents (which could be inserted into the binary cache).
-        # - For MSBuild targets, see `vcpkg.targets` which handles this via a powershell script.
+        # - For MSBuild targets, see `VcpkgSourcelinkPrep` in `vcpkg.targets`.
         file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/sourcelink/*.json")
 
         # Discover the sourcelink information for the current build target itself.
         # - Unlike for dependencies, this file is not installed yet, so it must be picked up directly when linking each port.
-        # - This could be optionally specified via "VCPKG_SOURCELINK_FILE" (via vcpkg_cmake_configure and ports.cmake).
+        # - This could be optionally specified via "VCPKG_SOURCELINK_FILE".
         if(VCPKG_SOURCELINK_FILE)
             list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
         else()
-            # Attempt to discover any extra sourcelink files in the package directory for the current build.
-            # - This is only done when the install prefix is within the vcpkg root directory
-            #   to avoid picking up files during normal builds of the top-level target.
-            string(FIND "${CMAKE_INSTALL_PREFIX}" "${Z_VCPKG_ROOT_DIR}" pos)
-            if ("${pos}" GREATER "-1")
-                if ("${CMAKE_INSTALL_PREFIX}" MATCHES "/debug$")
-                    set(xxx "${CMAKE_INSTALL_PREFIX}/..")
-                else()
-                    set(xxx "${CMAKE_INSTALL_PREFIX}")
-                endif()
-                file(GLOB extra_sourcelink_files "${xxx}/share/sourcelink/*.json")
-                if (extra_sourcelink_files)
-                    list(APPEND sourcelink_files "${extra_sourcelink_files}")
+            # Port builds install into "<packages root>/<port>_<triplet>" (or its "debug" subdirectory), where
+            # vcpkg_write_sourcelink_file already wrote "share/sourcelink/<port>.json". The packages root may be
+            # outside the vcpkg root, and other projects are unaffected because they lack this layout.
+            string(REGEX REPLACE "/debug$" "" package_dir "${CMAKE_INSTALL_PREFIX}")
+            get_filename_component(package_name "${package_dir}" NAME)
+            string(FIND "${package_name}" "_${VCPKG_TARGET_TRIPLET}" suffix_pos REVERSE)
+            if(suffix_pos GREATER 0)
+                string(SUBSTRING "${package_name}" 0 ${suffix_pos} package_port)
+                set(package_sourcelink_file "${package_dir}/share/sourcelink/${package_port}.json")
+                if("${package_port}_${VCPKG_TARGET_TRIPLET}" STREQUAL package_name AND EXISTS "${package_sourcelink_file}")
+                    list(APPEND sourcelink_files "${package_sourcelink_file}")
                 endif()
             endif()
         endif()
@@ -635,22 +658,38 @@ function(vcpkg_add_sourcelink_link_options target)
             set(sourcelink_separator " ")
 
             foreach(sourcelink_file IN LISTS sourcelink_files)
+                if(NOT EXISTS "${sourcelink_file}" OR IS_DIRECTORY "${sourcelink_file}")
+                    message(WARNING "Missing sourcelink file: ${sourcelink_file}")
+                    continue()
+                endif()
                 file(READ "${sourcelink_file}" sourcelink_contents)
-                string(JSON content_type TYPE "${sourcelink_contents}")
-
-                if(content_type STREQUAL "OBJECT")
-                    string(JSON documents GET "${sourcelink_contents}" "documents")
-                else()
+                string(JSON documents_type ERROR_VARIABLE json_error TYPE "${sourcelink_contents}" documents)
+                if(json_error OR NOT documents_type STREQUAL "OBJECT")
                     message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
                     continue()
                 endif()
+                string(JSON documents GET "${sourcelink_contents}" documents)
 
                 string(JSON imax LENGTH "${documents}")
-                if ("${imax}" LESS "1")
-                    message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
+                if(imax EQUAL 0)
                     continue()
                 endif()
                 math(EXPR imax "${imax} - 1")
+
+                # Validate the entire fragment before adding any mappings from it.
+                set(valid_documents ON)
+                foreach(i RANGE ${imax})
+                    string(JSON entry_key MEMBER "${documents}" ${i})
+                    string(JSON entry_type TYPE "${documents}" "${entry_key}")
+                    if(NOT entry_type STREQUAL "STRING")
+                        set(valid_documents OFF)
+                        break()
+                    endif()
+                endforeach()
+                if(NOT valid_documents)
+                    message(WARNING "Invalid sourcelink file (expected string values): ${sourcelink_file}")
+                    continue()
+                endif()
 
                 foreach(i RANGE ${imax})
                     string(JSON entry_key MEMBER "${documents}" ${i})
@@ -660,11 +699,11 @@ function(vcpkg_add_sourcelink_link_options target)
                     # so simply replace the strings in-place
                     string(REPLACE "__VCPKG_INSTALLED_TRIPLET_DIR__" "${installed_triplet_dir}" entry_key "${entry_key}")
 
-                    # CMake treats the embedded '*' as a wildcard, which we simply want to set as a literal, so escape
-                    # manually instead of setting the string using CMake's JSON capabilities
-                    string(REGEX REPLACE "\\\\" "\\\\\\\\" entry_key "${entry_key}")
+                    # Re-encode both decoded strings to preserve quotes, backslashes and control characters.
+                    z_vcpkg_sourcelink_json_string(entry_key "${entry_key}")
+                    z_vcpkg_sourcelink_json_string(entry_value "${entry_value}")
 
-                    string(APPEND sourcelink_fragments "${sourcelink_separator}\"${entry_key}\" : \"${entry_value}\"\n")
+                    string(APPEND sourcelink_fragments "${sourcelink_separator}${entry_key} : ${entry_value}\n")
                     set(sourcelink_separator ",")
                 endforeach()
             endforeach()
@@ -701,6 +740,8 @@ function(vcpkg_add_sourcelink_link_options target)
                 message(DEBUG "vcpkg: Detected CUDA compiler, so omitting unrecognized sourcelink linker option")
             else()
                 set_property( TARGET ${target} APPEND PROPERTY LINK_OPTIONS "${Z_VCPKG_SOURCELINK_LINK_OPTS}")
+                # Relink when only the mappings change. Visual Studio generators track the file through the linker.
+                set_property(TARGET ${target} APPEND PROPERTY LINK_DEPENDS "${Z_VCPKG_SOURCELINK_JSON}")
             endif()
         endif()
     endif()

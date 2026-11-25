@@ -47,6 +47,9 @@ because none of the embedded paths will match to that prefix.
 It is critical that the `from` paths are globally unique, because they are used as keys in the JSON file.
 Hence, these typically start with the port name (as installed under `include/`), except in rare cases where individual header names are specified.
 
+When a port acquires several sources, such as a library and its separately hosted build scripts, each call adds its
+mappings to the same `share/sourcelink/${PORT}.json` file. If a key is mapped more than once, the first mapping is kept.
+
 Common patterns include:
 ```cmake
     list(APPEND raw_include_mapping "${PORT}/*" "*")
@@ -151,12 +154,21 @@ function(vcpkg_write_sourcelink_file)
     file(TO_NATIVE_PATH "${arg_SOURCE_PATH}/*" sourcelink_source_path)
     string(REGEX REPLACE "\\\\" "\\\\\\\\" sourcelink_source_path "${sourcelink_source_path}")
 
-    # Write the first line of the file, which is used for the immediate build of this port
+    # A port may acquire several sources, such as a library and its separately hosted build scripts.
+    # Merge them into the file this process already wrote; the first mapping of a key wins.
+    set(sourcelink_file "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json")
+    set(entries_property "z_vcpkg_sourcelink_entries:${sourcelink_file}")
+    set(entries "")
+    if(EXISTS "${sourcelink_file}")
+        get_property(entries GLOBAL PROPERTY "${entries_property}")
+    endif()
+
+    # The first entry is used for the immediate build of this port
     # - These paths are fully known because the buildtree is directly using the original repo
     #   contents when the port is built directly from the local source.
     # - Of course if any local patches or modifications are applied, then the file hashes will never
     #   match exactly.. but that is beyond the scope of this automatic sourcelink mechanism.
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
+    z_vcpkg_sourcelink_add_entry(entries "${sourcelink_source_path}" "${arg_SERVER_PATH}")
 
     # If specified, add the mappings
     while(raw_include_mapping)
@@ -168,10 +180,18 @@ function(vcpkg_write_sourcelink_file)
         # SourceLink strings are allowed to have either 0 or 1 wildcards, so a simple replace is suitable.
         string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
 
-        file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
+        z_vcpkg_sourcelink_add_entry(entries "${adjusted_item_from}" "${adjusted_item_to}")
     endwhile()
+    set_property(GLOBAL PROPERTY "${entries_property}" "${entries}")
 
-    # Append the closing braces the the file
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "}}")
+    string(SUBSTRING "${entries}" 2 -1 entries)
+    file(WRITE "${sourcelink_file}" "{\"documents\":{ ${entries}}}")
 
+endfunction()
+
+function(z_vcpkg_sourcelink_add_entry entries_var key value)
+    string(FIND "${${entries_var}}" ", \"${key}\": " existing)
+    if(existing EQUAL -1)
+        set("${entries_var}" "${${entries_var}}, \"${key}\": \"${value}\"" PARENT_SCOPE)
+    endif()
 endfunction()

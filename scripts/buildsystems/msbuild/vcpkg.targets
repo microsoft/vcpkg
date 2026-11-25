@@ -113,14 +113,6 @@
     </PropertyPageSchema>
   </ItemGroup>
 
-  <!-- Use absolute, triplet-specific paths because the generator runs in a separate project
-  and multiple triplets may share the installed directory. -->
-  <PropertyGroup Condition="'$(_ZVcpkgSourceLink)' == 'true'">
-    <_ZVcpkgSourceLinkTripletDir>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_ZVcpkgInstalledDir)', '$(VcpkgTriplet)'))</_ZVcpkgSourceLinkTripletDir>
-    <_ZVcpkgSourceLinkInstalledPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(_ZVcpkgInstalledDir)', '.vcpkg_sourcelink-$(VcpkgTriplet).json'))</_ZVcpkgSourceLinkInstalledPath>
-    <_ZVcpkgSourceLinkOpts>/SOURCELINK:"$(_ZVcpkgSourceLinkInstalledPath)" </_ZVcpkgSourceLinkOpts>
-  </PropertyGroup>
-
   <!-- Install settings to get headers and import libs for the currently selected _ZVcpkgCurrentInstalledDir -->
   <ItemDefinitionGroup Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'">
     <Lib>
@@ -129,7 +121,8 @@
     <Link>
       <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
-      <AdditionalOptions>%(AdditionalOptions) $(_ZVcpkgSourceLinkOpts)</AdditionalOptions>
+      <!-- Item definitions are evaluated after all properties, so $(IntDir) has its final value here. -->
+      <AdditionalOptions Condition="'$(_ZVcpkgSourceLink)' == 'true'">%(AdditionalOptions) /SOURCELINK:"$(IntDir)vcpkg.sourcelink.json"</AdditionalOptions>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(_ZVcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
@@ -249,15 +242,124 @@
     </CreateProperty>
   </Target>
 
-  <!-- Share generation through MSBuild's project results cache. The linker tracks the generated file,
-  whose timestamp is preserved when the mappings are unchanged. -->
+  <!-- Keep the task inline: vcpkg export copies this file but not the support directory. -->
+  <UsingTask TaskName="CombineSourceLink" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll"
+             Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(_ZVcpkgSourceLink)' == 'true'">
+    <ParameterGroup>
+      <Fragments ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
+      <InstalledTripletDirectory ParameterType="System.String" Required="true" />
+      <Content ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Using Namespace="System.Runtime.Serialization.Json" />
+      <Using Namespace="System.Text" />
+      <Using Namespace="System.Xml" />
+      <Using Namespace="System.Xml.Linq" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        var documents = new SortedDictionary<string, string>(StringComparer.Ordinal);
+        foreach (var fragment in (Fragments ?? new Microsoft.Build.Framework.ITaskItem[0]).OrderBy(f => f.ItemSpec, StringComparer.Ordinal))
+        {
+            try
+            {
+                XElement root;
+                using (var reader = JsonReaderWriterFactory.CreateJsonReader(
+                    Encoding.UTF8.GetBytes(File.ReadAllText(fragment.ItemSpec)), XmlDictionaryReaderQuotas.Max))
+                {
+                    root = XElement.Load(reader);
+                }
+                var members = root.Elements().ToArray();
+                if ((string)root.Attribute("type") != "object" || members.Length != 1 ||
+                    members[0].Name != "documents" || (string)members[0].Attribute("type") != "object" ||
+                    members[0].Elements().Any(e => (string)e.Attribute("type") != "string"))
+                {
+                    Log.LogWarning("[vcpkg] Ignoring invalid Source Link file '{0}': expected a documents object with string values.", fragment.ItemSpec);
+                    continue;
+                }
+
+                // Validate the entire fragment before adding any entries. JSON names that are not XML names
+                // are represented by the JSON reader as an "item" attribute.
+                foreach (var entry in members[0].Elements())
+                {
+                    var key = (string)entry.Attribute("item") ?? entry.Name.LocalName;
+                    key = key.Replace("__VCPKG_INSTALLED_TRIPLET_DIR__", InstalledTripletDirectory.TrimEnd('\\'));
+                    documents[key] = entry.Value;
+                }
+            }
+            catch (XmlException ex)
+            {
+                Log.LogWarning("[vcpkg] Ignoring invalid Source Link file '{0}': {1}", fragment.ItemSpec, ex.Message);
+            }
+            catch (IOException ex)
+            {
+                Log.LogWarning("[vcpkg] Ignoring unreadable Source Link file '{0}': {1}", fragment.ItemSpec, ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Log.LogWarning("[vcpkg] Ignoring unreadable Source Link file '{0}': {1}", fragment.ItemSpec, ex.Message);
+            }
+        }
+        // Not DataContractJsonSerializer: it escapes every '/' and writes a single line.
+        Action<StringBuilder, string> appendJsonString = (builder, value) =>
+        {
+            builder.Append('"');
+            foreach (var c in value)
+            {
+                if (c == '"' || c == '\\')
+                {
+                    builder.Append('\\').Append(c);
+                }
+                else if (c < ' ')
+                {
+                    builder.Append("\\u").Append(((int)c).ToString("x4"));
+                }
+                else
+                {
+                    builder.Append(c);
+                }
+            }
+            builder.Append('"');
+        };
+        var content = new StringBuilder("{\"documents\":{");
+        var separator = "\r\n ";
+        foreach (var document in documents)
+        {
+            content.Append(separator);
+            appendJsonString(content, document.Key);
+            content.Append(" : ");
+            appendJsonString(content, document.Value);
+            separator = "\r\n,";
+        }
+        content.Append(documents.Count == 0 ? "}}" : "\r\n}}");
+        Content = content.ToString();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <!-- Combine fragments into a per-project file so the installed tree may be read-only.
+  Preserve the timestamp when the mappings are unchanged so linker tracking does not force a relink. -->
   <Target Name="VcpkgSourcelinkPrep" BeforeTargets="ClCompile" AfterTargets="VcpkgInstallManifestDependencies"
           Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(_ZVcpkgSourceLink)' == 'true'">
-    <MSBuild BuildInParallel="true"
-             Projects="$(MSBuildThisFileDirectory)support\SourcelinkImplementation.targets"
-             Targets="VcpkgSourcelinkImplementation"
-             Properties="_ZVcpkgSourceLinkTripletDir=$([MSBuild]::Escape('$(_ZVcpkgSourceLinkTripletDir)'));_ZVcpkgSourceLinkInstalledPath=$([MSBuild]::Escape('$(_ZVcpkgSourceLinkInstalledPath)'))"
-    />
+    <PropertyGroup>
+      <_ZVcpkgSourceLinkTripletDir>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(_ZVcpkgCurrentInstalledDir)'))</_ZVcpkgSourceLinkTripletDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ZVcpkgSourceLinkFragment Include="$(_ZVcpkgSourceLinkTripletDir)share\sourcelink\*.json" />
+    </ItemGroup>
+    <CombineSourceLink Fragments="@(_ZVcpkgSourceLinkFragment)" InstalledTripletDirectory="$(_ZVcpkgSourceLinkTripletDir)">
+      <Output TaskParameter="Content" PropertyName="_ZVcpkgSourceLinkContent" />
+    </CombineSourceLink>
+    <WriteLinesToFile File="$(IntDir)vcpkg.sourcelink.json"
+                      Lines="$(_ZVcpkgSourceLinkContent)"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(IntDir)vcpkg.sourcelink.json" />
+    </ItemGroup>
   </Target>
 
 
