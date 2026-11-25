@@ -9356,6 +9356,10 @@
       "baseline": "15.4.0",
       "port-version": 0
     },
+    "sdl-painter": {
+      "baseline": "1.5.1",
+      "port-version": 0
+    },
     "sdl2": {
       "baseline": "2.32.10",
       "port-version": 1
