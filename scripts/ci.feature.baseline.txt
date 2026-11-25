@@ -422,7 +422,6 @@ hdf5[fortran]:arm64-linux=feature-fails
 hdf5[fortran](android | windows)=feature-fails # No fortran compiler
 hdf5[parallel](android)=cascade
 hdf5[parallel](arm64 & windows)=cascade
-hdf5[threadsafe](android)=feature-fails # pthread_setcancelstate
 hello-imgui[experimental-dx11-binding](!windows | uwp)=cascade
 hello-imgui[experimental-dx12-binding](x86 | !windows | uwp)=cascade
 hello-imgui[glfw-binding]:arm64-linux=cascade
