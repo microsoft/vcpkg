@@ -1,11 +1,17 @@
 {
   "name": "libczi",
-  "version": "0.69.1",
+  "version": "0.73.0",
   "description": "library to read and write CZI files.",
   "homepage": "https://github.com/ZEISS/libczi",
   "license": null,
   "dependencies": [
     "eigen3",
+    {
+      "name": "libjpeg-turbo",
+      "features": [
+        "turbojpeg"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

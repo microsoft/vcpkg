@@ -5041,7 +5041,7 @@
       "port-version": 0
     },
     "libczi": {
-      "baseline": "0.69.1",
+      "baseline": "0.73.0",
       "port-version": 0
     },
     "libdaemon": {
