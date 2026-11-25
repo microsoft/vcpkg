@@ -7,8 +7,6 @@ vcpkg_from_gitlab(
     REF "${VERSION}"
     SHA512 341a795e6aa4f76f606a57921511233eb68510bea0bc6967449e2d2bb5949106c7d17ae964683797734c1cd688ac15ad076e08cc1d54aee22a16d23a9ca61510
     HEAD_REF main
-    PATCHES
-        pkgconfig-include-root.patch
 )
 
 set(include_dir "${CURRENT_PACKAGES_DIR}/include/ModemManager")

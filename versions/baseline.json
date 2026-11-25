@@ -6878,7 +6878,7 @@
     },
     "modemmanager-headers": {
       "baseline": "1.24.2",
-      "port-version": 0
+      "port-version": 1
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",
