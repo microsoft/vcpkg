@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 c525248bad66c41355620f0f6e7ed9035e958dca0008edfa5c2d4b49bad443eea0482c1c8cad72e12925c0da481ade3e88d6f59b638f60c77380a6fd613c10c8
+    SHA512 9cd22f4d3ecca14a13159b8da264b75333bca318d984224618ea5d71f8ccdce3ad5d849ec09ea4ba419f4b5d41bc21fb8ebb286b6cdec4364cfc76e435506895
     HEAD_REF master
 )
 
@@ -30,9 +30,11 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/expat-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "defined(_MSC_VER)" "defined(_WIN32)")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

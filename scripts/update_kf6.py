@@ -15,7 +15,7 @@ import time
 # ============================================================
 # CONFIGURATION - Set version, port list, and paths here
 # ============================================================
-NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
+NEW_VERSION = "6.32.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
     "attica",
@@ -26,6 +26,7 @@ PORT_LIST = [
     "kbookmarks",
     "kbreezeicons",
     "kcalendarcore",
+    "kcmutils",
     "kcodecs",
     "kcolorscheme",
     "kcompletion",
@@ -58,6 +59,7 @@ PORT_LIST = [
     "kwidgetsaddons",
     "kwindowsystem",
     "kxmlgui",
+    "modemmanager-qt",
     "oxygen-icons",
     "prison",
     "sonnet",

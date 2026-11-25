@@ -1,0 +1,22 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ac8f60d..175b179 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -111,11 +111,13 @@ set_target_properties(KF6ModemManagerQt PROPERTIES VERSION ${MODEMMANAGERQT_VERS
+ target_include_directories(KF6ModemManagerQt PUBLIC ${MODEMMANAGER_INCLUDE_DIRS})
+ 
+ ########### static lib for tests  ###############
+-add_library(KF6ModemManagerQt_static STATIC ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
+-set_target_properties(KF6ModemManagerQt_static PROPERTIES COMPILE_FLAGS -DMMQT_STATIC=1)
++if (BUILD_TESTING)
++    add_library(KF6ModemManagerQt_static STATIC ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
++    set_target_properties(KF6ModemManagerQt_static PROPERTIES COMPILE_FLAGS -DMMQT_STATIC=1)
+ 
+-target_link_libraries(KF6ModemManagerQt_static PUBLIC Qt6::Core Qt6::DBus Qt6::Xml)
+-target_include_directories(KF6ModemManagerQt_static PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..;${CMAKE_CURRENT_BINARY_DIR}/..>")
++    target_link_libraries(KF6ModemManagerQt_static PUBLIC Qt6::Core Qt6::DBus Qt6::Xml)
++    target_include_directories(KF6ModemManagerQt_static PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..;${CMAKE_CURRENT_BINARY_DIR}/..>")
++endif()
+ ecm_generate_headers(ModemManagerQt_CamelCaseHEADERS
+     HEADER_NAMES
+     Call

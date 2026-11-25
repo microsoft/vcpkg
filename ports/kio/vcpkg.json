@@ -1,6 +1,6 @@
 {
   "name": "kio",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Network transparent access to files and data",
   "homepage": "https://invent.kde.org/frameworks/kio",
   "documentation": "https://api.kde.org/kio-index.html",
