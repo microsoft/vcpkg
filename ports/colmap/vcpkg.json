@@ -29,6 +29,7 @@
     "glog",
     "metis",
     "openimageio",
+    "poselib",
     "sqlite3",
     {
       "name": "vcpkg-cmake",

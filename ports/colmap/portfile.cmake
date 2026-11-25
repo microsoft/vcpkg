@@ -1,7 +1,3 @@
-if(EXISTS "${CURRENT_INSTALLED_DIR}/share/poselib/copyright")
-    message(FATAL_ERROR "'${PORT}' conflicts with 'poselib'. Please remove poselib:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     # colmap does not export its symbols (no dllexport, no export header): it cannot be built as a DLL on Windows.
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -23,16 +19,6 @@ vcpkg_from_github(
         cryptopp-config.diff
         caspar-msvc-force-include.diff
         caspar-public-headers.diff
-)
-
-# FETCHCONTENT_FULLY_DISCONNECTED is set by vcpkg: PoseLib must be downloaded here.
-# Update both with colmap: src/thirdparty/CMakeLists.txt (FETCH_POSELIB).
-vcpkg_from_github(
-    OUT_SOURCE_PATH POSELIB_SOURCE_PATH
-    REPO PoseLib/PoseLib
-    REF fa7280fee27f97aff31ae7f98bab7f583fac7d08
-    SHA512 624c8789bf99113ef23b987736eabc9b7844afdb2fd4d39e0bae086bcb59375f29e011d1bec82c8aff53df5515f4e84d6ec79ec0714e0c04db45992db56050e8
-    HEAD_REF master
 )
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -147,8 +133,7 @@ vcpkg_cmake_configure(
         -DCCACHE_ENABLED=OFF
         -DUNINSTALL_ENABLED=OFF
         -DTESTS_ENABLED=OFF
-        -DFETCH_POSELIB=ON
-        -DFETCHCONTENT_SOURCE_DIR_POSELIB=${POSELIB_SOURCE_PATH}
+        -DFETCH_POSELIB=OFF
         -DFETCH_FAISS=OFF
         -DFETCH_ONNX=OFF
 )
@@ -194,15 +179,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/colmap/cmake/vcpkg"
 )
 
-# Headers of the vendored PoseLib, required by the installed headers of colmap.
-file(INSTALL "${POSELIB_SOURCE_PATH}/PoseLib" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
-file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_deps/poselib-build/generated_headers/PoseLib" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
-
 vcpkg_copy_pdbs()
 
 set(COPYRIGHT_FILES
     "${SOURCE_PATH}/COPYING.txt"
-    "${POSELIB_SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/src/thirdparty/LSD/LICENSE"
     "${SOURCE_PATH}/src/thirdparty/LSD/lsd.h"
 )
