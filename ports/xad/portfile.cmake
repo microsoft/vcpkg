@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO auto-differentiation/xad
     REF "v${VERSION}"
-    SHA512 c1da2a795f7eb9b690b2b3bda072b7231b8672b8eec489a31324c42796d36cae791cb34a8119d1ca9d3b42cef6036b7c198538c9b3a80232f6eca1356abf1ce5
+    SHA512 4242dbf2a3acb9ddc8ab83d36938fb52baddae3bf4383f3f21d7912cde2acc876900a28e13bf041e05432c32de680b23a1c679ae6902028da78712977905468d
     HEAD_REF main
     PATCHES
         fix-install-pdb.patch # no .pdb is produced with /Z7
