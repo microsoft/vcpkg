@@ -1,0 +1,12 @@
+diff --git a/KF6KCMUtilsConfig.cmake.in b/KF6KCMUtilsConfig.cmake.in
+index ff9c6af..7d6cfc2 100644
+--- a/KF6KCMUtilsConfig.cmake.in
++++ b/KF6KCMUtilsConfig.cmake.in
+@@ -15,6 +15,7 @@ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(KF6GuiAddons    "@KF_DEP_VERSION@")
+     find_dependency(KF6I18n         "@KF_DEP_VERSION@")
+     find_dependency(KF6ItemViews    "@KF_DEP_VERSION@")
++    find_dependency(KF6KIO          "@KF_DEP_VERSION@")
+     find_dependency(KF6XmlGui       "@KF_DEP_VERSION@")
+ endif()
+ 
