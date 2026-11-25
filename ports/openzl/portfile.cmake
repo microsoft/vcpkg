@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         fix-runtime.patch
+        fix-misuse-of-include-directories.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/src/openzl/shared/xxhash.h")
