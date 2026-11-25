@@ -20,7 +20,8 @@
   ],
   "features": {
     "dtoa": {
-      "description": "Use the Milo Yip DTOA library"
+      "description": "Use the Milo Yip DTOA library",
+      "license": "MIT"
     },
     "mem-file": {
       "description": "Use memory files instead of temp files",
