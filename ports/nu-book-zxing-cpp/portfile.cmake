@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
         -DZXING_EXAMPLES=OFF
         -DZXING_WRITERS=OLD
         -DZXING_C_API=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
@@ -25,12 +24,12 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME ZXing
 )
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/ZXing/ZXingConfig.cmake" _contents)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/ZXing/ZXingConfig.cmake" "
-include(CMakeFindDependencyMacro)
-find_dependency(Threads)
-${_contents}")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    COMMENT "Upstream does not provide a standalone BSD-3-Clause license for libzueci. zueci.c also contains the LicenseRef-Hoehrmann-UTF-8 notice."
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/core/src/libzueci/zueci.c"
+        "${SOURCE_PATH}/core/src/libzueci/zueci_sb.h"
+)
