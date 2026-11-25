@@ -1252,6 +1252,7 @@ saucer:arm64-linux=cascade
 saucer:arm64-osx=fail # std::move_only_function is not supported
 saucer:x64-linux=fail # requires gcc14 or later
 sdformat13:x64-windows-static=cascade
+sdl-painter:arm64-linux=fail # No cross OpenGL
 sdl2-mixer-ext:arm64-linux=cascade
 sdl2-net:arm64-linux=cascade
 sdl2-ttf:arm64-linux=cascade

@@ -1,0 +1,12 @@
+diff --git a/Analysis/include/Luau/StackPusher.h b/Analysis/include/Luau/StackPusher.h
+index 0d0a6b0..1a36726 100644
+--- a/Analysis/include/Luau/StackPusher.h
++++ b/Analysis/include/Luau/StackPusher.h
+@@ -4,6 +4,7 @@
+ #include "Luau/Common.h"
+ #include "Luau/NotNull.h"
+ 
++#include <utility>
+ #include <vector>
+ 
+ namespace Luau

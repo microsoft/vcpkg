@@ -1,0 +1,7 @@
+sdl-painter provides CMake targets:
+
+  find_package(sdl_painter CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE sdl_painter::sdl_painter)
+
+  # Optional window, event loop and timing layer:
+  target_link_libraries(main PRIVATE sdl_painter::app)

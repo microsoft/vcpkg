@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO simdjson/simdjson
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 975242f1c84484f7e1c00622ce5a917319d6fd0a021c1acb064ddde9b583d1c559b4f30cc3ce4dc91acf20d38bf224ac14f9f7b82db69c324a5948c5dde5c3a6
+    SHA512 3589ed116a3f69a3cca2943c4cdbff2f5442b28e8c86f3a61d0a01a0a4d1cf064f1cb1486a054e7608928b3d881cae1b558b70656db77af7be20227f5fc9cf03
 )
 
 vcpkg_check_features(
@@ -49,7 +49,15 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+file(READ "${SOURCE_PATH}/src/to_chars.cpp" TO_CHARS_SOURCE)
+# Example: the Zmij notice starts with "/*!" and includes "Copyright (c) 2025 - present, Victor Zverovich".
+string(REGEX MATCH "/\\*![^*]*Zmij:[^*]*Copyright[^*]*\\*/" ZMIJ_NOTICE "${TO_CHARS_SOURCE}")
+if(NOT ZMIJ_NOTICE)
+    message(FATAL_ERROR "Could not find the Zmij notice in src/to_chars.cpp")
+endif()
+
 vcpkg_install_copyright(
+    COMMENT "${ZMIJ_NOTICE}"
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/LICENSE-MIT"

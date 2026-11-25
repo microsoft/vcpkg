@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/threadweaver
     REF "v${VERSION}"
-    SHA512 b1516e805ff465a6dd5884954e636fdfcb3407046d5faaff98c2bbbd43b15da0d7fa8edc1fbb5a03e56a04a1354580fb798f964926ff62a250dbe05d5c3b6c23
+    SHA512 bc9d8f8a08ce2c8b5cf03aeccd0067c56feda38648fb48c80a0f1421b9c10e68e42a0f745740dcaa027688514fbb691aa8b40bc698218b52f759c3910f8cbb09
     HEAD_REF master
     PATCHES
         disable-examples.patch

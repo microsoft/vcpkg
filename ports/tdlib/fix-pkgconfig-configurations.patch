@@ -1,0 +1,63 @@
+diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
+index 4cbdb15..afaddbe 100644
+--- a/CMake/GeneratePkgConfig.cmake
++++ b/CMake/GeneratePkgConfig.cmake
+@@ -1,12 +1,12 @@
+ function(get_relative_link OUTPUT PATH)
+-  if (PATH MATCHES "^[$]<[$]<CONFIG:DEBUG>:")
+-    set(${OUTPUT} "" PARENT_SCOPE)
+-    return()
++  set(CONDITION "")
++  if (PATH MATCHES "^[$]<([$]<CONFIG:DEBUG>|[$]<NOT:[$]<CONFIG:DEBUG>>):(.*)>$")
++    set(CONDITION "${CMAKE_MATCH_1}")
++    set(PATH "${CMAKE_MATCH_2}")
+   endif()
+-  string(REGEX REPLACE "^[$]<[$]<NOT:[$]<CONFIG:DEBUG>>:(.*)>$" "\\1" PATH "${PATH}")
+ 
+   get_filename_component(NAME "${PATH}" NAME_WE)
+-  if (IS_ABSOLUTE ${PATH})
++  if (IS_ABSOLUTE "${PATH}")
+     get_filename_component(DIRECTORY_NAME "${PATH}" DIRECTORY)
+     get_filename_component(FULL_NAME "${PATH}" NAME)
+     string(REGEX REPLACE "^lib([^.]+).*$" "\\1" LIB_NAME "${FULL_NAME}")
+@@ -14,17 +14,17 @@ function(get_relative_link OUTPUT PATH)
+     if ("${LIB_NAME}" STREQUAL "${FULL_NAME}")
+       set(LIB_NAME "${NAME}")
+     endif()
+-    set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
+-    return()
+-  endif()
+-
+-  if (NOT WIN32 AND NAME MATCHES "^lib")
++    set(LINK "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}")
++  elseif (NOT WIN32 AND NAME MATCHES "^lib")
+     string(REGEX REPLACE "^lib" "-l" LINK "${NAME}")
+   elseif (NAME MATCHES "^-")
+     set(LINK "${NAME}")
+   else()
+     string(CONCAT LINK "-l" "${NAME}")
+   endif()
++  if (CONDITION)
++    set(LINK "$<${CONDITION}:${LINK}>")
++  endif()
+   set(${OUTPUT} "${LINK}" PARENT_SCOPE)
+ endfunction()
+ 
+@@ -149,7 +149,7 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+   endif()
+   unset(_td_iface_defs)
+ 
+-  file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
++  file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/$<CONFIG>/${TARGET}.pc" CONTENT
+ "prefix=${PREFIX}
+ 
+ Name: ${TARGET}
+@@ -162,7 +162,7 @@ ${REQUIRES}${LIBRARIES}")
+ 
+   if ("${LIBRARY_TYPE}" STREQUAL "STATIC_LIBRARY" OR "${LIBRARY_TYPE}" STREQUAL "SHARED_LIBRARY" OR
+       "${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
+-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/$<CONFIG>/${TARGET}.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+   else()
+     message(FATAL_ERROR "Don't know how to handle ${TARGET} of type ${LIBRARY_TYPE}")
+   endif()

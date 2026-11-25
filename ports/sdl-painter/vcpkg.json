@@ -1,0 +1,54 @@
+{
+  "name": "sdl-painter",
+  "version": "1.5.1",
+  "description": "Modern C++17 2D drawing library for SDL3 with interchangeable OpenGL 3.3 and Vulkan 1.1 backends.",
+  "homepage": "https://github.com/yazilimperver/sdl-painter",
+  "license": "MIT",
+  "supports": "(windows & !uwp) | linux",
+  "dependencies": [
+    "glad",
+    "glm",
+    "opengl",
+    {
+      "name": "sdl3",
+      "default-features": false,
+      "features": [
+        {
+          "name": "wayland",
+          "platform": "linux"
+        },
+        {
+          "name": "x11",
+          "platform": "linux"
+        }
+      ]
+    },
+    "sdl3-ttf",
+    "spdlog",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "vulkan": {
+      "description": "Vulkan 1.1 backend",
+      "dependencies": [
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
+        "vulkan-headers",
+        "vulkan-loader"
+      ]
+    }
+  }
+}
