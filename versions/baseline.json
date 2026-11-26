@@ -10549,8 +10549,8 @@
       "port-version": 0
     },
     "tomlplusplus": {
-      "baseline": "3.4.0",
-      "port-version": 1
+      "baseline": "3.5.1",
+      "port-version": 0
     },
     "tomsolver": {
       "baseline": "1.0.2",
