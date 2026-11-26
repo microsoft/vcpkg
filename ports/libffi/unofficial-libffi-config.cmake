@@ -1,7 +1,7 @@
 if(NOT TARGET unofficial::libffi::libffi)
     get_filename_component(VCPKG_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
-    find_library(VCPKG_LIBFFI_LIBRARY_RELEASE NAMES ffi PATHS "${VCPKG_IMPORT_PREFIX}/lib" REQUIRED)
-    find_library(VCPKG_LIBFFI_LIBRARY_DEBUG NAMES ffi PATHS "${VCPKG_IMPORT_PREFIX}/debug/lib")
+    find_library(VCPKG_LIBFFI_LIBRARY_RELEASE NAMES ffi PATHS "${VCPKG_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(VCPKG_LIBFFI_LIBRARY_DEBUG NAMES ffi PATHS "${VCPKG_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
     mark_as_advanced(VCPKG_LIBFFI_LIBRARY_RELEASE VCPKG_LIBFFI_LIBRARY_DEBUG)
     add_library(unofficial::libffi::libffi UNKNOWN IMPORTED)
     set_target_properties(unofficial::libffi::libffi PROPERTIES
