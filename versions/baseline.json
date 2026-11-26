@@ -11076,6 +11076,10 @@
       "baseline": "2.3.0",
       "port-version": 1
     },
+    "vtz": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "vulkan": {
       "baseline": "2023-12-17",
       "port-version": 0
