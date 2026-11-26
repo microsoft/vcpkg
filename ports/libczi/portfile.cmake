@@ -52,6 +52,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/libCZI/ImportExport.h"
+        "#pragma once"
+        "#pragma once\n\n#ifndef _LIBCZISTATICLIB\n#define _LIBCZISTATICLIB\n#endif"
+    )
+endif()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH share/libczi)
 
 file(REMOVE_RECURSE
