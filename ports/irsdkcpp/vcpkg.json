@@ -1,7 +1,7 @@
 {
   "name": "irsdkcpp",
   "version": "1.0.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "iRacing Modern C++ SDK",
   "license": "MIT",
   "supports": "windows & !uwp & x64",
