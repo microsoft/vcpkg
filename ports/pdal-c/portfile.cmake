@@ -1,12 +1,15 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/CAPI
     REF "v${VERSION}"
-    SHA512 6fe2136831e37c2f87643b3c971a1397d8912c230e9bfde53a51ec1769bc5c2f08482395263906975c5d40dbabd32852a5a145a159cdcf2548390a0aff72a295
+    SHA512 19931945234341c18ff6264d65989e23fdc78e1072b1ebda8537aa677d93cd77689d809f7ceed8e815871c750fedf248be98c14cacc890626f5921f8854567b5
     HEAD_REF master
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+     string(APPEND VCPKG_C_FLAGS " -DPDALC_BUILD_STATIC")
+     string(APPEND VCPKG_CXX_FLAGS " -DPDALC_BUILD_STATIC")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,8 +24,15 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# Remove headers from debug
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pdal/pdalc_forward.h" "#elif defined(PDALC_BUILD_STATIC)" "#elif 1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Install copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# Ignore license files related to unused tests
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+        "${SOURCE_PATH}/cmake/CodeCoverage.cmake"
+)
