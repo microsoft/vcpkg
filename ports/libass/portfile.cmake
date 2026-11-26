@@ -20,6 +20,12 @@ list(APPEND options
     -Dtest=disabled
 )
 
+if("unibreak" IN_LIST FEATURES)
+    list(APPEND options -Dlibunibreak=enabled)
+else()
+    list(APPEND options -Dlibunibreak=disabled)
+endif()
+
 if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_LINUX)
     list(APPEND options -Drequire-system-font-provider=false)
 endif()
