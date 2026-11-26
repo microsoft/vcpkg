@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 fc4e1ae2b640e8439fb8ca490cfaa27461e74ee44abc1798d49a97a97f1de7fec5cc776b7dedf58e72eb0ccbb5bf0edaf92e4db8052980667567ef6e783b4b39
+    SHA512 99eaecf794695534bd2220469b9d575bc110eb777131d158ef529acacc2812fd8793b827eb7685e2ea6f48aa224ad87633e379b83e2ccb898fca8bb91917f64c
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -33,6 +33,10 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibDataChannel)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/common.hpp" "#ifdef RTC_STATIC" "#if 1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef RTC_STATIC" "#if 1")
+endif()
+
+if("stdcall" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rtc/rtc.h" "#ifdef CAPI_STDCALL" "#if 1")
 endif()
 
 foreach(header IN ITEMS common.hpp rtc.h)
