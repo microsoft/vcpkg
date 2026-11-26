@@ -7,7 +7,6 @@
   "supports": "(linux | windows | osx) & (x86 | x64 | arm64)",
   "dependencies": [
     "boost-algorithm",
-    "boost-container-hash",
     "boost-graph",
     "boost-heap",
     "boost-predef",
@@ -61,6 +60,7 @@
     "cgal": {
       "description": "Build with CGAL support.",
       "dependencies": [
+        "boost-container-hash",
         "cgal"
       ]
     },
