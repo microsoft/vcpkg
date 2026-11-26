@@ -26,9 +26,9 @@ function(boost_configure_and_install)
   if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow
     set(target_path "${arg_SOURCE_PATH}/${boost_lib_path}")
     cmake_path(GET target_path PARENT_PATH parent_path)
-    file(RENAME "${arg_SOURCE_PATH}/" "${arg_SOURCE_PATH}.tmp/")
+    file(RENAME "${arg_SOURCE_PATH}" "${arg_SOURCE_PATH}.tmp")
     file(MAKE_DIRECTORY "${parent_path}")
-    file(RENAME "${arg_SOURCE_PATH}.tmp/" "${target_path}")
+    file(RENAME "${arg_SOURCE_PATH}.tmp" "${target_path}")
   endif()
 
   # Beta builds contains a text in the version string
