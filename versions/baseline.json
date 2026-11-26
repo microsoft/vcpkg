@@ -449,7 +449,7 @@
       "port-version": 1
     },
     "avcpp": {
-      "baseline": "3.0.1",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "avir": {
