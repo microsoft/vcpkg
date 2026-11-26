@@ -1,0 +1,69 @@
+diff --git a/cmake/FindFFmpeg.cmake b/cmake/FindFFmpeg.cmake
+index 1fb547d..9809b8b 100644
+--- a/cmake/FindFFmpeg.cmake
++++ b/cmake/FindFFmpeg.cmake
+@@ -228,6 +228,7 @@ if (TRUE)
+   setup_component(SWRESAMPLE libswresample swresample libswresample/swresample.h)
+ 
+   # Check if the required components were found and add their stuff to the FFMPEG_* vars.
++  set(FFMPEG_PKGCONFIG_MODULES)
+   foreach (_component ${FFmpeg_FIND_COMPONENTS})
+     # find only requested componsnts
+     find_component(${_component} ${_${_component}_PKGCONFIG_NAME} ${_${_component}_LIBRARY_NAME} ${_${_component}_HEADER_NAME})
+@@ -239,6 +240,9 @@ if (TRUE)
+       set(FFMPEG_DEFINITIONS  ${FFMPEG_DEFINITIONS}  ${${_component}_DEFINITIONS})
+ 
+       list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
++      if (PC_${_component}_FOUND)
++        list(APPEND FFMPEG_PKGCONFIG_MODULES ${_${_component}_PKGCONFIG_NAME})
++      endif()
+ 
+       string(TOLOWER ${_component} _lowerComponent)
+       if (NOT TARGET FFmpeg::${_lowerComponent})
+@@ -266,12 +270,20 @@ if (TRUE)
+ 
+ endif ()
+ 
++if (PKG_CONFIG_FOUND AND FFMPEG_PKGCONFIG_MODULES)
++  pkg_check_modules(AVCPP_FFMPEG IMPORTED_TARGET ${FFMPEG_PKGCONFIG_MODULES})
++endif()
++
+ if (NOT TARGET FFmpeg::FFmpeg)
+   add_library(FFmpeg INTERFACE)
+-  set_target_properties(FFmpeg PROPERTIES
+-      INTERFACE_COMPILE_OPTIONS "${FFMPEG_DEFINITIONS}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${FFMPEG_INCLUDE_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${FFMPEG_LIBRARIES}")
++  if (TARGET PkgConfig::AVCPP_FFMPEG)
++    target_link_libraries(FFmpeg INTERFACE PkgConfig::AVCPP_FFMPEG)
++  else()
++    set_target_properties(FFmpeg PROPERTIES
++        INTERFACE_COMPILE_OPTIONS "${FFMPEG_DEFINITIONS}"
++        INTERFACE_INCLUDE_DIRECTORIES "${FFMPEG_INCLUDE_DIRS}"
++        INTERFACE_LINK_LIBRARIES "${FFMPEG_LIBRARIES}")
++  endif()
+   add_library(FFmpeg::FFmpeg ALIAS FFmpeg)
+ endif()
+ 
+diff --git a/src/avcpp/Config.cmake.in b/src/avcpp/Config.cmake.in
+index e8abd66..61a2180 100644
+--- a/src/avcpp/Config.cmake.in
++++ b/src/avcpp/Config.cmake.in
+@@ -1,5 +1,17 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
++set(_avcpp_ffmpeg_pc_modules "@FFMPEG_PKGCONFIG_MODULES@")
++if(_avcpp_ffmpeg_pc_modules)
++    find_dependency(PkgConfig)
++    pkg_check_modules(AVCPP_FFMPEG IMPORTED_TARGET ${_avcpp_ffmpeg_pc_modules})
++    if(NOT AVCPP_FFMPEG_FOUND)
++        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
++        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "Could not find FFmpeg pkg-config modules: ${_avcpp_ffmpeg_pc_modules}")
++        unset(_avcpp_ffmpeg_pc_modules)
++        return()
++    endif()
++endif()
++unset(_avcpp_ffmpeg_pc_modules)
+ 
+ @PACKAGE_INIT@
+ include("${CMAKE_CURRENT_LIST_DIR}/avcpp-targets.cmake")

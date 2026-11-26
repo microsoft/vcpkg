@@ -1,8 +1,8 @@
 {
   "name": "xad",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Comprehensive C++ library for automatic differentiation: forward and adjoint modes, higher-order derivatives, checkpointing and vector modes.",
-  "homepage": "https://auto-differentiation.github.io",
+  "homepage": "https://www.xcelerit.com/xad/docs/",
   "license": "AGPL-3.0-or-later",
   "supports": "!mingw",
   "dependencies": [

@@ -1,0 +1,21 @@
+{
+  "name": "sdl3-gfx",
+  "version": "2.0.0",
+  "description": "Graphics primitives, surface rotozoomer, framerate control and image filters for SDL3.",
+  "homepage": "https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "sdl3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

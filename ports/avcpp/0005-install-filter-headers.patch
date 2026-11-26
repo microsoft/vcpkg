@@ -1,0 +1,15 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 15931d2..6758401 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -115,6 +115,10 @@ if (AVCPP_NOT_SUBPROJECT)
+         PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avcpp
+         PUBLIC_HEADER DESTINATION  ${CMAKE_INSTALL_INCLUDEDIR}/avcpp)
+ 
++    install(DIRECTORY avcpp/filters
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avcpp
++        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
++
+     #cmake_policy(SET CMP0022 OLD)
+     install(EXPORT avcpp-targets
+         FILE avcpp-targets.cmake

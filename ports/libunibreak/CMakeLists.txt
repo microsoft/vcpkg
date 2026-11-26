@@ -7,12 +7,9 @@ set(libunibreak_srcs
   src/linebreakdata.c
   src/linebreakdef.c
   src/wordbreak.c
-  src/wordbreakdata.c
   src/graphemebreak.c
-  src/graphemebreakdata.c
   src/emojidef.c
   src/eastasianwidthdef.c
-  src/eastasianwidthdata.c
   src/unibreakbase.c
   src/unibreakdef.c
 )
@@ -40,10 +37,22 @@ if(NOT DISABLE_INSTALL_HEADERS)
     src/linebreak.h
     src/linebreakdef.h
     src/test_skips.h
-    src/unibreakbase.h
-    src/unibreakdef.h
     src/wordbreak.h
     src/wordbreakdef.h
     DESTINATION include
   )
 endif()
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libunibreak.pc"
+"prefix=${CMAKE_INSTALL_PREFIX}
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: libunibreak
+Description: Library to implement Unicode algorithms for line and word breaking
+Version: ${UNIBREAK_VERSION}
+Libs: -L\${libdir} -lunibreak
+Cflags: -I\${includedir}
+")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libunibreak.pc" DESTINATION lib/pkgconfig)

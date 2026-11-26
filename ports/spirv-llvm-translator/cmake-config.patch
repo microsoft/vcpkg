@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a6aab41..33c2624 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,10 +144,24 @@ install(
+     ${CMAKE_INSTALL_PREFIX}/include/LLVMSPIRVLib
+ )
+ 
+-configure_file(LLVMSPIRVLib.pc.in ${CMAKE_BINARY_DIR}/LLVMSPIRVLib.pc @ONLY)
++target_include_directories(LLVMSPIRVLib INTERFACE $<INSTALL_INTERFACE:include>)
++install(TARGETS LLVMSPIRVLib EXPORT LLVMSPIRVLibTargets)
++install(
++  EXPORT LLVMSPIRVLibTargets
++  NAMESPACE unofficial::spirv-llvm-translator::
++  DESTINATION lib/cmake/unofficial-spirv-llvm-translator
++)
++include(CMakePackageConfigHelpers)
++configure_file(cmake/unofficial-spirv-llvm-translator-config.cmake.in
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-spirv-llvm-translator-config.cmake @ONLY)
++write_basic_package_version_file(
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-spirv-llvm-translator-config-version.cmake
++  VERSION ${LLVMSPIRV_PACKAGE_VERSION}
++  COMPATIBILITY SameMinorVersion
++)
+ install(
+   FILES
+-    ${CMAKE_BINARY_DIR}/LLVMSPIRVLib.pc
+-  DESTINATION
+-    ${CMAKE_INSTALL_PREFIX}/lib${LLVM_LIBDIR_SUFFIX}/pkgconfig
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-spirv-llvm-translator-config.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-spirv-llvm-translator-config-version.cmake
++  DESTINATION lib/cmake/unofficial-spirv-llvm-translator
+ )
+diff --git a/cmake/unofficial-spirv-llvm-translator-config.cmake.in b/cmake/unofficial-spirv-llvm-translator-config.cmake.in
+new file mode 100644
+index 0000000..f3d9998
+--- /dev/null
++++ b/cmake/unofficial-spirv-llvm-translator-config.cmake.in
+@@ -0,0 +1,3 @@
++include(CMakeFindDependencyMacro)
++find_dependency(LLVM @LLVM_VERSION_MAJOR@.@LLVM_VERSION_MINOR@ CONFIG)
++include("${CMAKE_CURRENT_LIST_DIR}/LLVMSPIRVLibTargets.cmake")
