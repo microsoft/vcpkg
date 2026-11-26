@@ -7385,7 +7385,7 @@
       "port-version": 0
     },
     "nu-book-zxing-cpp": {
-      "baseline": "3.1.1",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "nuklear": {
