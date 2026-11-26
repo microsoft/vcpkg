@@ -4,9 +4,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebook/folly
+    REPO meta/folly
     REF "v${VERSION}"
-    SHA512 8ee08591724fb1f6183cc0456c13cd00474e425d41824add2751fd3823e23b95ea69ec1b246bc85c95d30add854ee53dafd2bc1b824d0b555917dcbaf6943a6f
+    SHA512 8dc1e5ec7f475727f7889982b81ce1a59124a6e1e1a049325b4825f06a4e50138a7de1de593a31f6be4cb153f7ed8179304ea53149f255d4c806d7b872872c7d
     HEAD_REF main
     PATCHES
         fix-deps.patch
