@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-static-library.patch
         fix-static-dependencies.patch
         exclude-test-only-target.patch
+        fix-modemmanager-includes.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
