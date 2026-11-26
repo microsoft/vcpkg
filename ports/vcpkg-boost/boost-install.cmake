@@ -72,7 +72,7 @@ include(BoostRoot)\n"
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${SEMVER_VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
   endforeach()
 
-  if(PORT MATCHES "boost-(stacktrace|test)") 
+  if(PORT MATCHES "boost-(stacktrace|test)")
     # These ports have no cmake config agreeing with the port name
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
   else()
