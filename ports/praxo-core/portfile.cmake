@@ -1,9 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_git(
-    URL https://github.com/axisvela/praxo-core.git
-    REF da4cae049176c5f9d4d6912cdef3f69e1a10db41
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO axisvela/praxo-core
+    REF cbeade3c91d9035174350ec95560efffb661708c
+    SHA512 95e2b45ea999ff10302b04cc471291c890fb865984d62bffd17896ba6df094028757bf119aabfd158b9816c131cbcd120a0ef9c70a776802d77a655667456141
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
