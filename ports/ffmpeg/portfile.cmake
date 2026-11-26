@@ -664,6 +664,12 @@ else()
     set(WITH_RUBBERBAND OFF)
 endif()
 
+if("dvdvideo" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libdvdnav --enable-libdvdread")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libdvdnav --disable-libdvdread")
+endif()
+
 set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
