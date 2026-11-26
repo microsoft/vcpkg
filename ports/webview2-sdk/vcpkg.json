@@ -1,5 +1,5 @@
 {
-  "name": "webview2",
+  "name": "webview2-sdk",
   "version": "1.0.4370.26",
   "description": "The WebView2 control allows you to embed web technologies (HTML, CSS, and JavaScript) using Microsoft Edge",
   "homepage": "https://docs.microsoft.com/en-us/microsoft-edge/webview2",

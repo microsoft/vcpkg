@@ -4290,7 +4290,7 @@
     },
     "juce": {
       "baseline": "8.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "jwsung91-unilink": {
       "baseline": "0.9.0",
@@ -9302,7 +9302,7 @@
     },
     "saucer": {
       "baseline": "6.0.1",
-      "port-version": 8
+      "port-version": 9
     },
     "sbgecom": {
       "baseline": "5.7.626",
@@ -11180,7 +11180,7 @@
       "baseline": "2.4.2",
       "port-version": 0
     },
-    "webview2": {
+    "webview2-sdk": {
       "baseline": "1.0.4370.26",
       "port-version": 0
     },
@@ -11326,7 +11326,7 @@
     },
     "wxwidgets": {
       "baseline": "3.3.3",
-      "port-version": 1
+      "port-version": 2
     },
     "wyhash": {
       "baseline": "2023-12-03",
