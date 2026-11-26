@@ -1,0 +1,41 @@
+diff --git a/cmake/QtJavaHelpers.cmake b/cmake/QtJavaHelpers.cmake
+index 5c4c49a..7935999 100644
+--- a/cmake/QtJavaHelpers.cmake
++++ b/cmake/QtJavaHelpers.cmake
+@@ -33,6 +33,14 @@ function(_qt_internal_resolve_gradle_build_variant out_var)
+     endif()
+ endfunction()
+ 
++function(_qt_internal_gradle_sdk_root out_var)
++    if(NOT "$ENV{VCPKG_QT_ANDROID_GRADLE_SDK_ROOT}" STREQUAL "")
++        set(${out_var} "$ENV{VCPKG_QT_ANDROID_GRADLE_SDK_ROOT}" PARENT_SCOPE)
++    else()
++        set(${out_var} "${ANDROID_SDK_ROOT}" PARENT_SCOPE)
++    endif()
++endfunction()
++
+ function(qt_internal_add_jar target)
+     set(options)
+     set(oneValueArgs OUTPUT_DIR GRADLE_PROJECT_DIR)
+@@ -159,9 +167,10 @@ function(qt_internal_add_jar target)
+     list(APPEND gradle_props "-PbuildToolsVersion=${build_tools_revision}")
+ 
+     # Invoke Gradle
++    _qt_internal_gradle_sdk_root(gradle_sdk_root)
+     add_custom_command(OUTPUT "${jar_output_file}"
+         COMMAND ${CMAKE_COMMAND} -E make_directory "${jar_output_dir}"
+-        COMMAND ${CMAKE_COMMAND} -E env "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
++        COMMAND ${CMAKE_COMMAND} -E env "ANDROID_SDK_ROOT=${gradle_sdk_root}"
+             "${gradlew}"
+             --init-script "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/android/qt-android-init.gradle"
+             --project-cache-dir "${gradle_build_dir}/.gradle"
+@@ -261,7 +270,8 @@ function(_qt_internal_verify_gradle_offline_cache gradle_source_dir)
+         message(FATAL_ERROR "Android build-tools '${build_tools_revision}' is not installed.")
+     endif()
+     set(build_tools_revision_arg "-DQT_ANDROID_SDK_BUILD_TOOLS_REVISION=${build_tools_revision}")
+-    set(gradle_env "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}")
++    _qt_internal_gradle_sdk_root(gradle_sdk_root)
++    set(gradle_env "ANDROID_SDK_ROOT=${gradle_sdk_root}")
+     execute_process(
+         COMMAND "${CMAKE_COMMAND}" -E env "${gradle_env}"
+             "${CMAKE_COMMAND}"
