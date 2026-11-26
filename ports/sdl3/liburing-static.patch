@@ -1,0 +1,111 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f7c15287b2e488aacf706412ad85d83af7651489..453c9586267461adfbba6384f352499a14be3c06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1982,11 +1982,17 @@ elseif(UNIX AND NOT APPLE AND NOT RISCOS AND NOT HAIKU)
+       endif()
+ 
+       if(SDL_LIBURING)
+-        pkg_search_module(LIBURING liburing-ffi)
++        pkg_search_module(LIBURING IMPORTED_TARGET liburing)
+         find_path(HAVE_LIBURING_H NAMES liburing.h)
+         if(LIBURING_FOUND AND HAVE_LIBURING_H)
+           set(HAVE_LIBURING_LIBURING_H TRUE)
+-          sdl_include_directories(PRIVATE SYSTEM ${LIBURING_INCLUDE_DIRS})
++          FindLibraryAndSONAME("uring" LIBDIRS ${LIBURING_LIBRARY_DIRS})
++          if(URING_SHARED)
++            sdl_include_directories(PRIVATE SYSTEM ${LIBURING_INCLUDE_DIRS})
++          else()
++            sdl_compile_definitions(PRIVATE SDL_LIBURING_STATIC)
++            sdl_link_dependency(liburing LIBS PkgConfig::LIBURING PKG_CONFIG_PREFIX LIBURING PKG_CONFIG_SPECS liburing)
++          endif()
+           set(HAVE_LIBURING TRUE)
+         endif()
+       endif()
+diff --git a/src/io/io_uring/SDL_asyncio_liburing.c b/src/io/io_uring/SDL_asyncio_liburing.c
+index a15218a1e3aef4c6b295f8443431ac8e9f3fcd7d..87183e3ada630f7bf2c30e763557a210a199961a 100644
+--- a/src/io/io_uring/SDL_asyncio_liburing.c
++++ b/src/io/io_uring/SDL_asyncio_liburing.c
+@@ -41,7 +41,7 @@ static bool (*CreateAsyncIOQueue)(SDL_AsyncIOQueue *queue);
+ static void (*QuitAsyncIO)(void);
+ static bool (*AsyncIOFromFile)(const char *file, const char *mode, SDL_AsyncIO *asyncio);
+ 
+-// we never link directly to liburing.
++#ifndef SDL_LIBURING_STATIC
+ // (this says "-ffi" which sounds like a scripting language binding thing, but the non-ffi version
+ // is static-inline code we can't lookup with dlsym. This is by design.)
+ #define SDL_DRIVER_LIBURING_DYNAMIC "liburing-ffi.so.2"
+@@ -54,6 +54,7 @@ SDL_ELF_NOTE_DLOPEN(
+     SDL_ELF_NOTE_DLOPEN_PRIORITY_SUGGESTED,
+     SDL_DRIVER_LIBURING_DYNAMIC
+ )
++#endif
+ 
+ #define SDL_LIBURING_FUNCS \
+     SDL_LIBURING_FUNC(int, io_uring_queue_init, (unsigned entries, struct io_uring *ring, unsigned flags)) \
+@@ -65,8 +66,8 @@ SDL_ELF_NOTE_DLOPEN(
+     SDL_LIBURING_FUNC(void, io_uring_prep_write,(struct io_uring_sqe *sqe, int fd, const void *buf, unsigned nbytes, __u64 offset)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_close, (struct io_uring_sqe *sqe, int fd)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_fsync, (struct io_uring_sqe *sqe, int fd, unsigned fsync_flags)) \
+-    SDL_LIBURING_FUNC(void, io_uring_prep_cancel, (struct io_uring_sqe *sqe, void *user_data, int flags)) \
+-    SDL_LIBURING_FUNC(void, io_uring_prep_timeout, (struct io_uring_sqe *sqe, struct __kernel_timespec *ts, unsigned count, unsigned flags)) \
++    SDL_LIBURING_FUNC(void, io_uring_prep_cancel, (struct io_uring_sqe *sqe, const void *user_data, int flags)) \
++    SDL_LIBURING_FUNC(void, io_uring_prep_timeout, (struct io_uring_sqe *sqe, const struct __kernel_timespec *ts, unsigned count, unsigned flags)) \
+     SDL_LIBURING_FUNC(void, io_uring_prep_nop, (struct io_uring_sqe *sqe)) \
+     SDL_LIBURING_FUNC(void, io_uring_sqe_set_data, (struct io_uring_sqe *sqe, void *data)) \
+     SDL_LIBURING_FUNC(void, io_uring_sqe_set_flags, (struct io_uring_sqe *sqe, unsigned flags)) \
+@@ -103,21 +104,27 @@ typedef struct LibUringAsyncIOQueueData
+ 
+ static void UnloadLibUringLibrary(void)
+ {
++#ifndef SDL_LIBURING_STATIC
+     if (liburing_library) {
+         SDL_UnloadObject(liburing_handle);
+         liburing_library = NULL;
+     }
++#endif
+     SDL_zero(liburing);
+ }
+ 
+ static bool LoadLibUringSyms(void)
+ {
++#ifdef SDL_LIBURING_STATIC
++    #define SDL_LIBURING_FUNC(ret, fn, args) liburing.fn = fn;
++#else
+     #define SDL_LIBURING_FUNC(ret, fn, args) { \
+         liburing.fn = (SDL_fntype_##fn) SDL_LoadFunction(liburing_handle, #fn); \
+         if (!liburing.fn) { \
+             return false; \
+         } \
+     }
++#endif
+     SDL_LIBURING_FUNCS
+     #undef SDL_LIBURING_FUNC
+     return true;
+@@ -130,12 +137,16 @@ static bool LoadLibUring(void)
+ {
+     bool result = true;
+ 
++#ifndef SDL_LIBURING_STATIC
+     if (!liburing_handle) {
+         liburing_handle = SDL_LoadObject(liburing_library);
+         if (!liburing_handle) {
+             result = false;
+             // Don't call SDL_SetError(): SDL_LoadObject already did.
+         } else {
++#else
++        {
++#endif
+             result = LoadLibUringSyms();
+             if (result) {
+                 static const int needed_ops[] = {
+@@ -166,7 +177,9 @@ static bool LoadLibUring(void)
+                 UnloadLibUringLibrary();
+             }
+         }
++#ifndef SDL_LIBURING_STATIC
+     }
++#endif
+     return result;
+ }
+ 

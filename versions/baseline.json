@@ -9398,7 +9398,7 @@
     },
     "sdl3": {
       "baseline": "3.4.20",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-gfx": {
       "baseline": "2.0.0",
