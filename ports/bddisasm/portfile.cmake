@@ -8,10 +8,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Cached packages must not target the build host's CPU.
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "-march=native" "")
+# Let vcpkg_fixup_pkgconfig point Debug at the shared headers.
+vcpkg_replace_string("${SOURCE_PATH}/bddisasm.pc.in"
+    [[include_dir=${dir_prefix}/${include}]]
+    [[include_dir=${prefix}/@BDDISASM_INSTALL_INCLUDE_DIR@]]
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBDD_INCLUDE_TOOL=OFF
+        -DBDD_INCLUDE_ISAGENERATOR_X86=OFF
 )
 
 vcpkg_cmake_install()
@@ -26,5 +35,4 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
