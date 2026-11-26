@@ -1,6 +1,7 @@
 {
   "name": "openzl",
   "version": "0.3.0",
+  "port-version": 1,
   "description": "Format-aware compression framework delivering high ratios while preserving speed.",
   "homepage": "https://github.com/facebook/openzl",
   "license": "BSD-3-Clause",

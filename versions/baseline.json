@@ -7762,7 +7762,7 @@
     },
     "openzl": {
       "baseline": "0.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -11637,7 +11637,7 @@
       "port-version": 0
     },
     "zstd": {
-      "baseline": "1.5.7",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "zstr": {
