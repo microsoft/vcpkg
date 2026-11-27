@@ -11,7 +11,7 @@
 ## Note: Since Qt 6.12, qtwebengine is released separately (versioned after Chromium, e.g. 6.140.0).
 ##       It is not part of QT_PORTS; update ports/qtwebengine/port.data.cmake and its vcpkg.json manually.
 
-set(QT_VERSION 6.12.0)
+set(QT_VERSION 6.12.1)
 
 set(QT_DEV_BRANCH 0)
 
