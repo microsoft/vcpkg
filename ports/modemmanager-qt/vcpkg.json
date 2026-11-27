@@ -1,6 +1,7 @@
 {
   "name": "modemmanager-qt",
   "version": "6.32.0",
+  "port-version": 1,
   "description": "Qt wrapper for ModemManager DBus API",
   "homepage": "https://invent.kde.org/frameworks/modemmanager-qt",
   "documentation": "https://api.kde.org/modemmanager-qt-index.html",
