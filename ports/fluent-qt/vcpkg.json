@@ -1,6 +1,6 @@
 {
   "name": "fluent-qt",
-  "version-semver": "1.12.3",
+  "version-semver": "1.12.4",
   "description": "Fluent UI components for native Qt Widgets desktop applications.",
   "homepage": "https://github.com/calvinhxx/Fluent-Qt",
   "license": "MIT AND OFL-1.1",

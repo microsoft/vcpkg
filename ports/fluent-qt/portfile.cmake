@@ -12,7 +12,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO calvinhxx/Fluent-Qt
     REF "v${VERSION}"
-    SHA512 c46a0ffe16ca9eeeb78dfe3d2a47409399b66d684d7605b6bf510ad316bb3ab869856b0c114dc430309fbb84f4235a65eac23ba1903caac11270bb8c5c749530
+    SHA512 0e09756a0956fa83556e83adaf46eacda763988fb7fa5dfa1fc05d0cbbab6acb1db182488afcdb54cc89a3c569e01b110d62e0f6bd5edbc5136118c9ece40264
     PATCHES ${direct_include_patch}
 )
 
