@@ -1,24 +1,23 @@
 {
   "name": "mesa",
   "version": "26.3.1",
+  "port-version": 1,
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0 AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause",
-  "supports": "!(windows & arm) & !staticcrt & !uwp",
+  "supports": "(windows | linux | osx | android) & !(windows & arm) & !staticcrt & !uwp",
   "dependencies": [
     {
       "name": "directx-headers",
       "platform": "windows"
     },
     {
-      "name": "llvm",
-      "default-features": false,
-      "features": [
-        "enable-rtti",
-        "target-x86",
-        "tools"
-      ],
-      "platform": "windows"
+      "name": "elfutils",
+      "platform": "linux"
+    },
+    {
+      "name": "expat",
+      "platform": "linux"
     },
     {
       "name": "vcpkg-get-python-packages",
@@ -32,35 +31,51 @@
     "zstd"
   ],
   "default-features": [
-    "gles1",
-    "gles2",
     {
-      "name": "llvm",
-      "platform": "(x64 | x86) & !android"
+      "name": "d3d12",
+      "platform": "windows"
+    },
+    {
+      "name": "gles1",
+      "platform": "windows | android"
+    },
+    {
+      "name": "gles2",
+      "platform": "windows | android"
+    },
+    {
+      "name": "kosmickrisp",
+      "platform": "osx"
+    },
+    {
+      "name": "lavapipe",
+      "platform": "windows | linux | osx"
+    },
+    {
+      "name": "llvmpipe",
+      "platform": "windows | linux"
+    },
+    {
+      "name": "opengl",
+      "platform": "windows | linux"
+    },
+    {
+      "name": "softpipe",
+      "platform": "android"
+    },
+    {
+      "name": "wayland",
+      "platform": "linux"
+    },
+    {
+      "name": "x11",
+      "platform": "linux"
     }
   ],
   "features": {
-    "egl": {
-      "description": "Build support for EGL platform",
-      "dependencies": [
-        "egl-registry"
-      ]
-    },
-    "gles1": {
-      "description": "Build support for OpenGL ES 1.x",
-      "dependencies": [
-        "opengl"
-      ]
-    },
-    "gles2": {
-      "description": "Build support for OpenGL ES 2.x and 3.x",
-      "dependencies": [
-        "opengl"
-      ]
-    },
-    "lavapipe": {
-      "description": "Build the lavapipe software Vulkan driver",
-      "supports": "windows & !uwp & (x64 | x86)",
+    "anv": {
+      "description": "Build the anv Vulkan driver",
+      "supports": "linux & (x64 | arm64)",
       "dependencies": [
         {
           "name": "glslang",
@@ -70,27 +85,190 @@
           ]
         },
         {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc"
+          ]
+        }
+      ]
+    },
+    "asahi": {
+      "description": "Build the asahi driver",
+      "supports": "linux & arm64",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc",
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "clc": {
+      "description": "Build the OpenCL C compiler for precompiling shaders",
+      "dependencies": [
+        {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "enable-rtti",
-            "target-x86",
+            "clang"
+          ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "llvm"
+          ]
+        },
+        "spirv-llvm-translator",
+        "spirv-tools"
+      ]
+    },
+    "d3d12": {
+      "description": "Build the d3d12 gallium driver",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "dozen": {
+      "description": "Build the dozen Vulkan driver",
+      "supports": "windows"
+    },
+    "egl": {
+      "description": "Build support for EGL platform",
+      "supports": "windows | linux",
+      "dependencies": [
+        "egl-registry"
+      ]
+    },
+    "freedreno": {
+      "description": "Build the freedreno gallium driver",
+      "supports": "linux & arm64",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "gbm": {
+      "description": "Build support for the GBM platform",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "egl"
+          ]
+        }
+      ]
+    },
+    "gles1": {
+      "description": "Build support for OpenGL ES 1",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!android"
+        },
+        "opengl"
+      ]
+    },
+    "gles2": {
+      "description": "Build support for OpenGL ES 2 and 3",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ],
+          "platform": "!android"
+        },
+        "opengl"
+      ]
+    },
+    "honeykrisp": {
+      "description": "Build the honeykrisp Vulkan driver",
+      "supports": "linux & arm64",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc"
+          ]
+        }
+      ]
+    },
+    "iris": {
+      "description": "Build the iris gallium driver",
+      "supports": "linux & (x64 | arm64)",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc",
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "kosmickrisp": {
+      "description": "Build the kosmickrisp Vulkan driver",
+      "supports": "osx",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc"
+          ]
+        }
+      ]
+    },
+    "lavapipe": {
+      "description": "Build the lavapipe Vulkan driver",
+      "supports": "windows | linux | osx",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "host": true,
+          "features": [
             "tools"
+          ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "llvm"
           ]
         }
       ]
     },
     "llvm": {
-      "description": "Build with llvmpipe",
+      "description": "Build with LLVM",
       "dependencies": [
-        {
-          "name": "glslang",
-          "host": true,
-          "features": [
-            "tools"
-          ],
-          "platform": "linux | android"
-        },
         {
           "name": "llvm",
           "default-features": false,
@@ -130,6 +308,208 @@
             "target-x86"
           ],
           "platform": "x64 | x86"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-loongarch",
+            "target-mips",
+            "target-powerpc",
+            "target-riscv",
+            "target-systemz"
+          ],
+          "platform": "!(x86 | x64 | arm)"
+        }
+      ]
+    },
+    "llvmpipe": {
+      "description": "Build the llvmpipe gallium driver",
+      "supports": "windows | linux | android | osx",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "llvm",
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "nouveau": {
+      "description": "Build the nouveau gallium driver",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "opengl": {
+      "description": "Build support for OpenGL",
+      "supports": "windows | linux | android | osx",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "panfrost": {
+      "description": "Build the panfrost gallium driver ",
+      "supports": "linux & arm",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc",
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "panvk": {
+      "description": "Build the panvk Vulkan driver",
+      "supports": "linux & arm",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "clc"
+          ]
+        }
+      ]
+    },
+    "radeonsi": {
+      "description": "Build the radeonsi gallium driver",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "radv": {
+      "description": "Build the radv Vulkan driver",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "softpipe": {
+      "description": "Build the softpipe gallium driver",
+      "supports": "windows | linux | android | osx",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "svga": {
+      "description": "Build the svga gallium driver",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "turnip": {
+      "description": "Build the turnip Vulkan driver",
+      "supports": "linux & arm64",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "v3d": {
+      "description": "Build the v3d gallium driver",
+      "supports": "linux & arm",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "v3dv": {
+      "description": "Build the v3dv Vulkan driver",
+      "supports": "linux & arm"
+    },
+    "virgl": {
+      "description": "Build the virgl gallium driver",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "wayland": {
+      "description": "Build support for the Wayland platform",
+      "supports": "linux",
+      "dependencies": [
+        "wayland",
+        "wayland-protocols"
+      ]
+    },
+    "x11": {
+      "description": "Build support for the X11 platform",
+      "supports": "linux | osx",
+      "dependencies": [
+        "libx11",
+        "libxcb",
+        "libxext",
+        "libxrandr",
+        "libxxf86vm",
+        "xcb-keysyms",
+        "xproto"
+      ]
+    },
+    "zink": {
+      "description": "Build the zink gallium driver",
+      "supports": "windows | linux",
+      "dependencies": [
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     }

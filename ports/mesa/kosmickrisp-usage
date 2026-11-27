@@ -1,0 +1,6 @@
+The feature mesa[kosmickrisp] provides the KosmicKrisp Vulkan driver.
+To use the driver, point the Vulkan loader at the installed ICD manifest:
+    VK_DRIVER_FILES=<vcpkg_installed>/share/vulkan/icd.d/kosmickrisp_mesa_icd.json
+(replaces driver discovery) or
+    VK_ADD_DRIVER_FILES=<vcpkg_installed>/share/vulkan/icd.d/kosmickrisp_mesa_icd.json
+(adds KosmicKrisp to the normal driver search).
