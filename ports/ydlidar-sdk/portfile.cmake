@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-windows-macros.patch
+        fix-serial-wait-timeout.patch
 )
 
 # Upstream's build system is not installable (CMake 4 policy errors, LOCATION-based

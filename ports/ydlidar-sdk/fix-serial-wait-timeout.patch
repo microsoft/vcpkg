@@ -1,0 +1,15 @@
+diff --git a/core/serial/impl/windows/win_serial.cpp b/core/serial/impl/windows/win_serial.cpp
+index 4cce5cb..18b08fe 100644
+--- a/core/serial/impl/windows/win_serial.cpp
++++ b/core/serial/impl/windows/win_serial.cpp
+@@ -616,6 +616,10 @@ int  Serial::SerialImpl::waitfordata(size_t data_count, uint32_t timeout,
+       if (GetLastError() == ERROR_IO_PENDING) {
+ 
+         if (WaitForSingleObject(_wait_o.hEvent, timeout) == WAIT_TIMEOUT) {
++          // The pending WaitCommEvent still writes to msk; finish it first.
++          CancelIoEx(fd_, &_wait_o);
++          GetOverlappedResult(fd_, &_wait_o, &lengths, TRUE);
++          ::ResetEvent(_wait_o.hEvent);
+           *returned_size = 0;
+           return -1;
+         }
