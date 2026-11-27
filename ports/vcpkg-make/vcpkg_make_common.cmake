@@ -180,13 +180,16 @@ function(z_vcpkg_make_prepare_compile_flags)
         endforeach()
     endif()
 
-    set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
-    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
-    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-        vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
-    endif()
-    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-        vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
+    # MSVC uses the library paths in LIB/LIBPATH, set by z_vcpkg_make_prepare_env.
+    if(NOT (VCPKG_TARGET_IS_WINDOWS AND arg_COMPILER_FRONTEND STREQUAL "MSVC"))
+        set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
+        string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
+            vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
+        endif()
+        if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
+            vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
+        endif()
     endif()
 
     # libtool tries to filter CFLAGS passed to the link stage via a allow list.
