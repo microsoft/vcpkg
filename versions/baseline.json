@@ -6882,7 +6882,7 @@
     },
     "modemmanager-qt": {
       "baseline": "6.32.0",
-      "port-version": 0
+      "port-version": 1
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",

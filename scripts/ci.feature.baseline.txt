@@ -1349,7 +1349,6 @@ usbmuxd:x64-windows-static-md=fail
 usd=skip # USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
 usockets[network]:arm64-osx=cascade
 vcpkg-ci-lua:arm64-linux=fail
-vcpkg-ci-podofo:arm64-linux=fail
 vectorclass:arm64-windows=fail
 vectorscan:arm64-linux=fail
 vlfeat[openmp]:arm64-osx=feature-fails # No openmp on osx

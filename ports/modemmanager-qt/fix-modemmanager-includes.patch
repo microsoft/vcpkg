@@ -1,0 +1,130 @@
+diff --git a/src/call.cpp b/src/call.cpp
+index cf88cac..f2c3243 100644
+--- a/src/call.cpp
++++ b/src/call.cpp
+@@ -14,7 +14,7 @@
+ #include "dbus/dbus.h"
+ #endif
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::CallPrivate::CallPrivate(const QString &path, Call *q)
+ #ifdef MMQT_STATIC
+diff --git a/src/cbm.cpp b/src/cbm.cpp
+index d182449..9b8c4d4 100644
+--- a/src/cbm.cpp
++++ b/src/cbm.cpp
+@@ -14,7 +14,7 @@
+ #include "dbus/dbus.h"
+ #endif
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::CbmPrivate::CbmPrivate(const QString &path, Cbm *q)
+ #ifdef MMQT_STATIC
+diff --git a/src/generictypes.h b/src/generictypes.h
+index 909fb2d..50e7f86 100644
+--- a/src/generictypes.h
++++ b/src/generictypes.h
+@@ -9,7 +9,7 @@
+ #ifndef MODEMMANAGERQT_GENERIC_TYPES_H
+ #define MODEMMANAGERQT_GENERIC_TYPES_H
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ #include <modemmanagerqt_export.h>
+ 
+ #include <QByteArray>
+diff --git a/src/modem.h b/src/modem.h
+index 1bab436..7d2f76a 100644
+--- a/src/modem.h
++++ b/src/modem.h
+@@ -11,7 +11,7 @@
+ #ifndef MODEMMANAGERQT_MODEM_H
+ #define MODEMMANAGERQT_MODEM_H
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ #include <modemmanagerqt_export.h>
+ 
+diff --git a/src/modemcellbroadcast.cpp b/src/modemcellbroadcast.cpp
+index 6e35909..de7168d 100644
+--- a/src/modemcellbroadcast.cpp
++++ b/src/modemcellbroadcast.cpp
+@@ -14,7 +14,7 @@
+ #endif
+ #include "mmdebug_p.h"
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::ModemCellBroadcastPrivate::ModemCellBroadcastPrivate(const QString &path, ModemCellBroadcast *q)
+     : InterfacePrivate(path, q)
+diff --git a/src/modemdevice.h b/src/modemdevice.h
+index 518b577..056cdc8 100644
+--- a/src/modemdevice.h
++++ b/src/modemdevice.h
+@@ -8,7 +8,7 @@
+ #ifndef MODEMMANAGERQT_MODEMDEVICE_H
+ #define MODEMMANAGERQT_MODEMDEVICE_H
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ #include <modemmanagerqt_export.h>
+ 
+diff --git a/src/modemmessaging.cpp b/src/modemmessaging.cpp
+index d6e9df2..efe28df 100644
+--- a/src/modemmessaging.cpp
++++ b/src/modemmessaging.cpp
+@@ -16,7 +16,7 @@
+ #endif
+ #include "mmdebug_p.h"
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::ModemMessagingPrivate::ModemMessagingPrivate(const QString &path, ModemMessaging *q)
+     : InterfacePrivate(path, q)
+diff --git a/src/modemsimple.h b/src/modemsimple.h
+index a8119ed..1e03163 100644
+--- a/src/modemsimple.h
++++ b/src/modemsimple.h
+@@ -7,7 +7,7 @@
+ #ifndef MODEMMANAGERQT_MODEM_SIMPLE_H
+ #define MODEMMANAGERQT_MODEM_SIMPLE_H
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ #include <modemmanagerqt_export.h>
+ 
+diff --git a/src/modemvoice.cpp b/src/modemvoice.cpp
+index e9e5413..419f2a0 100644
+--- a/src/modemvoice.cpp
++++ b/src/modemvoice.cpp
+@@ -14,7 +14,7 @@
+ #endif
+ #include "mmdebug_p.h"
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::ModemVoicePrivate::ModemVoicePrivate(const QString &path, ModemVoice *q)
+     : InterfacePrivate(path, q)
+diff --git a/src/sms.cpp b/src/sms.cpp
+index ecec285..c5dfedc 100644
+--- a/src/sms.cpp
++++ b/src/sms.cpp
+@@ -16,7 +16,7 @@
+ #include "dbus/dbus.h"
+ #endif
+ 
+-#include <ModemManager/ModemManager.h>
++#include <ModemManager.h>
+ 
+ ModemManager::SmsPrivate::SmsPrivate(const QString &path, Sms *q)
+ #ifdef MMQT_STATIC
