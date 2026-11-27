@@ -1,3 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 
 vcpkg_from_github(
@@ -22,6 +23,7 @@ vcpkg_from_github(
 
         # Used in src/gpu/ganesh/d3d/GrD3DBackendSurface.cpp:118, next time we update skia port, check if this patch is still needed
         014-fix-direct3d.patch
+        015-arm64ec-support.patch
 )
 
 # De-vendor

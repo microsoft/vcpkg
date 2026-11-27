@@ -9630,7 +9630,7 @@
     },
     "skia": {
       "baseline": "148",
-      "port-version": 2
+      "port-version": 3
     },
     "skyr-url": {
       "baseline": "3.0.0",

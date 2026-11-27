@@ -1,0 +1,85 @@
+Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+
+Add ARM64EC support for MSVC builds: use the ARM64 tools with /arm64EC and
+/machine:arm64ec, treat _M_ARM64EC as ARM64 instead of x86, and avoid
+__vectorcall in SkRasterPipeline (error C7301 on ARM64EC).
+
+diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
+index 4357b64d..562be45d 100644
+--- a/gn/toolchain/BUILD.gn
++++ b/gn/toolchain/BUILD.gn
+@@ -75,7 +75,13 @@ template("msvc_toolchain") {
+     lib_switch = ""
+     lib_dir_switch = "/LIBPATH:"
+ 
+-    bin = "$win_vc/Tools/MSVC/$win_toolchain_version/bin/HostX64/$toolchain_target_cpu"
++    if (toolchain_target_cpu == "arm64ec") {
++      # MSVC has no separate ARM64EC tools; the ARM64 tools target ARM64EC
++      # when given /arm64EC (cl) and /machine:arm64ec (lib, link).
++      bin = "$win_vc/Tools/MSVC/$win_toolchain_version/bin/HostX64/arm64"
++    } else {
++      bin = "$win_vc/Tools/MSVC/$win_toolchain_version/bin/HostX64/$toolchain_target_cpu"
++    }
+ 
+     cl_m32_flag = ""
+ 
+@@ -99,6 +105,11 @@ template("msvc_toolchain") {
+       cl = "\"$bin/cl.exe\""
+       lib = "\"$bin/lib.exe\""
+       link = "\"$bin/link.exe\""
++      if (toolchain_target_cpu == "arm64ec") {
++        cl += " /arm64EC"
++        lib += " /machine:arm64ec"
++        link += " /machine:arm64ec"
++      }
+     }
+ 
+     tool("asm") {
+diff --git a/include/private/base/SkFeatures.h b/include/private/base/SkFeatures.h
+index 9ea8063a..366a2a82 100644
+--- a/include/private/base/SkFeatures.h
++++ b/include/private/base/SkFeatures.h
+@@ -65,7 +65,9 @@
+     #endif
+ #endif
+ 
+-#if defined(__i386) || defined(_M_IX86) ||  defined(__x86_64__) || defined(_M_X64)
++// ARM64EC defines _M_X64 and _M_AMD64 for source compatibility, but it compiles to ARM64 code.
++#if (defined(__i386) || defined(_M_IX86) ||  defined(__x86_64__) || defined(_M_X64)) && \
++    !defined(_M_ARM64EC)
+   #define SK_CPU_X86 1
+ #endif
+ 
+@@ -137,7 +139,7 @@
+ #endif
+ 
+ // Are we in VisualStudio?
+-#ifndef SK_CPU_X64_LEVEL
++#if !defined(SK_CPU_X64_LEVEL) && !defined(_M_ARM64EC)
+     // These checks must be done in descending order to ensure we set the highest
+     // available SSE level. 64-bit intel guarantees at least SSE2 support.
+     #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512CD__) && \
+@@ -161,7 +163,7 @@
+ // ARM defines
+ #if defined(__arm__) && (!defined(__APPLE__) || !TARGET_IPHONE_SIMULATOR)
+     #define SK_CPU_ARM32
+-#elif defined(__aarch64__)
++#elif defined(__aarch64__) || defined(_M_ARM64EC)
+     #define SK_CPU_ARM64
+ #endif
+ 
+diff --git a/src/opts/SkRasterPipeline_opts.h b/src/opts/SkRasterPipeline_opts.h
+index 610c75ee..4eec48a7 100644
+--- a/src/opts/SkRasterPipeline_opts.h
++++ b/src/opts/SkRasterPipeline_opts.h
+@@ -1525,6 +1525,10 @@ static constexpr size_t N = sizeof(F) / sizeof(float);
+     // We can still only pass 16 floats, so best as 4x {r,g,b,a}.
+     #define ABI __attribute__((pcs("aapcs-vfp")))
+     #define SKRP_NARROW_STAGES 1
++#elif defined(_MSC_VER) && defined(_M_ARM64EC)
++    // __vectorcall is not supported on ARM64EC, and the default ABI handles wide stages well.
++    #define ABI
++    #define SKRP_NARROW_STAGES 0
+ #elif defined(_MSC_VER)
+     // Even if not vectorized, this lets us pass {r,g,b,a} as registers,
+     // instead of {b,a} on the stack.  Narrow stages work best for __vectorcall.
