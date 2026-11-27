@@ -1,0 +1,15 @@
+diff --git a/src/meson.build b/src/meson.build
+index 90c1c9f..e86ce7c 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -19,6 +19,10 @@ else
+     api_export_flags = []
+ endif
+ 
++if host_machine.system() == 'windows'
++    extra_dependencies += cc.find_library('shell32')
++endif
++
+ # The final libdvdcss library
+ libdvdcss = library('dvdcss', dvdcss_src,
+     include_directories: dvdcss_inc_dirs,

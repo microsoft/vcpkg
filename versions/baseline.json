@@ -3102,7 +3102,7 @@
     },
     "ffmpeg": {
       "baseline": "9.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ffmpeg-bin2c": {
       "baseline": "9.1",
@@ -5102,15 +5102,15 @@
     },
     "libdvdcss": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libdvdnav": {
-      "baseline": "6.1.1",
-      "port-version": 2
+      "baseline": "7.0.0",
+      "port-version": 0
     },
     "libdvdread": {
-      "baseline": "6.1.3",
-      "port-version": 1
+      "baseline": "7.1.1",
+      "port-version": 0
     },
     "libdwarf": {
       "baseline": "2.3.3",

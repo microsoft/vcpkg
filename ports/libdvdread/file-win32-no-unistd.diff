@@ -1,0 +1,12 @@
+diff --git a/src/file/file_win32.c b/src/file/file_win32.c
+index 685da0b..d157e33 100644
+--- a/src/file/file_win32.c
++++ b/src/file/file_win32.c
+@@ -19,7 +19,6 @@
+ 
+ #include <io.h>
+ #include <stdlib.h>
+-#include <unistd.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
