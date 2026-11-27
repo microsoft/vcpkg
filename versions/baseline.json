@@ -7068,6 +7068,10 @@
       "baseline": "1.3.11",
       "port-version": 0
     },
+    "multichain-address-validator": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "mumps-solver": {
       "baseline": "5.9.2",
       "port-version": 0
