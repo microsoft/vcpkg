@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AravisProject/aravis
     REF "${VERSION}"
-    SHA512 5c9b8ad5d2a4da9f0b31e99a4f817450f5c498507e8e4a5f2b3af2f3976eecbdabbea2112d6039aba3c077a3f4259c6ccc8e6f2d8d787938f139a221cacb4dec
+    SHA512 291ecbd154f43870038c5471fb74580d5b9fa5edecfe6deafbda54d7626aaa83eb612b4ecb6e0127a6f96cf67eff6d360ed147be83f68f1bf5985a8f49bec4d4
     HEAD_REF main
 )
 
