@@ -1,11 +1,11 @@
 set(LIBCZI_REPO_NAME ZEISS/libczi)
-set(LIBCZI_REPO_REF 61f74ff097d6d0fbe6e36f204ff59d92e299d7cd)
+set(LIBCZI_REPO_REF 0bcf442562dde287c2ef14c86bee56cba0387f6f)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
-    SHA512 5f1f487df249b4939e2c2fff3ec9a87771ec07f5da1bc8b0a9c487e67d75fd0384f0c7dbb753dba23c66296e5caf048fa334515d9fd63ca13e7bb7c936601f5b
+    SHA512 58ff26ba7f0c122fb591351ff32077354af5911049dcd79b60e5043a1e503c71e343951b314ddae73798464a1cf83945b59ac5976e1fa44ef284c3ab6a8e6838
 )
 
 # Translate enabled vcpkg features into CMake -D flags:
@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
         -DLIBCZI_BUILD_EXPERIMENTAL_CHUNKED_COMPRESSION=OFF
         -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LZ4=ON
         -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_EIGEN3=ON
+        -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_JPEGTURBO=ON
         -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_ZSTD=ON
         -DLIBCZI_BUILD_UNITTESTS=OFF
         -DLIBCZI_ENABLE_INSTALL=ON
@@ -51,9 +52,20 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/libCZI/ImportExport.h"
+        "#pragma once"
+        "#pragma once\n\n#ifndef _LIBCZISTATICLIB\n#define _LIBCZISTATICLIB\n#endif"
+    )
+endif()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH share/libczi)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(
     FILE_LIST
