@@ -1,0 +1,8 @@
+{
+  "name": "multichain-address-validator",
+  "version": "1.0.0",
+  "description": "Header-only C++17 library for validating multi-chain cryptocurrency addresses, mandatory custodial memos, and address-poisoning attacks",
+  "homepage": "https://allswap.io/tools/address-validator",
+  "documentation": "https://zhangglnuo-art.github.io/allswap-validator-docs/",
+  "license": "MIT"
+}
