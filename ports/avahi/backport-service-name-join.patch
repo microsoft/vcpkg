@@ -1,0 +1,80 @@
+From 333c6f457e9e67f4f688b497cac25689be83b5c2 Mon Sep 17 00:00:00 2001
+From: Evgeny Vereshchagin <evvers@ya.ru>
+Date: Fri, 13 Nov 2026 14:35:00 +0000
+Subject: [PATCH] common: bail out of service_name_join when snprintf fails or
+ truncates the result
+
+It fixes a bug where it was possible for unprivileged local users to
+crash avahi-daemon via D-Bus by calling the
+ResolveService/ServiceResolverNew methods with bogus service names:
+```
+d=$(python -c 'print(".".join([r"\\032"*62]*4))')
+gdbus call --system --dest org.freedesktop.Avahi --object-path / --method org.freedesktop.Avahi.Server.ResolveService -- -1 -1 aaaaaaaaa _http._tcp "$d" -1 0
+```
+avahi-daemon crashed with
+```
+browse.c:506: avahi_s_record_browser_prepare: Assertion `key' failed.
+
+Program received signal SIGABRT, Aborted.
+0x00007ffff7bf6d0c in __pthread_kill_implementation () from /lib64/libc.so.6
+(gdb) bt
+ #0  0x00007ffff7bf6d0c in __pthread_kill_implementation () from /lib64/libc.so.6
+ #1  0x00007ffff7b9be8e in raise () from /lib64/libc.so.6
+ #2  0x00007ffff7b837b3 in abort () from /lib64/libc.so.6
+ #3  0x00007ffff7b84804 in __libc_message_impl.cold () from /lib64/libc.so.6
+ #4  0x00007ffff7b93d45 in __assert_fail () from /lib64/libc.so.6
+ #5  0x00007ffff7f5bcf2 in avahi_s_record_browser_prepare (server=server@entry=0x555555582e60, interface=interface@entry=-1, protocol=protocol@entry=-1,
+     key=key@entry=0x0, flags=flags@entry=0, callback=callback@entry=0x7ffff7f70d90 <record_browser_callback>, userdata=0x5555555a0480)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-core/browse.c:506
+ #6  0x00007ffff7f71703 in avahi_s_service_resolver_prepare (server=0x555555582e60, interface=-1, protocol=-1, name=0x5555555a46ec "aaaaaaaaa",
+     type=<optimized out>, domain=<optimized out>, aprotocol=-1, flags=0, callback=0x5555555679f0 <avahi_dbus_sync_service_resolver_callback>,
+     userdata=0x5555555a07f0) at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-core/resolve-service.c:441
+ #7  0x00007ffff7f718ff in avahi_s_service_resolver_new (server=<optimized out>, interface=<optimized out>, protocol=<optimized out>, name=<optimized out>,
+     type=<optimized out>, domain=<optimized out>, aprotocol=-1, flags=0, callback=0x5555555679f0 <avahi_dbus_sync_service_resolver_callback>,
+     userdata=0x5555555a07f0) at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-core/resolve-service.c:521
+ #8  0x00005555555628b4 in dbus_create_sync_service_resolver_object (c=0x55555557f210, m=0x555555580dc0, error=<optimized out>)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/dbus-protocol.c:665
+ #9  dbus_select_common_methods (c=0x55555557f210, m=0x555555580dc0, iface=<optimized out>, error=<optimized out>, userdata=<optimized out>)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/dbus-protocol.c:1058
+ #10 0x0000555555563c64 in dbus_select_common_methods (userdata=<optimized out>, c=0x55555557f210, m=0x555555580dc0,
+     iface=0x55555556e558 "org.freedesktop.Avahi.Server", error=0x7fffffffe000)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/dbus-protocol.c:1006
+ #11 msg_server_impl (c=0x55555557f210, m=0x555555580dc0, userdata=<optimized out>)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/dbus-protocol.c:1186
+ #12 0x00007ffff7d8bda4 in dbus_connection_dispatch () from /lib64/libdbus-1.so.3
+ #13 0x0000555555568143 in dispatch_timeout_callback (t=<optimized out>, userdata=0x55555557fa60) at ../avahi-common/dbus-watch-glue.c:105
+ #14 0x00007ffff7f97b50 in avahi_simple_poll_dispatch () from /lib64/libavahi-common.so.3
+ #15 0x0000555555558ef8 in run_server (c=0x555555579120 <config>)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/main.c:1279
+ #16 main (argc=<optimized out>, argv=<optimized out>)
+     at /usr/src/debug/avahi-0.9.rc5-9.20261109095711870346.master.37.g7d8af13.fc44.x86_64/avahi-daemon/main.c:1708
+```
+
+https://github.com/avahi/avahi/security/advisories/GHSA-94vj-j7c7-f848
+---
+ avahi-common/domain.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/avahi-common/domain.c b/avahi-common/domain.c
+index 10c7b24c5..400d78b35 100644
+--- a/avahi-common/domain.c
++++ b/avahi-common/domain.c
+@@ -446,6 +446,7 @@ int avahi_service_name_join(char *p, size_t size, const char *name, const char *
+     char escaped_name[AVAHI_LABEL_MAX*4];
+     char normalized_type[AVAHI_DOMAIN_NAME_MAX];
+     char normalized_domain[AVAHI_DOMAIN_NAME_MAX];
++    int n;
+ 
+     assert(p);
+ 
+@@ -477,7 +478,9 @@ int avahi_service_name_join(char *p, size_t size, const char *name, const char *
+ 
+     /* Concatenation */
+ 
+-    snprintf(p, size, "%s%s%s.%s", name ? escaped_name : "", name ? "." : "", normalized_type, normalized_domain);
++    n = snprintf(p, size, "%s%s%s.%s", name ? escaped_name : "", name ? "." : "", normalized_type, normalized_domain);
++    if (n < 0 || (size_t) n >= size)
++        return AVAHI_ERR_FAILURE;
+ 
+     return AVAHI_OK;
+ }
