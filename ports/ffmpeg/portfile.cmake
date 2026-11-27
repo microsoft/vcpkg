@@ -666,8 +666,10 @@ endif()
 
 if("dvdvideo" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libdvdnav --enable-libdvdread")
+    set(WITH_DVDVIDEO ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libdvdnav --disable-libdvdread")
+    set(WITH_DVDVIDEO OFF)
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
