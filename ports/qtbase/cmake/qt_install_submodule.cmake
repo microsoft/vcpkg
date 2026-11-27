@@ -204,6 +204,8 @@ function(qt_cmake_configure)
 
     if(NOT PORT MATCHES "qtbase")
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
+        # qtbase moves qt_cyclonedx_generator.py tools/Qt6/bin
+        list(APPEND _qarg_OPTIONS "-DQT_CYCLONE_DX_GENERATOR_SCRIPT_PATH:FILEPATH=${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt_cyclonedx_generator.py")
     endif()
 
     if(NOT DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -264,6 +266,7 @@ function(qt_cmake_configure)
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
             QT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX
+            QT_CYCLONE_DX_GENERATOR_SCRIPT_PATH # Only used when CycloneDX SBOM generation is enabled
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype
