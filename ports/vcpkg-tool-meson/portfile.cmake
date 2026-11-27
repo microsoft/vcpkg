@@ -10,6 +10,7 @@ set(patches
   adjust-args.patch
   remove-pkgconfig-specialization.patch
   rc-args.patch
+  install-cross-support-win.patch
 )
 set(scripts
   vcpkg-port-config.cmake

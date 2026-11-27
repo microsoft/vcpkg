@@ -1,0 +1,27 @@
+diff --git a/mesonbuild/options.py b/mesonbuild/options.py
+index 147a442..bcedfaa 100644
+--- a/mesonbuild/options.py
++++ b/mesonbuild/options.py
+@@ -799,6 +799,8 @@ class OptionStore:
+ 
+     def _is_host_absolute(self, path: str) -> bool:
+         """Check if path is absolute according to host machine path semantics."""
++        if os.name == 'nt' and pathlib.PureWindowsPath(path).is_absolute():
++            return True
+         path_obj = self.pure_path_class(path)
+         if isinstance(path_obj, pathlib.PureWindowsPath) and path_obj.root:
+             # Accept Windows root-relative paths (root but no drive, like /myprog)
+diff --git a/mesonbuild/utils/platform.py b/mesonbuild/utils/platform.py
+index 31e90d5..4d77e03 100644
+--- a/mesonbuild/utils/platform.py
++++ b/mesonbuild/utils/platform.py
+@@ -127,7 +127,8 @@ if sys.platform in {'win32', 'os2knix'}:
+         if path and path[0] in '/\\':
+             return True
+         # Check for paths including a drive
+-        return os.path.isabs(path)
++        from pathlib import PureWindowsPath
++        return bool(PureWindowsPath(path).root)
+ 
+ else:
+     # on POSIX systems don't go through pathlib as it's slower
