@@ -10,6 +10,8 @@ vcpkg_extract_source_archive(
         installdirs.diff
         linking-and-naming.diff
         opencascade.diff
+        use-cxx-17.diff
+        compatible-occ-8.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
