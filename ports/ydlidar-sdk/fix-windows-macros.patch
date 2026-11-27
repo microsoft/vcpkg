@@ -1,0 +1,43 @@
+diff --git a/core/base/datatype.h b/core/base/datatype.h
+index 71dd625..425cd72 100644
+--- a/core/base/datatype.h
++++ b/core/base/datatype.h
+@@ -115,10 +115,10 @@ typedef int socklen_t;
+ #ifdef _AVR_
+ typedef uint8_t        _size_t;
+ #define THREAD_PROC
+-#elif defined (WIN64)
++#elif defined (_WIN64)
+ typedef uint64_t       _size_t;
+ #define THREAD_PROC    __stdcall
+-#elif defined (WIN32)
++#elif defined (_WIN32)
+ typedef uint32_t       _size_t;
+ #define THREAD_PROC    __stdcall
+ #elif defined (_M_X64)
+diff --git a/core/base/utils.h b/core/base/utils.h
+index 338f0c5..83cf627 100644
+--- a/core/base/utils.h
++++ b/core/base/utils.h
+@@ -1,18 +1,10 @@
+ 
+ #pragma once
+ 
+-#ifdef WIN32
+-#ifdef ydlidar_IMPORTS
++#if defined(_WIN32) && defined(ydlidar_sdk_EXPORTS)
++#define YDLIDAR_API __declspec(dllexport)
++#elif defined(_WIN32) && defined(ydlidar_IMPORTS)
+ #define YDLIDAR_API __declspec(dllimport)
+ #else
+-#ifdef ydlidarStatic_IMPORTS
+ #define YDLIDAR_API
+-#else
+-
+-#define YDLIDAR_API __declspec(dllexport)
+-#endif // YDLIDAR_STATIC_EXPORTS
+ #endif
+-
+-#else
+-#define YDLIDAR_API
+-#endif // ifdef WIN32

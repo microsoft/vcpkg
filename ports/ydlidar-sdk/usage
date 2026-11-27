@@ -1,4 +1,0 @@
-ydlidar-sdk provides CMake targets:
-
-  find_package(unofficial-ydlidar-sdk CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::ydlidar-sdk::ydlidar_sdk)

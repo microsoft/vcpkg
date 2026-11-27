@@ -3,7 +3,7 @@
   "version": "1.2.7",
   "description": "SDK for YDLIDAR laser range scanners (LiDAR), with serial and network drivers.",
   "homepage": "https://github.com/YDLIDAR/YDLidar-SDK",
-  "license": "MIT",
+  "license": "MIT AND BSD-3-Clause AND LicenseRef-clsocket",
   "supports": "!uwp",
   "dependencies": [
     {

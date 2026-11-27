@@ -48,11 +48,8 @@ target_include_directories(ydlidar_sdk
 )
 
 if(WIN32)
-    # The headers test the WIN32 macro, which only CMake's default MSVC flags define.
-    # ydlidarStatic_IMPORTS turns YDLIDAR_API into nothing for static builds.
-    target_compile_definitions(ydlidar_sdk PUBLIC WIN32 ydlidarStatic_IMPORTS)
     target_compile_definitions(ydlidar_sdk PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
-    target_link_libraries(ydlidar_sdk PUBLIC winmm setupapi ws2_32)
+    target_link_libraries(ydlidar_sdk PUBLIC advapi32 winmm setupapi ws2_32)
 else()
     find_package(Threads REQUIRED)
     target_link_libraries(ydlidar_sdk PUBLIC Threads::Threads)

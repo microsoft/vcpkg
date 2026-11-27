@@ -7,6 +7,8 @@ vcpkg_from_github(
     REF "V${VERSION}"
     SHA512 8e295da4a130192b9770e8bafaab4a26a18e063f70ee3d04b2b67cdab320518ff28ec9e808d6088660ea159d970c559db97f44ceefd826c6b08975848fc7aada
     HEAD_REF master
+    PATCHES
+        fix-windows-macros.patch
 )
 
 # Upstream's build system is not installable (CMake 4 policy errors, LOCATION-based
@@ -25,5 +27,8 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ydlidar-sdk)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/core/network/SimpleSocket.h"
+    "${SOURCE_PATH}/core/math/angles.h"
+)
