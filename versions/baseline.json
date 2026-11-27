@@ -4704,6 +4704,10 @@
       "baseline": "6.32.0",
       "port-version": 0
     },
+    "kparts": {
+      "baseline": "6.32.0",
+      "port-version": 0
+    },
     "kplotting": {
       "baseline": "6.32.0",
       "port-version": 0
@@ -4966,7 +4970,7 @@
     },
     "libcanberra": {
       "baseline": "0.30",
-      "port-version": 4
+      "port-version": 5
     },
     "libcap": {
       "baseline": "2.78",
