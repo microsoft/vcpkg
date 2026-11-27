@@ -12,6 +12,10 @@
       "baseline": "6.4.0",
       "port-version": 0
     },
+    "ablemon": {
+      "baseline": "1.9.0",
+      "port-version": 0
+    },
     "ableton-link": {
       "baseline": "3.1.5",
       "port-version": 0
