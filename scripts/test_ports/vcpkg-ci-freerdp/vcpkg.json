@@ -26,6 +26,10 @@
         "winpr-tools"
       ],
       "platform": "!android & !ios & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
