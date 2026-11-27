@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 03090fbcfe16aff6b640ef64f8d26551f0347c9e49fbca4efc48d6874ec87c109227fa05157e21e2031d58fe9374a8af9a5e34cf67a2255806f32e39ce4ca3ed
+    SHA512 f0e2e33ef03dadbd02bdf1e9be8ad423748aaa2fc552911b8008d166c9dc35cb7fdeec98d7563fe38c69a5225ad1aaeb8bba3e27eb81d9760e337fa6ce87a265
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
-        # Backport of https://github.com/microsoft/mimalloc/commit/23fced334cb0c3fbe43a847c895e1c0ebf20c873
-        fix-backtrace-detection.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
