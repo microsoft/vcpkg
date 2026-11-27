@@ -8642,7 +8642,7 @@
     },
     "qtbase": {
       "baseline": "6.12.1",
-      "port-version": 1
+      "port-version": 0
     },
     "qtcanvaspainter": {
       "baseline": "6.12.1",
