@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dv/dv-processing
     REF "${VERSION}"
-    SHA512 b53d59120b65aee8cfa8a524a5b9779c55687c649d847e20f344b246dd800aa639a31fe12e2f1cd810f38db743ec8051b9f6fbe895486e318942b86daab114c2
+    SHA512 7ed5bf57ac94e465d88ea2959861df39743a6772fd2d97bea8a396d0b5da50ca7755646d1f0f648b61d6ac48b1eaa8c25167bcc0f787bb7af64686e87a1af9b7
     HEAD_REF master
 )
 
@@ -22,7 +22,10 @@ file(COPY ${CMAKEMOD_FILES} DESTINATION "${SOURCE_PATH}/cmake/modules")
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools   DVP_ENABLE_UTILITIES
+        backtrace CMAKE_REQUIRE_FIND_PACKAGE_libbacktrace
+        tools     DVP_ENABLE_UTILITIES
+    INVERTED_FEATURES
+        backtrace CMAKE_DISABLE_FIND_PACKAGE_libbacktrace
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
