@@ -1,9 +1,8 @@
 {
   "name": "folly",
-  "version-string": "2026.02.23.00",
-  "port-version": 2,
-  "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
-  "homepage": "https://github.com/facebook/folly",
+  "version-string": "2026.11.23.00",
+  "description": "An open-source C++ library developed and used at Meta. The library is UNSTABLE on Windows",
+  "homepage": "https://github.com/meta/folly",
   "license": "Apache-2.0",
   "supports": "(windows & x64 & !uwp & !mingw) | (!windows & !android & (x64 | arm64))",
   "dependencies": [
@@ -20,7 +19,6 @@
     "boost-system",
     "boost-thread",
     "boost-variant",
-    "double-conversion",
     "fast-float",
     "fmt",
     "gflags",

@@ -1,12 +1,62 @@
-diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 5fc83ac..7efb0fc 100644
---- a/CMake/folly-config.cmake.in
-+++ b/CMake/folly-config.cmake.in
-@@ -34,10 +34,31 @@ endif()
- set(FOLLY_LIBRARIES Folly::folly)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6cc7d2f5a..d0acedd25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -364,7 +364,8 @@ endif ()
+ if (TARGET folly_testing_test_util)
+   target_compile_definitions(
+     folly_testing_test_util
+-    INTERFACE FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++    INTERFACE $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++              $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly/">
+   )
+ endif ()
  
- # Find folly's dependencies
--find_dependency(fmt)
+@@ -381,7 +382,8 @@ add_library(
+ add_library(Folly::folly_test_util ALIAS folly_test_util)
+ target_compile_definitions(
+   folly_test_util
+-  PUBLIC FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++  PUBLIC $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++         $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly">
+ )
+ set_property(TARGET folly_test_util PROPERTY VERSION ${PACKAGE_VERSION})
+ target_link_libraries(folly_test_util PUBLIC folly ${LIBGMOCK_LIBRARIES})
+diff --git a/cmake/folly-config.cmake.in b/cmake/folly-config.cmake.in
+index 7c8e0685e..133a22afe 100644
+--- a/cmake/folly-config.cmake.in
++++ b/cmake/folly-config.cmake.in
+@@ -20,17 +20,6 @@ set_and_check(FOLLY_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
+ # folly's prefix directory in the FOLLY_PREFIX_DIR variable
+ set(FOLLY_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
+-# Find glog before loading targets, since targets reference the glog::glog target
+-if(NOT TARGET glog::glog)
+-  find_package(Glog QUIET)
+-endif()
+-
+-# Likewise for gflags, which the targets name when folly built it as a
+-# subproject rather than finding it on the system.
+-if(@FOLLY_HAVE_LIBGFLAGS@ AND NOT TARGET gflags::gflags_static)
+-  find_package(gflags QUIET)
+-endif()
+-
+ # A dependency folly fetched is confined to folly's build tree and never enters
+ # the installed link interface, so a consumer that needs one supplies its own.
+ # The lookups here are for the copies folly found on the system, which its
+@@ -38,15 +27,35 @@ endif()
+ if(@FOLLY_OPENSSL_SYSTEM@)
+   find_dependency(OpenSSL)
+ endif()
+-if(NOT TARGET event_core_static AND NOT TARGET event_core_shared)
+-  find_package(Libevent QUIET)
+-endif()
+ 
+ # folly_deps carries Threads::Threads in its link interface.
+ # The preference matches folly's own build so consumers also get -pthread.
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_dependency(Threads)
+ 
 +find_dependency(fmt CONFIG)
 +find_dependency(double-conversion CONFIG)
 +find_dependency(FastFloat CONFIG)
@@ -29,17 +79,14 @@ index 5fc83ac..7efb0fc 100644
 +if("@VCPKG_LOCK_FIND_PACKAGE_LIBSODIUM@")
 +  find_dependency(unofficial-sodium CONFIG)
 +endif()
- 
- set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
--find_package(Boost 1.69.0 REQUIRED
-+find_dependency(Boost 1.69.0
-   COMPONENTS
-     context
-     filesystem
-diff --git a/CMake/folly-config.h.cmake b/CMake/folly-config.h.cmake
-index 1da1cc1..701ec99 100644
---- a/CMake/folly-config.h.cmake
-+++ b/CMake/folly-config.h.cmake
++
+ # Include the folly-targets.cmake file, which is generated from our CMake rules
+ if (NOT TARGET Folly::folly)
+   include("${FOLLY_CMAKE_DIR}/folly-targets.cmake")
+diff --git a/cmake/folly-config.h.cmake b/cmake/folly-config.h.cmake
+index 7c19bbf57..907a3ce71 100644
+--- a/cmake/folly-config.h.cmake
++++ b/cmake/folly-config.h.cmake
 @@ -16,6 +16,9 @@
  
  #pragma once
@@ -50,53 +97,63 @@ index 1da1cc1..701ec99 100644
  #ifdef __APPLE__
  #include <TargetConditionals.h> // @manual
  #endif
-diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 1c41750..6ab485c 100644
---- a/CMake/folly-deps.cmake
-+++ b/CMake/folly-deps.cmake
-@@ -57,14 +57,17 @@ find_package(Boost 1.69.0 REQUIRED
- # Per-target Boost dependencies are specified via EXTERNAL_DEPS
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
+diff --git a/cmake/folly-deps.cmake b/cmake/folly-deps.cmake
+index 4ca65fdc4..a76956190 100644
+--- a/cmake/folly-deps.cmake
++++ b/cmake/folly-deps.cmake
+@@ -102,7 +102,7 @@ elseif (NOT Boost_FOUND)
+                  "FOLLY_FETCH_BOOST to fetch it.")
+ endif ()
  
--find_package(DoubleConversion MODULE REQUIRED)
-+find_package(double-conversion CONFIG REQUIRED)
-+set(DOUBLE_CONVERSION_LIBRARY double-conversion::double-conversion)
- list(APPEND FOLLY_LINK_LIBRARIES ${DOUBLE_CONVERSION_LIBRARY})
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${DOUBLE_CONVERSION_INCLUDE_DIR})
- 
--find_package(FastFloat MODULE REQUIRED)
--list(APPEND FOLLY_INCLUDE_DIRECTORIES ${FASTFLOAT_INCLUDE_DIR})
-+find_package(FastFloat CONFIG REQUIRED)
-+list(APPEND FOLLY_LINK_LIBRARIES FastFloat::fast_float)
- 
+-find_package(FastFloat MODULE)
++find_package(FastFloat CONFIG)
+ if (NOT FASTFLOAT_FOUND)
+   # Conv.h checks the same macros. Conv.cpp calls the long double overload
+   # only where __cpp_lib_to_chars promises it; libc++ has none.
+@@ -134,7 +134,7 @@ if (NOT FASTFLOAT_FOUND)
+ endif ()
+ set(FOLLY_HAVE_FAST_FLOAT ON)
+ if (FASTFLOAT_FOUND)
+-  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${FASTFLOAT_INCLUDE_DIR})
++  list(APPEND FOLLY_LINK_LIBRARIES FastFloat::fast_float)
+ elseif (FOLLY_HAVE_FLOAT_FROM_CHARS)
+   set(FOLLY_HAVE_FAST_FLOAT OFF)
+   message(STATUS "fast_float not found, parsing floating-point numbers with "
+@@ -161,7 +161,9 @@ endif ()
+ # gflags is optional: without it, folly/portability/GFlags.h defines folly's
+ # flags as plain variables. The tests and benchmarks use gflags directly, so
+ # they still need it.
 -find_package(Gflags MODULE)
 +set(GFLAGS_USE_TARGET_NAMESPACE ON)
 +find_package(LIBGFLAGS NAMES gflags REQUIRED)
 +set(LIBGFLAGS_LIBRARY gflags::gflags)
- set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
- if(LIBGFLAGS_FOUND)
-   list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
-@@ -73,7 +76,8 @@ if(LIBGFLAGS_FOUND)
-   set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
- endif()
+ if (NOT LIBGFLAGS_FOUND AND (BUILD_TESTS OR BUILD_BENCHMARKS))
+   # As a subproject gflags builds only its single-threaded library.
+   set(GFLAGS_BUILD_gflags_LIB ON)
+@@ -194,7 +196,8 @@ else ()
+   set(FOLLY_HAVE_LIBGFLAGS OFF)
+ endif ()
  
 -find_package(Glog MODULE)
 +find_package(GLOG NAMES glog REQUIRED)
 +set(GLOG_LIBRARY glog::glog)
- set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
+ if (GLOG_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
+   # Glog 0.7+ requires GLOG_USE_GLOG_EXPORT to be defined so that headers
+@@ -255,7 +258,11 @@ endif ()
+ set(FOLLY_HAVE_LIBGLOG ON)
  list(APPEND FOLLY_LINK_LIBRARIES glog::glog)
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
-@@ -83,11 +87,16 @@ if (EXISTS "${GLOG_INCLUDE_DIR}/glog/export.h")
-   list(APPEND FOLLY_CXX_FLAGS -DGLOG_USE_GLOG_EXPORT)
- endif()
  
--find_package(LibEvent MODULE REQUIRED)
+-find_package(LibEvent MODULE)
 +find_package(LIBEVENT NAMES Libevent REQUIRED)
 +set(LIBEVENT_LIB libevent::core libevent::extra)
 +if(NOT WIN32)
 +  list(APPEND LIBEVENT_LIB libevent::pthreads)
 +endif()
- list(APPEND FOLLY_LINK_LIBRARIES ${LIBEVENT_LIB})
+ if (NOT LibEvent_FOUND)
+   set(EVENT__DISABLE_TESTS ON)
+   set(EVENT__DISABLE_BENCHMARK ON)
+@@ -310,6 +317,7 @@ folly_add_external_library(event MONOLITH_PUBLIC LIBRARIES ${LIBEVENT_LIB})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
  
  find_package(ZLIB MODULE)
@@ -104,9 +161,9 @@ index 1c41750..6ab485c 100644
  set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
  if (ZLIB_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
-@@ -120,21 +129,24 @@ if (LIBLZMA_FOUND)
-   list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
- endif()
+@@ -512,21 +520,24 @@ if (LIBLZMA_FOUND)
+ endif ()
+ folly_add_external_library(lzma LIBRARIES ${LIBLZMA_LIBRARIES})
  
 -find_package(LZ4 MODULE)
 +find_package(LZ4 NAMES lz4)
@@ -114,17 +171,17 @@ index 1c41750..6ab485c 100644
  set(FOLLY_HAVE_LIBLZ4 ${LZ4_FOUND})
  if (LZ4_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LZ4_INCLUDE_DIR})
-   list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
- endif()
+ endif ()
+ folly_add_external_library(lz4 LIBRARIES ${LZ4_LIBRARY})
  
 -find_package(Zstd MODULE)
 +find_package(ZSTD NAMES zstd)
 +set(ZSTD_LIBRARY zstd::libzstd)
  set(FOLLY_HAVE_LIBZSTD ${ZSTD_FOUND})
- if(ZSTD_FOUND)
+ if (ZSTD_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZSTD_INCLUDE_DIR})
-   list(APPEND FOLLY_LINK_LIBRARIES ${ZSTD_LIBRARY})
- endif()
+ endif ()
+ folly_add_external_library(zstd LIBRARIES ${ZSTD_LIBRARY})
  
 -find_package(Snappy MODULE)
 +find_package(SNAPPY NAMES Snappy)
@@ -132,17 +189,12 @@ index 1c41750..6ab485c 100644
  set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
  if (SNAPPY_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
-@@ -150,14 +162,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
- 
- find_package(LibAIO)
-+set(FOLLY_HAS_LIBAIO ${VCPKG_LOCK_FIND_PACKAGE_LibAIO})
- list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
+@@ -542,10 +553,14 @@ folly_add_external_library(aio LIBRARIES ${LIBAIO_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
  
  find_package(LibUring)
 +set(FOLLY_HAS_LIBURING ${VCPKG_LOCK_FIND_LibUring})
- list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+ folly_add_external_library(uring LIBRARIES ${LIBURING_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
  
 -find_package(Libsodium)
@@ -150,44 +202,20 @@ index 1c41750..6ab485c 100644
 +if(LIBSODIUM_FOUND)
 +  set(LIBSODIUM_LIBRARIES unofficial-sodium::sodium)
 +endif()
- list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
- list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
- 
-@@ -174,6 +191,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+ # LtHash's templates call into libsodium.
+ folly_add_external_library(sodium MONOLITH_PUBLIC
+                            LIBRARIES ${LIBSODIUM_LIBRARIES})
+@@ -567,6 +582,8 @@ folly_add_external_library(unwind LIBRARIES ${LIBUNWIND_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
  if (LIBUNWIND_FOUND)
    set(FOLLY_HAVE_LIBUNWIND ON)
 +  list(REMOVE_ITEM FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
 +  list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
- endif()
- if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-   list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 49dd964..b84f338 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -273,7 +273,8 @@ folly_resolve_deferred_dependencies()
- # This points to the SSL test certificates used by TestSSLServer and related tests
- if(TARGET folly_testing_test_util)
-   target_compile_definitions(folly_testing_test_util INTERFACE
--    FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
-+    $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
-+    $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly/">
-   )
- endif()
+ endif ()
  
-@@ -285,7 +286,8 @@ add_library(folly_test_util
-   ${FOLLY_DIR}/json/JsonTestUtil.cpp
- )
- target_compile_definitions(folly_test_util PUBLIC
--  FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
-+  $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
-+  $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly">
- )
- set_property(TARGET folly_test_util PROPERTY VERSION ${PACKAGE_VERSION})
- target_link_libraries(folly_test_util
+ cmake_push_check_state()
 diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
-index 2760e0f..a51c16c 100644
+index 2487576af..80ff3fd6a 100644
 --- a/folly/io/async/AsyncIO.cpp
 +++ b/folly/io/async/AsyncIO.cpp
 @@ -35,7 +35,7 @@
@@ -200,7 +228,7 @@ index 2760e0f..a51c16c 100644
  // debugging helpers
  namespace {
 diff --git a/folly/io/async/AsyncIO.h b/folly/io/async/AsyncIO.h
-index 36c6df2..02ff518 100644
+index 36c6df28b..02ff518bb 100644
 --- a/folly/io/async/AsyncIO.h
 +++ b/folly/io/async/AsyncIO.h
 @@ -18,7 +18,7 @@
@@ -213,22 +241,24 @@ index 36c6df2..02ff518 100644
  #include <libaio.h>
  
 diff --git a/folly/io/async/Liburing.h b/folly/io/async/Liburing.h
-index 8e81aaa..c7f4a67 100644
+index 4a0642e01..9a29544ba 100644
 --- a/folly/io/async/Liburing.h
 +++ b/folly/io/async/Liburing.h
-@@ -17,7 +17,5 @@
- #pragma once
- 
- #if defined(__linux__) && __has_include(<liburing.h>)
+@@ -27,9 +27,7 @@
+ #if defined(IO_URING_VERSION_MAJOR) && \
+     (IO_URING_VERSION_MAJOR > 2 ||     \
+      (IO_URING_VERSION_MAJOR == 2 && IO_URING_VERSION_MINOR >= 10))
 -#define FOLLY_HAS_LIBURING 1
  #else
 -#define FOLLY_HAS_LIBURING 0
  #endif
+ 
+ // The ZCRX query and control APIs first shipped in liburing 2.15.
 diff --git a/folly/io/async/SimpleAsyncIO.cpp b/folly/io/async/SimpleAsyncIO.cpp
-index cceb964..9f97e36 100644
+index 3b4945594..81ca9880d 100644
 --- a/folly/io/async/SimpleAsyncIO.cpp
 +++ b/folly/io/async/SimpleAsyncIO.cpp
-@@ -25,7 +25,7 @@
+@@ -30,7 +30,7 @@
  
  namespace folly {
  

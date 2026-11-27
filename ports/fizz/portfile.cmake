@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
     REF "v${VERSION}"
-    SHA512 0246c3add82002f648fd9844ab3f4062265049de3976a5e4cb92b5a8eea8ac3778254dac61364abd7cdc582b223d0d062049b5664100376913a2b153c5638afb
+    SHA512 3a95d538f8db1f2e5d1e83217c3bb51955ce58d4f97ea29f371862214a8942e3d425223c89f2410bce3304396d7b8fc9ac0db3c1d73137d0df30f03bcefcec46
     HEAD_REF main
     PATCHES
         fix-build.patch
@@ -38,6 +38,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/fizz/record/test/facebook"
     "${CURRENT_PACKAGES_DIR}/include/fizz/server/test/facebook"
     "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test"
-    "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
+    "${CURRENT_PACKAGES_DIR}/include/fizz/util/test"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

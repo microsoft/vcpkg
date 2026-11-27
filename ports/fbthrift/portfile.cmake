@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 32f2a648496a321b6aaf55197c2dc1412d030ca82f8d8a5ca0516379379a0f71dc17e2edcb2be3972f76603935c7dcae29769c067caa1ec8a33e7f4efb251581
+    SHA512 0f6c73d21229481f1159f15590fbff1a078e5613550887fc5ac8bb901f93d04bb9132b8a05a3f34a6b9e574dd1c6f43767ad876ca58650faf35b48764128aefb
     HEAD_REF main
     PATCHES
         fix-deps.patch
@@ -88,11 +88,11 @@ vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake"
         "${PACKAGE_PREFIX_DIR}/lib/cmake/fbthrift" "${PACKAGE_PREFIX_DIR}/share/fbthrift")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake"
         "${PACKAGE_PREFIX_DIR}/bin/thrift1.exe" "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1.exe")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake" 
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fbthrift/FBThriftConfig.cmake"
         "${PACKAGE_PREFIX_DIR}/bin/thrift1" "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1")
 endif()
 
