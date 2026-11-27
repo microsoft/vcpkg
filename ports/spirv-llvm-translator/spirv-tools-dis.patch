@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d52499..a97f13e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -120,6 +120,7 @@ endif()
+ 
+ set(LLVM_SPIRV_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ 
++if(0)
+ # first try locating SPIRV-Tools via pkgconfig (the old way)
+ pkg_search_module(SPIRV_TOOLS SPIRV-Tools)
+ if (NOT SPIRV_TOOLS_FOUND)
+@@ -143,12 +144,15 @@ if (NOT SPIRV_TOOLS_FOUND)
+     get_target_property(SPIRV_TOOLS_INCLUDE_DIRS ${SPIRV-Tools-library} INTERFACE_INCLUDE_DIRECTORIES)
+   endif()
+ endif()
++endif()
+ 
+ option(LLVM_SPIRV_ENABLE_LIBSPIRV_DIS "Enable --spirv-tools-dis support.")
+ 
+-if (NOT SPIRV_TOOLS_FOUND AND LLVM_SPIRV_ENABLE_LIBSPIRV_DIS)
+-  message(STATUS "SPIRV-Tools not found; project will be built without "
+-          "--spirv-tools-dis support.")
++if(LLVM_SPIRV_ENABLE_LIBSPIRV_DIS)
++  find_package(SPIRV-Tools CONFIG REQUIRED)
++  if(NOT TARGET SPIRV-Tools-static)
++    message(FATAL_ERROR "SPIRV-Tools did not provide its static library target.")
++  endif()
+ endif()
+ 
+ 
+diff --git a/tools/llvm-spirv/CMakeLists.txt b/tools/llvm-spirv/CMakeLists.txt
+index 28a9230..1a1287e 100644
+--- a/tools/llvm-spirv/CMakeLists.txt
++++ b/tools/llvm-spirv/CMakeLists.txt
+@@ -37,8 +37,7 @@ target_include_directories(llvm-spirv
+     ${LLVM_SPIRV_INCLUDE_DIRS}
+ )
+ 
+-if(SPIRV_TOOLS_FOUND AND LLVM_SPIRV_ENABLE_LIBSPIRV_DIS)
++if(LLVM_SPIRV_ENABLE_LIBSPIRV_DIS)
+   target_compile_definitions(llvm-spirv PRIVATE LLVM_SPIRV_HAVE_SPIRV_TOOLS=1)
+-  target_include_directories(llvm-spirv PRIVATE ${SPIRV_TOOLS_INCLUDE_DIRS})
+-  target_link_libraries(llvm-spirv PRIVATE ${SPIRV_TOOLS_LDFLAGS})
++  target_link_libraries(llvm-spirv PRIVATE SPIRV-Tools-static)
+ endif()

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a7dda55..59932602 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -213,7 +213,7 @@ target_include_directories(openzl
+         $<TARGET_PROPERTY:openzl_deps,INTERFACE_INCLUDE_DIRECTORIES>
+ )
+ 
+-target_include_directories(openzl
++target_compile_definitions(openzl
+     PUBLIC
+         $<TARGET_PROPERTY:openzl_deps,INTERFACE_COMPILE_DEFINITIONS>
+ )

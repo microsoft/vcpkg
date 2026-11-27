@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
     REF "v${VERSION}"
-    SHA512 a961a6d8094cc9f9996c9cf6c143e0382422eb4b63ec68d4ee1cce76afef562656855ed08c630974b67d33a4af9706df602c4ababad0767466b43a3e0563f2cf
+    SHA512 eebf8c332228f2cb4bef689323fe9006a90d46fdae481efe1011ec27b2ecd1de0c772a6663e7388a8fd61d5e3b399d4865fe8af25d796ae30f9eb85c5157a058
     HEAD_REF main
     PATCHES
         minizip.diff

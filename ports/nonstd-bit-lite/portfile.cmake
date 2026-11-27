@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nonstd-lite/bit-lite
     REF "v${VERSION}"
-    SHA512 a0b9f5786e72ffa1dcd77f7bd62ad08160a845c4fb05ff0b6fe7233c80aed89b7df6e698eed9ff633dd9e7ffaf19fa866d93d5d541d0a5af0d79afd5f76425e3
+    SHA512 3d993841f436961d95931dda30b4e5a1c8b07f1a6a8cf326168a8ee01307c461c94ed7e0fde221263b4164bb86efb1801f452c7c1414f769a6a98fb25c0ef6e2
     HEAD_REF master
 )
 

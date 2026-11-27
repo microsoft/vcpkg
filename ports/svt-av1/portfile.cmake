@@ -1,12 +1,10 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/SVT-AV1
     REF "v${VERSION}"
-    SHA512 89064696277b3e92e95945e4415bc86490c60c968680dc21253beb4b4caf39d5fa46838aa83759c6e9b31b759abb76c581fb40ebdf08d53d63aaf05a264fc9c9
+    SHA512 1d131943fef2bea9bb7a193aae8d10e5225cb8df36a880633226105f88ef735a48c29a0d78d578933b9f0bca2f41a16023ce71adf46c4f0e587f7123d60f074a
     PATCHES
         no-force-llvm.diff
-        no-inline-yy_unpacklo_epi128.diff
         no-safestringlib.diff
         unvendor-fastfeat.diff
 )

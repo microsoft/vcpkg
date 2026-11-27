@@ -1,6 +1,6 @@
 {
   "name": "libyaml",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "A C library for parsing and emitting YAML.",
   "homepage": "https://github.com/yaml/libyaml",
   "dependencies": [
