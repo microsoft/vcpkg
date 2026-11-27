@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-adbc
     REF apache-arrow-adbc-${VERSION}
-    SHA512 48f3e5663ae59d3910f0e545f0bad68778151017e7a67804143832a5812126ff5796db18e9584be75dcedae751f294f13457600964bb84c1038f65eb285c2d05
+    SHA512 f788693e75f7e1b56f177075b12bab798e070257c1a2c05ef1bbb012d49980cfcebca2e54b13b81825e995e5e5b33783d8729f6e0a196b518ed4ac4cf08d3c7c
     HEAD_REF main
     PATCHES
         fmt-format.patch # https://github.com/apache/arrow-adbc/pull/4626
