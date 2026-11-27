@@ -6069,7 +6069,7 @@
       "port-version": 0
     },
     "libvips": {
-      "baseline": "8.18.7",
+      "baseline": "8.18.8",
       "port-version": 0
     },
     "libvmaf": {
