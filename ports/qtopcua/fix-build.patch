@@ -1,8 +1,8 @@
 diff --git a/src/plugins/opcua/open62541/qopen62541.h b/src/plugins/opcua/open62541/qopen62541.h
-index a4f63df..877888b 100644
+index 0c4868a..2a17a71 100644
 --- a/src/plugins/opcua/open62541/qopen62541.h
 +++ b/src/plugins/opcua/open62541/qopen62541.h
-@@ -18,7 +18,10 @@
+@@ -19,7 +19,11 @@
  #pragma clang diagnostic ignored "-Wunused-parameter"
  #endif
  
@@ -11,6 +11,19 @@ index a4f63df..877888b 100644
 +#include <open62541/client_config_default.h>
 +#include <open62541/client_subscriptions.h>
 +#include <open62541/server.h>
++#include <open62541/util.h>
  
  #if defined(_MSC_VER)
  #pragma warning(pop)
+diff --git a/src/plugins/opcua/open62541/qopen62541valueconverter.cpp b/src/plugins/opcua/open62541/qopen62541valueconverter.cpp
+index 580c377..1ab32d7 100644
+--- a/src/plugins/opcua/open62541/qopen62541valueconverter.cpp
++++ b/src/plugins/opcua/open62541/qopen62541valueconverter.cpp
+@@ -4,6 +4,7 @@
+ 
+ #ifdef USE_SYSTEM_OPEN62541
+ #include <open62541/types.h>
++#include <open62541/util.h>
+ #else
+ #include "qopen62541.h"
+ #endif
