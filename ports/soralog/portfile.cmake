@@ -1,11 +1,8 @@
-# soralog.dll has no code of its own: it only links the other soralog libraries
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xDimon/soralog
     REF "v${VERSION}"
-    SHA512 d094173937235cd2f8df891cef72b9da871a9197ac54d79dd68820ed158255f0258aa88dc424c1c1c46151311867b66075a113993e6d7478c940ed2a6c09b6c1
+    SHA512 75c72bd4491c0d6d794de8ee3a975f8b47f3309787353e4eb1916bdad093a3746f5786e04380dc65a9e3caf8514e9dc755c2be4c3e36ee6c62b4f4b87998fba1
     HEAD_REF master
 )
 
