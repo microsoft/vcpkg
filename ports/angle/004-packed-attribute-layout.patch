@@ -1,0 +1,48 @@
+diff --git a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
+index 3795eb4..28ef5dc 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
+@@ -66,10 +66,6 @@ struct PackedAttribute
+ 
+ }  // anonymous namespace
+ 
+-PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), attributeData({}) {}
+-
+-PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other) = default;
+-
+ void PackedAttributeLayout::addAttributeData(GLenum glType,
+                                              UINT semanticIndex,
+                                              angle::FormatID vertexFormatID,
+diff --git a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
+index 1a7f15e..81cb94b 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
++++ b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
+@@ -27,11 +27,10 @@
+ 
+ namespace rx
+ {
++ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
++
+ struct PackedAttributeLayout
+ {
+-    PackedAttributeLayout();
+-    PackedAttributeLayout(const PackedAttributeLayout &other);
+-
+     void addAttributeData(GLenum glType,
+                           UINT semanticIndex,
+                           angle::FormatID vertexFormatID,
+@@ -39,9 +38,12 @@ struct PackedAttributeLayout
+ 
+     bool operator==(const PackedAttributeLayout &other) const;
+ 
+-    uint32_t numAttributes;
+-    gl::AttribArray<uint64_t> attributeData;
++    uint32_t numAttributes                  = 0;
++    uint32_t pad0                           = 0;
++    gl::AttribArray<uint64_t> attributeData = {0};
+ };
++
++ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+ }  // namespace rx
+ 
+ namespace std
