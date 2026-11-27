@@ -7642,7 +7642,7 @@
     },
     "opengl": {
       "baseline": "2022-12-04",
-      "port-version": 3
+      "port-version": 4
     },
     "opengl-registry": {
       "baseline": "2026-08-03",
