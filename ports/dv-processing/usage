@@ -3,4 +3,4 @@ dv-processing provides CMake targets:
     find_package(dv-processing CONFIG REQUIRED)
     target_link_libraries(main PRIVATE dv::processing)
 
-Using dv-processing requires a C++20 compliant compiler.
+Using dv-processing requires a C++23 compliant compiler.
