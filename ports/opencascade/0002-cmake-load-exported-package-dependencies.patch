@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 25f31712c7..f002521b30 100644
+index 6c1dbd7161..76e7234ecc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -580,8 +580,8 @@ endif()
+@@ -579,8 +579,8 @@ endif()
  if (CAN_USE_FREETYPE AND USE_FREETYPE)
    message (STATUS "Info: FreeType is used by OCCT")
    add_definitions (-DHAVE_FREETYPE)
@@ -13,7 +13,7 @@ index 25f31712c7..f002521b30 100644
  else()
    if (NOT CAN_USE_FREETYPE)
      OCCT_CHECK_AND_UNSET ("USE_FREETYPE")
-@@ -596,9 +596,10 @@ endif()
+@@ -595,9 +595,10 @@ endif()
  # VTK
  if (USE_VTK)
    add_definitions (-DHAVE_VTK)
@@ -26,7 +26,7 @@ index 25f31712c7..f002521b30 100644
  else()
    OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_VTK")
    OCCT_UNSET_VCPKG_FEATURE ("vtk")
-@@ -613,8 +614,8 @@ endif()
+@@ -612,8 +613,8 @@ endif()
  # FREEIMAGE
  if (CAN_USE_FREEIMAGE AND USE_FREEIMAGE)
    add_definitions (-DHAVE_FREEIMAGE)
@@ -37,7 +37,7 @@ index 25f31712c7..f002521b30 100644
  elseif (NOT CAN_USE_FREEIMAGE)
    OCCT_CHECK_AND_UNSET ("USE_FREEIMAGE")
    OCCT_UNSET_VCPKG_FEATURE ("freeimage")
-@@ -707,8 +708,8 @@ endif()
+@@ -706,8 +707,8 @@ endif()
  # TBB
  if (CAN_USE_TBB AND USE_TBB)
    add_definitions (-DHAVE_TBB)
@@ -48,7 +48,7 @@ index 25f31712c7..f002521b30 100644
  elseif (NOT CAN_USE_TBB)
    OCCT_CHECK_AND_UNSET ("USE_TBB")
    OCCT_UNSET_VCPKG_FEATURE ("tbb")
-@@ -724,8 +725,8 @@ endif()
+@@ -723,8 +724,8 @@ endif()
  OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
  if (CAN_USE_RAPIDJSON AND USE_RAPIDJSON)
    add_definitions (-DHAVE_RAPIDJSON)
@@ -75,10 +75,10 @@ index 0795158ae7..a5a118e0ea 100644
    endif()
  endif()
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index a4796b2dc1..fef12e3163 100644
+index 141a2a93a2..c5536cbc9a 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -74,6 +74,26 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
+@@ -69,6 +69,26 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
  @SET_OpenCASCADE_WITH_D3D@
  @SET_OpenCASCADE_WITH_GLX@
  
@@ -102,6 +102,6 @@ index a4796b2dc1..fef12e3163 100644
 +  find_dependency(VTK)
 +endif()
 +
- # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.
- file(GLOB CONFIG_FILES "${CMAKE_CURRENT_LIST_DIR}/OpenCASCADECompileDefinitionsAndFlags-*.cmake")
- foreach(f ${CONFIG_FILES})
+ # Validate each request before importing targets or applying build flags.
+ set (OpenCASCADE_FOUND TRUE)
+ unset (OpenCASCADE_NOTFOUND_MESSAGE)

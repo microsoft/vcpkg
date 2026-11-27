@@ -3,13 +3,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 bbe7099071cbf5397940ebc6e66ec05f8023d5e5aae6142870e14b93aa6f8f94c30980ef421e717f0fbfbc23b3520c3ccfe8a939c4caba3ccbf325060e26eb52
+    SHA512 f6ab81a28ea2779c15a7e4d6fca7ee999a82b17bcfab13192b6fe335be9d4c1f5ef074cbca638ca755049d8bfcfef79e4e758a421f592468c5089a70befad3b7
     HEAD_REF master
     PATCHES
         0001-cmake-keep-build-use-vcpkg-explicit.patch
         0002-cmake-load-exported-package-dependencies.patch
         0003-image-remove-freeimage-msvc-autolink.patch
-        0004-cmake-add-additional-path-extraction-for-OpenCASCADE.patch
         0005-drop-bin-letter.patch
 )
 
@@ -47,7 +46,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade PACKAGE_NAME OpenCASCADE)
 
 #make occt includes relative to source_file
 file(GLOB extra_headers
@@ -65,10 +64,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/opencascade/Standard_Macro.hxx" "defined(OCCT_STATIC_BUILD)" "(1)")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/trash")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/opencascade/samples/qt"
+    "${CURRENT_PACKAGES_DIR}/share/trash"
+)
 
 vcpkg_install_copyright(
     FILE_LIST
