@@ -1,0 +1,13 @@
+mattbusel-llm-cpp is header-only and provides CMake targets:
+
+  find_package(llm-cpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE llm::llm)
+
+Or pick libraries, e.g. llm::cache, llm::json, llm::stream:
+
+  find_package(llm-cpp CONFIG REQUIRED COMPONENTS cache json stream)
+  target_link_libraries(main PRIVATE llm::cache llm::json llm::stream)
+
+The network libraries (ab, agent, audio, batch, chat, compress_summarize,
+embed, eval, finetune, rag, rank, stream, vision) need libcurl:
+install mattbusel-llm-cpp[curl].
