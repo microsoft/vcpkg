@@ -1,0 +1,66 @@
+diff --git a/modules/cudaarithm/CMakeLists.txt b/modules/cudaarithm/CMakeLists.txt
+index 34863ce2..f64f2aab 100644
+--- a/modules/cudaarithm/CMakeLists.txt
++++ b/modules/cudaarithm/CMakeLists.txt
+@@ -11,7 +11,11 @@ if(ENABLE_CUDA_FIRST_CLASS_LANGUAGE)
+ 	if(UNIX AND NOT BUILD_SHARED_LIBS AND CUDA_VERSION_STRING VERSION_GREATER_EQUAL 9.2 AND CUDA_VERSION_STRING VERSION_LESS 13.0 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.23)
+     set(CUDA_FFT_LIB_EXT "_static_nocallback")
+   endif()
+-  list(APPEND extra_dependencies CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_LIB_EXT} CUDA::nppc${CUDA_LIB_EXT} CUDA::nppitc${CUDA_LIB_EXT} CUDA::nppig${CUDA_LIB_EXT} CUDA::nppist${CUDA_LIB_EXT} CUDA::nppidei${CUDA_LIB_EXT})
++  set(CUDA_NPP_LIB_EXT "${CUDA_LIB_EXT}")
++  if(CUDA_VERSION VERSION_GREATER_EQUAL 13.4)
++    set(CUDA_NPP_LIB_EXT "")
++  endif()
++  list(APPEND extra_dependencies CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_NPP_LIB_EXT} CUDA::nppc${CUDA_NPP_LIB_EXT} CUDA::nppitc${CUDA_NPP_LIB_EXT} CUDA::nppig${CUDA_NPP_LIB_EXT} CUDA::nppist${CUDA_NPP_LIB_EXT} CUDA::nppidei${CUDA_NPP_LIB_EXT})
+   if(HAVE_CUBLAS)
+     list(APPEND extra_dependencies CUDA::cublas${CUDA_LIB_EXT})
+     if(NOT CUDA_VERSION VERSION_LESS 10.1)
+diff --git a/modules/cudafilters/CMakeLists.txt b/modules/cudafilters/CMakeLists.txt
+index c0eeb920..ee27f053 100644
+--- a/modules/cudafilters/CMakeLists.txt
++++ b/modules/cudafilters/CMakeLists.txt
+@@ -13,7 +13,11 @@ ocv_glob_module_sources()
+ 
+ set(build_libs "")
+ if(ENABLE_CUDA_FIRST_CLASS_LANGUAGE)
+-  list(APPEND build_libs CUDA::cudart${CUDA_LIB_EXT} CUDA::nppif${CUDA_LIB_EXT} CUDA::nppim${CUDA_LIB_EXT})
++  set(CUDA_NPP_LIB_EXT "${CUDA_LIB_EXT}")
++  if(CUDA_VERSION VERSION_GREATER_EQUAL 13.4)
++    set(CUDA_NPP_LIB_EXT "")
++  endif()
++  list(APPEND build_libs CUDA::cudart${CUDA_LIB_EXT} CUDA::nppif${CUDA_NPP_LIB_EXT} CUDA::nppim${CUDA_NPP_LIB_EXT})
+ endif()
+ ocv_create_module(${build_libs})
+ 
+diff --git a/modules/cudaimgproc/CMakeLists.txt b/modules/cudaimgproc/CMakeLists.txt
+index e70abca1..3a0b5c24 100644
+--- a/modules/cudaimgproc/CMakeLists.txt
++++ b/modules/cudaimgproc/CMakeLists.txt
+@@ -9,5 +9,9 @@ ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4127 /wd4100 /wd4324 /wd4512 /wd4515 -Wu
+ ocv_define_module(cudaimgproc opencv_imgproc OPTIONAL opencv_cudev opencv_cudaarithm opencv_cudafilters WRAP python)
+ 
+ if(ENABLE_CUDA_FIRST_CLASS_LANGUAGE)
+-  ocv_target_link_libraries(${the_module} PRIVATE CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_LIB_EXT} CUDA::nppist${CUDA_LIB_EXT} CUDA::nppicc${CUDA_LIB_EXT} CUDA::nppidei${CUDA_LIB_EXT})
++  set(CUDA_NPP_LIB_EXT "${CUDA_LIB_EXT}")
++  if(CUDA_VERSION VERSION_GREATER_EQUAL 13.4)
++    set(CUDA_NPP_LIB_EXT "")
++  endif()
++  ocv_target_link_libraries(${the_module} PRIVATE CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_NPP_LIB_EXT} CUDA::nppist${CUDA_NPP_LIB_EXT} CUDA::nppicc${CUDA_NPP_LIB_EXT} CUDA::nppidei${CUDA_NPP_LIB_EXT})
+ endif()
+diff --git a/modules/cudawarping/CMakeLists.txt b/modules/cudawarping/CMakeLists.txt
+index 403121f6..d34beedc 100644
+--- a/modules/cudawarping/CMakeLists.txt
++++ b/modules/cudawarping/CMakeLists.txt
+@@ -8,7 +8,11 @@ ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4127 /wd4324 /wd4512 -Wundef -Wmissing-d
+ 
+ set(build_libs "")
+ if(ENABLE_CUDA_FIRST_CLASS_LANGUAGE)
+-  list(APPEND build_libs CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_LIB_EXT} CUDA::nppig${CUDA_LIB_EXT})
++  set(CUDA_NPP_LIB_EXT "${CUDA_LIB_EXT}")
++  if(CUDA_VERSION VERSION_GREATER_EQUAL 13.4)
++    set(CUDA_NPP_LIB_EXT "")
++  endif()
++  list(APPEND build_libs CUDA::cudart${CUDA_LIB_EXT} CUDA::nppial${CUDA_NPP_LIB_EXT} CUDA::nppig${CUDA_NPP_LIB_EXT})
+ endif()
+ 
+ ocv_add_module(cudawarping opencv_core opencv_imgproc OPTIONAL opencv_cudev WRAP python)
