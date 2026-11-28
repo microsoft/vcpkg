@@ -6013,7 +6013,7 @@
       "port-version": 3
     },
     "libupnp": {
-      "baseline": "22.2.4",
+      "baseline": "22.2.5",
       "port-version": 0
     },
     "liburcu": {
