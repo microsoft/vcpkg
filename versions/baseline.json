@@ -8248,6 +8248,14 @@
       "baseline": "2023-04-10",
       "port-version": 0
     },
+    "praxo-core": {
+      "baseline": "0.14.0",
+      "port-version": 0
+    },
+    "praxo-core-cpp": {
+      "baseline": "0.10.0",
+      "port-version": 0
+    },
     "presentmon": {
       "baseline": "2.3.0",
       "port-version": 0
