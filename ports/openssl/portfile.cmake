@@ -73,7 +73,22 @@ if(OPENSSL_NO_AUTOLOAD_CONFIG)
     vcpkg_list(APPEND CONFIGURE_OPTIONS no-autoload-config)
 endif()
 
+# The nmake flow builds with an MSVC-style compiler driver (cl or clang-cl).
+# clang with the GNU-style driver targeting windows-msvc (e.g. through a
+# chainloaded toolchain, or cross builds from hosts without MSVC tools) goes
+# through the unix flow with a clang Configure target.
+set(use_nmake_flow OFF)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(use_nmake_flow ON)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "Clang"
+        AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
+        set(use_nmake_flow OFF)
+    endif()
+endif()
+
+if(use_nmake_flow)
     include("${CMAKE_CURRENT_LIST_DIR}/windows/portfile.cmake")
     include("${CMAKE_CURRENT_LIST_DIR}/install-pc-files.cmake")
 else()

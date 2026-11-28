@@ -1,0 +1,38 @@
+# Configure target for building openssl with a GNU-driver clang targeting
+# x86_64-pc-windows-msvc through the unix flow (native on Windows or
+# cross-compiled). CC/AR/RANLIB and the SDK include paths arrive via the
+# environment; this target adds what the environment cannot: the target
+# triple, the CRT selection, Windows system defines, the Windows link
+# libraries and the rules for building DLLs with an MSVC-style linker.
+#
+# The name must start with "mingw": OpenSSL keys its Windows handling on the
+# target name (DLL install layout, dllmain.c, version resources, winstore),
+# and this target needs all of it.
+my %targets = (
+    "mingw-clang-msvc64" => {
+        inherit_from     => [ "BASE_unix" ],
+        cflags           => picker(default => "--target=x86_64-pc-windows-msvc",
+                                   debug   => "-fms-runtime-lib=@OPENSSL_MS_RUNTIME_LIB@_dbg",
+                                   release => "-fms-runtime-lib=@OPENSSL_MS_RUNTIME_LIB@"),
+        defines          => add("UNICODE", "_UNICODE", "WIN32_LEAN_AND_MEAN",
+                                "_CRT_SECURE_NO_WARNINGS"),
+        lib_cppflags     => "-DL_ENDIAN",
+        sys_id           => "WIN64A",
+        asm_arch         => 'x86_64',
+        perlasm_scheme   => "mingw64",
+        bn_ops           => "SIXTY_FOUR_BIT",
+        thread_scheme    => "winthreads",
+        dso_scheme       => "win32",
+        ex_libs          => add("-lws2_32", "-lgdi32", "-lcrypt32", "-ladvapi32", "-luser32"),
+        # No entry in shared-info.pl, so nothing is merged into the flags
+        # below; "windows" (the name minus "-shared") selects mkdef.pl's
+        # Windows .def writer.
+        shared_target    => "windows-shared",
+        shared_ldflag    => "-shared",
+        shared_impflag   => "-Wl,-implib:",
+        shared_defflag   => "-Wl,-def:",
+        shared_argfileflag => "@",
+        shared_rcflag    => "--target=pe-x86-64",
+        perl_platform    => "ClangWindows",
+    },
+);
