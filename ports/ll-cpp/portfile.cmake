@@ -3,6 +3,7 @@ vcpkg_from_github(
     REPO ll-tg/ll-cpp
     REF v0.1.1
     SHA512 837bedd10f4ab7f0e3123672a1a77046bf73042ef207cfbe75476cb9c60d248115cbbed5e4f64f2aa1cbe22fe3bfecc9fb22b21ed17d0ed6d56a85eaa7cf6f48
+    PATCHES fix-msvc-warning-flags.patch
 )
 
 file(READ "${SOURCE_PATH}/cmake/llcppConfig.cmake.in" LLCPP_CONFIG)
