@@ -22,4 +22,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/license/gpl-2.0.txt" "${SOURCE_PATH}/doc/license/gpl-3.0.txt")
+file(READ "${SOURCE_PATH}/src/glad/include/glad/gl.h" _glad_header LIMIT 512)
+string(REGEX MATCH "\\* SPDX-License-Identifier:[^\r\n]*" _glad_license "${_glad_header}")
+
+file(READ "${SOURCE_PATH}/src/glad/include/KHR/khrplatform.h" _khr_header LIMIT 4096)
+string(REGEX MATCH "/\\*([^*]|\\*+[^*/])*\\*+/" _khr_license "${_khr_header}")
+
+file(WRITE "${CURRENT_BUILDTREES_DIR}/glad-license.txt"
+     "${_glad_license}\n\n${_khr_license}\n")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/doc/license/gpl-2.0.txt" 
+        "${SOURCE_PATH}/doc/license/gpl-3.0.txt"
+        "${CURRENT_BUILDTREES_DIR}/glad-license.txt"
+)
