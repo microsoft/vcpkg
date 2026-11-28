@@ -1,14 +1,16 @@
 {
   "name": "colmap",
-  "version": "4.1.1",
+  "version": "4.2.1",
   "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface.",
   "homepage": "https://colmap.github.io/",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND AGPL-3.0-or-later",
   "supports": "(linux | windows | osx) & (x86 | x64 | arm64)",
   "dependencies": [
     "boost-algorithm",
     "boost-graph",
     "boost-heap",
+    "boost-predef",
+    "boost-preprocessor",
     "boost-program-options",
     "boost-property-map",
     "boost-property-tree",
@@ -23,12 +25,7 @@
     "eigen3",
     "faiss",
     "gflags",
-    "glew",
     "glog",
-    {
-      "name": "jasper",
-      "default-features": false
-    },
     "metis",
     "openimageio",
     "poselib",
@@ -42,27 +39,59 @@
       "host": true
     }
   ],
+  "default-features": [
+    "cgal",
+    "download",
+    "gui"
+  ],
   "features": {
+    "caspar": {
+      "description": "Build the experimental Caspar GPU bundle adjustment backend (requires SM75 or newer).",
+      "license": "BSD-3-Clause AND AGPL-3.0-or-later AND Apache-2.0",
+      "dependencies": [
+        {
+          "name": "colmap",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
     "cgal": {
       "description": "Build with CGAL support.",
       "dependencies": [
+        "boost-container-hash",
         "cgal"
       ]
     },
     "cuda": {
       "description": "Build with CUDA support for the native architecture.",
       "dependencies": [
-        "cuda"
+        {
+          "name": "ceres",
+          "features": [
+            "cuda"
+          ]
+        },
+        "cuda",
+        "glew"
       ]
     },
     "cuda-redist": {
       "description": "Build with redistributable CUDA support for common supported compute architectures.",
       "dependencies": [
-        "cuda"
+        {
+          "name": "ceres",
+          "features": [
+            "cuda"
+          ]
+        },
+        "cuda",
+        "glew"
       ]
     },
     "download": {
-      "description": "Build with automatic resource download support.",
+      "description": "Build with download support (automatic download of ONNX models and vocabulary trees).",
       "dependencies": [
         {
           "name": "cryptopp",
@@ -70,10 +99,17 @@
         },
         {
           "name": "curl",
-          "default-features": false,
           "features": [
-            "ssl"
-          ]
+            "sspi"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "curl",
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows"
         },
         {
           "name": "openssl",
@@ -84,14 +120,28 @@
     "gui": {
       "description": "Build with GUI support.",
       "dependencies": [
+        "glew",
         "qtbase",
         "qtsvg"
       ]
     },
     "onnx": {
-      "description": "Build with ONNX support.",
-      "supports": "windows",
+      "description": "Build with ONNX Runtime support (ALIKED, LightGlue, ...).",
+      "supports": "!osx",
       "dependencies": [
+        "onnxruntime"
+      ]
+    },
+    "onnx-cuda": {
+      "description": "Build with ONNX Runtime support and its CUDA execution provider.",
+      "dependencies": [
+        {
+          "name": "colmap",
+          "features": [
+            "cuda",
+            "onnx"
+          ]
+        },
         {
           "name": "onnxruntime",
           "features": [

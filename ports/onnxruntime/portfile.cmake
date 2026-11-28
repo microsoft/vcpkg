@@ -16,6 +16,7 @@ vcpkg_from_github(
         fix-cmake-mlas.patch
         use-vcpkg-coremltools.patch # use the coremltools port instead of building its sources
         fix-debug-schema-count.patch # https://github.com/microsoft/onnxruntime/pull/33456 (open, unreviewed)
+        fix-cmake-static-include.patch
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -78,6 +79,16 @@ if("cuda" IN_LIST FEATURES)
         # too much warnings about attribute
         "-DCMAKE_CUDA_FLAGS=-Xcudafe --diag_suppress=2803 -Wno-deprecated-gpu-targets"
     )
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_from_github(
+            OUT_SOURCE_PATH DEEP_GEMM_SOURCE_PATH
+            REPO deepseek-ai/DeepGEMM
+            REF 559d79fb6994a58b8a15b4b93bf13ccc16edf247
+            SHA512 75f052c7fc9b1c1f33e9f311685744c228fbebbb62c381467fb9e8ea7c8433d5f7c38bf68351a1747d21163fb3d0c6a81b07fc1bff11ab3d32fc695fe8d50a9b
+            HEAD_REF main
+        )
+        list(APPEND FEATURE_OPTIONS "-DFETCHCONTENT_SOURCE_DIR_DEEP_GEMM=${DEEP_GEMM_SOURCE_PATH}")
+    endif()
 endif()
 
 if("tensorrt" IN_LIST FEATURES)
@@ -92,6 +103,11 @@ if("tensorrt" IN_LIST FEATURES)
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND "cuda" IN_LIST FEATURES)
+    # cudnn_flash_attention.cc exceeds the object file section limit (C1128).
+    string(APPEND VCPKG_CXX_FLAGS " /bigobj")
+    string(APPEND VCPKG_C_FLAGS " /bigobj")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
@@ -168,4 +184,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(COPYRIGHT_FILES "${SOURCE_PATH}/LICENSE")
+if(DEFINED DEEP_GEMM_SOURCE_PATH)
+    list(APPEND COPYRIGHT_FILES "${DEEP_GEMM_SOURCE_PATH}/LICENSE")
+endif()
+vcpkg_install_copyright(FILE_LIST ${COPYRIGHT_FILES})

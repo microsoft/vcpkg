@@ -11,6 +11,7 @@ vcpkg_from_github(
         0006_fix_cuda_architectures.patch
         0007_support_cuda_13.patch
         0008_support_eigen3_5.patch
+        0009_cuda_kernels_cxx17.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
@@ -37,6 +38,10 @@ if("cuda" IN_LIST FEATURES)
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        # CCCL >= 3.2 requires the conforming MSVC preprocessor
+        list(APPEND FEATURE_OPTIONS "-DCMAKE_CUDA_FLAGS_INIT=-Xcompiler=/Zc:preprocessor")
+    endif()
 endif()
 
 if(VCPKG_TARGET_IS_IOS)

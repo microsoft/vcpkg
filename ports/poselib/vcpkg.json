@@ -1,6 +1,6 @@
 {
   "name": "poselib",
-  "version": "2.0.5",
+  "version-date": "2026-10-07",
   "description": "Minimal solvers for calibrated camera pose estimation",
   "homepage": "https://github.com/PoseLib/PoseLib",
   "license": "BSD-3-Clause",

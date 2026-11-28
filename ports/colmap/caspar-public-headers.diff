@@ -1,0 +1,105 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e424f37..6beaed5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -152,6 +152,18 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ set(COLMAP_FIND_QUIETLY FALSE)
+ include(cmake/FindDependencies.cmake)
+ 
++if(CASPAR_ENABLED)
++    list(APPEND COLMAP_COMPILE_DEFINITIONS CASPAR_ENABLED)
++    if(CASPAR_USE_DOUBLE)
++        list(APPEND COLMAP_COMPILE_DEFINITIONS CASPAR_USE_DOUBLE)
++    endif()
++endif()
++
++configure_file(
++    src/colmap/util/caspar_config.h.in
++    include/colmap/util/caspar_config.h)
++include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
++
+ ################################################################################
+ # Compiler specific configuration
+ ################################################################################
+@@ -495,6 +507,7 @@ target_include_directories(
+     colmap
+     INTERFACE
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+ 
+ install(
+@@ -524,6 +537,9 @@ install(
+     DESTINATION ${INSTALL_CONFIG_DIR})
+ 
+ # Install header files.
++install(
++    FILES "${CMAKE_CURRENT_BINARY_DIR}/include/colmap/util/caspar_config.h"
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/colmap/util)
+ install(
+     DIRECTORY src/colmap
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+diff --git a/src/colmap/estimators/bundle_adjustment_caspar.h b/src/colmap/estimators/bundle_adjustment_caspar.h
+index 5c2f4ca..89feac5 100644
+--- a/src/colmap/estimators/bundle_adjustment_caspar.h
++++ b/src/colmap/estimators/bundle_adjustment_caspar.h
+@@ -30,15 +30,16 @@
+ #pragma once
+ 
+ #include "colmap/estimators/bundle_adjustment.h"
++#include "colmap/util/caspar_config.h"
+ 
+ #include <array>
+ #include <cstddef>
+ #include <vector>
+ #ifdef CASPAR_ENABLED
+ #ifdef CASPAR_USE_DOUBLE
+-#include "thirdparty/Symforce-Caspar/generated/f64/solver.h"
++#include "colmap/thirdparty/Symforce-Caspar/generated/f64/solver.h"
+ #else
+-#include "thirdparty/Symforce-Caspar/generated/f32/solver.h"
++#include "colmap/thirdparty/Symforce-Caspar/generated/f32/solver.h"
+ #endif
+ #endif
+ 
+diff --git a/src/colmap/estimators/caspar/caspar_model_adapter.h b/src/colmap/estimators/caspar/caspar_model_adapter.h
+index 9a326f0..660612e 100644
+--- a/src/colmap/estimators/caspar/caspar_model_adapter.h
++++ b/src/colmap/estimators/caspar/caspar_model_adapter.h
+@@ -8,9 +8,9 @@
+ #include <vector>
+ 
+ #ifdef CASPAR_USE_DOUBLE
+-#include "thirdparty/Symforce-Caspar/generated/f64/solver.h"
++#include "colmap/thirdparty/Symforce-Caspar/generated/f64/solver.h"
+ #else
+-#include "thirdparty/Symforce-Caspar/generated/f32/solver.h"
++#include "colmap/thirdparty/Symforce-Caspar/generated/f32/solver.h"
+ #endif
+ 
+ namespace colmap {
+diff --git a/src/colmap/util/caspar_config.h.in b/src/colmap/util/caspar_config.h.in
+new file mode 100644
+index 0000000..add857c
+--- /dev/null
++++ b/src/colmap/util/caspar_config.h.in
+@@ -0,0 +1,4 @@
++#pragma once
++
++#cmakedefine CASPAR_ENABLED 1
++#cmakedefine CASPAR_USE_DOUBLE 1
+diff --git a/src/thirdparty/CMakeLists.txt b/src/thirdparty/CMakeLists.txt
+index 48eb529..8a37144 100644
+--- a/src/thirdparty/CMakeLists.txt
++++ b/src/thirdparty/CMakeLists.txt
+@@ -113,6 +113,10 @@ if(CASPAR_ENABLED AND CUDA_ENABLED)
+             "Re-run generate_caspar.py to regenerate.")
+     endif()
+ 
++    file(COPY "${CASPAR_GEN_DIR}/"
++        DESTINATION "${CMAKE_BINARY_DIR}/include/colmap/thirdparty/Symforce-Caspar/generated/${_caspar_precision}"
++        FILES_MATCHING PATTERN "*.h")
++
+     include(FetchContent)
+     FetchContent_Declare(caspar
+         SOURCE_DIR ${CASPAR_GEN_DIR}
