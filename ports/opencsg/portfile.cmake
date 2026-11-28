@@ -22,4 +22,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/license/gpl-2.0.txt" "${SOURCE_PATH}/doc/license/gpl-3.0.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/doc/license/gpl-2.0.txt" 
+        "${SOURCE_PATH}/doc/license/gpl-3.0.txt"
+        "${SOURCE_PATH}/src/glad/include/glad/gl.h"
+        "${SOURCE_PATH}/src/glad/include/KHR/khrplatform.h"
+)

@@ -1,5 +1,7 @@
-cmake_minimum_required (VERSION 3.4)
-project (opencsg)
+cmake_minimum_required(VERSION 3.10)
+project(opencsg)
+
+find_package(OpenGL REQUIRED)
 
 set(HEADERS
   include/opencsg.h
@@ -21,15 +23,13 @@ set(SRCS
 	src/renderSCS.cpp
 	src/scissorMemo.cpp
 	src/settings.cpp
+	src/glad/src/gl.cpp
 )
-
 
 add_library(opencsg ${SRCS} ${HEADERS})
 
-include_directories(src include RenderTexture ".")
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
-target_link_libraries(opencsg PRIVATE GLEW::GLEW)
+target_include_directories(opencsg PRIVATE src src/glad/include include RenderTexture ".")
+target_link_libraries(opencsg PRIVATE OpenGL::GL)
 
 install(
   TARGETS opencsg
