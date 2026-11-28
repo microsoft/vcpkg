@@ -9665,7 +9665,7 @@
       "port-version": 0
     },
     "slick-perfmon": {
-      "baseline": "0.4.0",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "slick-queue": {
