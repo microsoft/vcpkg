@@ -5629,7 +5629,7 @@
       "port-version": 0
     },
     "libosdp": {
-      "baseline": "3.2.7",
+      "baseline": "3.2.11",
       "port-version": 0
     },
     "libosip2": {

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osdp-dev/libosdp
     REF "v${VERSION}"
-    SHA512 1035146f7527d405210e908b494e2d7bfc69216515ac59a05c502abf62c32451d13ef76549ca205b291cb3ccfddd42205c3d70b593dd1baf2351019a1732600f
+    SHA512 a73315ff8a7290176239235046b4315de11f324036d008cfcc44af9e88baa1e9eaeb41731fa167a690b67c639b35688ea3cf3e5e7af1edf813d13a179eeb05a7
     HEAD_REF master
     PATCHES
         fix-export-macros.patch
@@ -15,8 +15,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH UTILS_SOURCE_PATH
     REPO osdp-dev/c-utils
-    REF "86de31f9b3bf08ffbd1bde3e8cf66614e58a66f4"
-    SHA512 e5ffe68d9c7f102bcacd12167aa9c73f3012c2ec194ac6c8aeb4681f8384cf403fdc1ee4f8e4c198ce23acd1510504fa67c76bfb5da26fb0eea3d674d1bf253e
+    REF de5fd0b21af0fb1c8327b99cda7f2aec754be761
+    SHA512 4710cc6232eb75e35441898573fdbe0388d2d7fa39730ae0238744b346a4557cd86f0f157aea3ec5d4befcc75633a3100ffc7c8ba3470cc747d540c770ab6c7b
     HEAD_REF master
 )
 
