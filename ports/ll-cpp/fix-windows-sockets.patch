@@ -1,14 +1,12 @@
 --- a/src/llcpp.cpp
 +++ b/src/llcpp.cpp
-@@ -1,8 +1,20 @@
+@@ -1,8 +1,18 @@
  #include <llcpp/llcpp.hpp>
 +#ifdef _WIN32
 +#include <winsock2.h>
 +#include <ws2tcpip.h>
 +#include <io.h>
 +#define close closesocket
-+#define read _read
-+#define write _write
 +#define popen _popen
 +#define pclose _pclose
 +using ssize_t = int;
@@ -21,10 +19,24 @@
  #include <algorithm>
  #include <chrono>
  #include <cctype>
-@@ -110,5 +122,5 @@
+@@ -13,6 +23,13 @@
+ 
+ namespace llcpp {
+ namespace {
++#ifdef _WIN32
++int socket_read(int fd, char* buffer, int size) { return recv(fd, buffer, size, 0); }
++int socket_write(int fd, const char* buffer, int size) { return send(fd, buffer, size, 0); }
++#else
++ssize_t socket_read(int fd, char* buffer, std::size_t size) { return read(fd, buffer, size); }
++ssize_t socket_write(int fd, const char* buffer, std::size_t size) { return write(fd, buffer, size); }
++#endif
+ std::string shell_quote(const std::string& s) { std::string r="'"; for(char c:s) r += c=='\'' ? "'\\''" : std::string(1,c); return r+"'"; }
+ std::string value(const std::string& text, const std::string& key) { auto p=text.find(key); if(p==std::string::npos)return {}; p=text.find('=',p); if(p==std::string::npos)return {}; auto a=text.find_first_not_of(" \t\"",p+1); auto b=text.find_first_of("\"\r\n",a); return a==std::string::npos?std::string():text.substr(a,b-a); }
+ std::string json_string(const std::string& text, const std::string& key) {
+@@ -110,5 +127,5 @@
  bool Bot::reload(){return runtime_.reload([this](const Update& u){return dispatch(u);});}
  Config load_config(const std::string& path){Config c;std::ifstream f(path);std::stringstream b;b<<f.rdbuf();auto s=b.str();auto x=value(s,"token");if(!x.empty())c.token=x;if((x=value(s,"mode"))!="")c.mode=x;if((x=value(s,"listen"))!="")c.listen=x;if((x=value(s,"webhook_secret"))!="")c.webhook_secret=x;return c;}
  std::string telegram_request(const Config& c,const std::string& method,const std::string& form){std::string url="https://api.telegram.org/bot"+c.token+"/"+method;std::string cmd="curl --fail --silent --show-error --max-time 30 -X POST --data "+shell_quote(form)+" "+shell_quote(url);FILE*p=popen(cmd.c_str(),"r");if(!p)return{};std::string out;char b[4096];while(fgets(b,sizeof(b),p))out+=b;pclose(p);return out;}
 -int run_http(Runtime& runtime,const Config& config){auto colon=config.listen.rfind(':');if(colon==std::string::npos)return 2;int port=std::stoi(config.listen.substr(colon+1));int fd=socket(AF_INET,SOCK_STREAM,0);if(fd<0)return 2;int yes=1;setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));sockaddr_in addr{};addr.sin_family=AF_INET;addr.sin_port=htons(port);addr.sin_addr.s_addr=inet_addr(config.listen.substr(0,colon).c_str());if(bind(fd,reinterpret_cast<sockaddr*>(&addr),sizeof(addr))<0||listen(fd,16)<0){close(fd);return 2;}for(;;){int c=accept(fd,nullptr,nullptr);if(c<0)break;char b[8192];ssize_t n=read(c,b,sizeof(b)-1);if(n>0){b[n]=0;std::string req(b);bool secret=config.webhook_secret.empty()||req.find("X-Telegram-Bot-Api-Secret-Token: "+config.webhook_secret)!=std::string::npos;auto p=req.find("\r\n\r\n");if(secret&&p!=std::string::npos)runtime.enqueue({0,req.substr(p+4)});std::string body=secret?"accepted":"forbidden";std::string resp="HTTP/1.1 "+std::string(secret?"202 Accepted":"403 Forbidden")+"\r\nContent-Length: "+std::to_string(body.size())+"\r\n\r\n"+body;write(c,resp.data(),resp.size());}close(c);}close(fd);return 0;}
-+int run_http(Runtime& runtime,const Config& config){auto colon=config.listen.rfind(':');if(colon==std::string::npos)return 2;int port=std::stoi(config.listen.substr(colon+1));int fd=socket(AF_INET,SOCK_STREAM,0);if(fd<0)return 2;int yes=1;setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&yes),sizeof(yes));sockaddr_in addr{};addr.sin_family=AF_INET;addr.sin_port=htons(port);addr.sin_addr.s_addr=inet_addr(config.listen.substr(0,colon).c_str());if(bind(fd,reinterpret_cast<sockaddr*>(&addr),sizeof(addr))<0||listen(fd,16)<0){close(fd);return 2;}for(;;){int c=accept(fd,nullptr,nullptr);if(c<0)break;char b[8192];ssize_t n=read(c,b,sizeof(b)-1);if(n>0){b[n]=0;std::string req(b);bool secret=config.webhook_secret.empty()||req.find("X-Telegram-Bot-Api-Secret-Token: "+config.webhook_secret)!=std::string::npos;auto p=req.find("\r\n\r\n");if(secret&&p!=std::string::npos)runtime.enqueue({0,req.substr(p+4)});std::string body=secret?"accepted":"forbidden";std::string resp="HTTP/1.1 "+std::string(secret?"202 Accepted":"403 Forbidden")+"\r\nContent-Length: "+std::to_string(body.size())+"\r\n\r\n"+body;write(c,resp.data(),resp.size());}close(c);}close(fd);return 0;}
++int run_http(Runtime& runtime,const Config& config){auto colon=config.listen.rfind(':');if(colon==std::string::npos)return 2;int port=std::stoi(config.listen.substr(colon+1));int fd=socket(AF_INET,SOCK_STREAM,0);if(fd<0)return 2;int yes=1;setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&yes),sizeof(yes));sockaddr_in addr{};addr.sin_family=AF_INET;addr.sin_port=htons(port);addr.sin_addr.s_addr=inet_addr(config.listen.substr(0,colon).c_str());if(bind(fd,reinterpret_cast<sockaddr*>(&addr),sizeof(addr))<0||listen(fd,16)<0){close(fd);return 2;}for(;;){int c=accept(fd,nullptr,nullptr);if(c<0)break;char b[8192];ssize_t n=socket_read(c,b,sizeof(b)-1);if(n>0){b[n]=0;std::string req(b);bool secret=config.webhook_secret.empty()||req.find("X-Telegram-Bot-Api-Secret-Token: "+config.webhook_secret)!=std::string::npos;auto p=req.find("\r\n\r\n");if(secret&&p!=std::string::npos)runtime.enqueue({0,req.substr(p+4)});std::string body=secret?"accepted":"forbidden";std::string resp="HTTP/1.1 "+std::string(secret?"202 Accepted":"403 Forbidden")+"\r\nContent-Length: "+std::to_string(body.size())+"\r\n\r\n"+body;socket_write(c,resp.data(),resp.size());}close(c);}close(fd);return 0;}
  } // namespace llcpp
