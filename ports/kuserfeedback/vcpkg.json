@@ -1,0 +1,63 @@
+{
+  "name": "kuserfeedback",
+  "version": "6.32.0",
+  "description": "Framework for collecting user feedback for applications via telemetry and surveys",
+  "homepage": "https://invent.kde.org/frameworks/kuserfeedback",
+  "documentation": "https://api.kde.org/kuserfeedback-index.html",
+  "license": "MIT AND BSD-3-Clause",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "network"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build the QML module",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "translations": {
+      "description": "Build and install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    },
+    "widgets": {
+      "description": "Build the feedback configuration and notification widgets",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    }
+  }
+}

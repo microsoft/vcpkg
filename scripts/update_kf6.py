@@ -55,6 +55,7 @@ PORT_LIST = [
     "kservice",
     "ktexttemplate",
     "ktextwidgets",
+    "kuserfeedback",
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
