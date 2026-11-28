@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ll-cpp)
+vcpkg_cmake_config_fixup(PACKAGE_NAME llcpp CONFIG_PATH lib/cmake/ll-cpp)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
