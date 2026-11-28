@@ -1,0 +1,30 @@
+diff --git a/src/cmake/dependency_utils.cmake b/src/cmake/dependency_utils.cmake
+index 8a32510..6fa59a2 100644
+--- a/src/cmake/dependency_utils.cmake
++++ b/src/cmake/dependency_utils.cmake
+@@ -658,7 +658,11 @@ function(remove_prefixes_from_variable VAR_TYPE VAR_NAME PREFIXES)
+     endif()
+ 
+     # Convert the variable value into a list of paths
+-    string(REPLACE ":" ";" _path_list "${_original_value}")
++    if(VAR_TYPE STREQUAL "ENV")
++        string(REPLACE ":" ";" _path_list "${_original_value}")
++    else()
++        set(_path_list "${_original_value}")
++    endif()
+ 
+     foreach(_prefix ${PREFIXES})
+         # Normalize the prefix path
+@@ -675,7 +679,11 @@ function(remove_prefixes_from_variable VAR_TYPE VAR_NAME PREFIXES)
+     endforeach()
+ 
+     # Convert the list back to the appropriate separator
+-    string(REPLACE ";" ":" _new_value "${_path_list}")
++    if(VAR_TYPE STREQUAL "ENV")
++        string(REPLACE ";" ":" _new_value "${_path_list}")
++    else()
++        set(_new_value "${_path_list}")
++    endif()
+ 
+     # Update the variable based on the variable type
+     if(VAR_TYPE STREQUAL "ENV")

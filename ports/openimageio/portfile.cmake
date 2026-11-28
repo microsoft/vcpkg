@@ -3,6 +3,7 @@ set(PATCHES
     fix-static-ffmpeg.patch
     imath-version-guard.patch
     fix-openimageio_include_dir.patch
+    fix-remove-prefixes-list-separator.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -68,6 +69,11 @@ if("pybind11" IN_LIST FEATURES)
     )
 endif()
 
+set(ADDITIONAL_OPTIONS)
+if(CMAKE_HOST_APPLE)
+    list(APPEND ADDITIONAL_OPTIONS "-DIGNORE_HOMEBREWED_DEPS=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -91,6 +97,7 @@ vcpkg_cmake_configure(
         -DENABLE_INSTALL_testtex=OFF
         "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
+        ${ADDITIONAL_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
         ENABLE_IV
