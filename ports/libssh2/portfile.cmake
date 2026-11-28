@@ -1,3 +1,19 @@
+vcpkg_download_distfile(CVE_2026_55199_PATCH
+    URLS https://github.com/libssh2/libssh2/commit/17626857d20b3c9a1addfa45979dadcee1cd84a4.patch?full_index=1
+    FILENAME libssh2-CVE-2026-55199-17626857d20b3c9a1addfa45979dadcee1cd84a4.patch
+    SHA512 14d0f94e9b3544f2c9b5ef528447f3eeba7e2a3a716cf93a36b32ceecba54f3b4d2b3807928a841db8f1f9b22f81b246c955fadc569061230a5c9c21feb7e54a
+)
+vcpkg_download_distfile(CVE_2026_58051_PATCH
+    URLS https://github.com/libssh2/libssh2/commit/a9758da45a52bc8c630ec9493804d0c6ea30b24a.patch?full_index=1
+    FILENAME libssh2-CVE-2026-58051-a9758da45a52bc8c630ec9493804d0c6ea30b24a.patch
+    SHA512 ffbb2ad956f178d5a7cbe6c338d661dc9fa7db96e49176cddfb6701c7eea36a6608e989dc6eb10d774f25d83338aeec0c24ef906b10cc963c5cb6ec5ed925a2a
+)
+vcpkg_download_distfile(CVE_2026_66033_PATCH
+    URLS https://github.com/libssh2/libssh2/commit/a2ed82d40964bbc0d64cd717aa0a5a892117d2e6.patch?full_index=1
+    FILENAME libssh2-CVE-2026-66033-a2ed82d40964bbc0d64cd717aa0a5a892117d2e6.patch
+    SHA512 0c0c2c61f2f26b5bdf9224b59d4926887d7697e7b8433ea93691469f4f8a3b6ddeef8575ada7cc3e33e1e51e0e921875c0493a2602a9c415d5cdceb5fc2fe2d3
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libssh2/libssh2
@@ -7,6 +23,17 @@ vcpkg_from_github(
     PATCHES
         cmake-config.diff
         pkgconfig.diff
+        "${CVE_2026_55199_PATCH}"
+        "${CVE_2026_58051_PATCH}"
+        "${CVE_2026_66033_PATCH}"
+        CVE-2025-15661.diff
+        CVE-2026-7598.diff
+        CVE-2026-7598-hardening.diff
+        CVE-2026-55200.diff
+        CVE-2026-58050.diff
+        CVE-2026-66032.diff
+        CVE-2026-66034.diff
+        CVE-2026-66035.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
