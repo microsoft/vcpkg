@@ -26,9 +26,9 @@ function(boost_configure_and_install)
   if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow
     set(target_path "${arg_SOURCE_PATH}/${boost_lib_path}")
     cmake_path(GET target_path PARENT_PATH parent_path)
-    file(RENAME "${arg_SOURCE_PATH}/" "${arg_SOURCE_PATH}.tmp/")
+    file(RENAME "${arg_SOURCE_PATH}" "${arg_SOURCE_PATH}.tmp")
     file(MAKE_DIRECTORY "${parent_path}")
-    file(RENAME "${arg_SOURCE_PATH}.tmp/" "${target_path}")
+    file(RENAME "${arg_SOURCE_PATH}.tmp" "${target_path}")
   endif()
 
   # Beta builds contains a text in the version string
@@ -72,7 +72,7 @@ include(BoostRoot)\n"
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${config_name} CONFIG_PATH lib/cmake/${config_name}-${SEMVER_VERSION} DO_NOT_DELETE_PARENT_CONFIG_PATH)
   endforeach()
 
-  if(PORT MATCHES "boost-(stacktrace|test)") 
+  if(PORT MATCHES "boost-(stacktrace|test)")
     # These ports have no cmake config agreeing with the port name
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
   else()
