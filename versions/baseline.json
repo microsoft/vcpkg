@@ -7701,7 +7701,7 @@
       "port-version": 15
     },
     "openpit": {
-      "baseline": "0.11.0",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "openscap": {
