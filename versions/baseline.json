@@ -3320,6 +3320,10 @@
       "baseline": "7.0.3",
       "port-version": 0
     },
+    "fullint": {
+      "baseline": "1.0.0-preview.1",
+      "port-version": 0
+    },
     "function2": {
       "baseline": "4.2.5",
       "port-version": 0

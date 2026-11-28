@@ -1,0 +1,4 @@
+fullint provides CMake targets:
+
+  find_package(FullInt CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE FullInt::FullInt)
