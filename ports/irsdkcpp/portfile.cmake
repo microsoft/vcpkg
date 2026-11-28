@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix-format-header.patch
+        fix-known-var-name-enum-range.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IRSDKCPP_BUILD_SHARED)
