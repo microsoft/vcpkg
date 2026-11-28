@@ -4,7 +4,7 @@ string(REPLACE "-" "." format_version "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.live555.com/live.${format_version}.tar.gz"
     FILENAME "live.${format_version}.tar.gz"
-    SHA512 c5ee0ffa89a08e01a09367e3ae414fe2933e173abf060c8c9a39fde0e555df59f4f81f31e14d014bc6227569f464f736325b05e270fd061d472e3d1cc5136986
+    SHA512 e347f3170560652d3ed155eaa35e671f4a9f0b68043f366cb87d7a8876175f001a1015a785d22dd8906f0d77257b97314452ff86c478cf75239ad2c11cd25864
 )
 
 vcpkg_extract_source_archive(
