@@ -1,0 +1,73 @@
+diff --git a/src/rres-raylib.h b/src/rres-raylib.h
+index 056aa95..fd92ff0 100644
+--- a/src/rres-raylib.h
++++ b/src/rres-raylib.h
+@@ -89,22 +89,22 @@ extern "C" {            // Prevents name mangling of functions
+ 
+ // rres data loading to raylib data structures
+ // NOTE: Chunk data must be provided uncompressed/unencrypted
+-RLAPI void *LoadDataFromResource(rresResourceChunk chunk, unsigned int *size); // Load raw data from rres resource chunk
+-RLAPI char *LoadTextFromResource(rresResourceChunk chunk);      // Load text data from rres resource chunk
+-RLAPI Image LoadImageFromResource(rresResourceChunk chunk);     // Load Image data from rres resource chunk
+-RLAPI Wave LoadWaveFromResource(rresResourceChunk chunk);       // Load Wave data from rres resource chunk
+-RLAPI Font LoadFontFromResource(rresResourceMulti multi);       // Load Font data from rres resource multiple chunks
+-RLAPI Mesh LoadMeshFromResource(rresResourceMulti multi);       // Load Mesh data from rres resource multiple chunks
++extern void *LoadDataFromResource(rresResourceChunk chunk, unsigned int *size); // Load raw data from rres resource chunk
++extern char *LoadTextFromResource(rresResourceChunk chunk);      // Load text data from rres resource chunk
++extern Image LoadImageFromResource(rresResourceChunk chunk);     // Load Image data from rres resource chunk
++extern Wave LoadWaveFromResource(rresResourceChunk chunk);       // Load Wave data from rres resource chunk
++extern Font LoadFontFromResource(rresResourceMulti multi);       // Load Font data from rres resource multiple chunks
++extern Mesh LoadMeshFromResource(rresResourceMulti multi);       // Load Mesh data from rres resource multiple chunks
+ 
+ // Unpack resource chunk data (decompres/decrypt data)
+ // NOTE: Function return 0 on success or other value on failure
+-RLAPI int UnpackResourceChunk(rresResourceChunk *chunk);        // Unpack resource chunk data (decompress/decrypt)
++extern int UnpackResourceChunk(rresResourceChunk *chunk);        // Unpack resource chunk data (decompress/decrypt)
+                                                             
+ // Set base directory for externally linked data
+ // NOTE: When resource chunk contains an external link (FourCC: LINK, Type: RRES_DATA_LINK),
+ // a base directory is required to be prepended to link path
+ // If not provided, the application path is prepended to link by default 
+-RLAPI void SetBaseDirectory(const char *baseDir);               // Set base directory for externally linked data
++extern void SetBaseDirectory(const char *baseDir);               // Set base directory for externally linked data
+ 
+ #if defined(__cplusplus)
+ }
+@@ -168,12 +168,18 @@ static char *LoadTextFromResourceChunk(rresResourceChunk chunk, unsigned int *co
+ static Image LoadImageFromResourceChunk(rresResourceChunk chunk);                        // Load chunk: RRES_DATA_IMAGE
+ 
+ static const char *GetExtensionFromProps(unsigned int ext01, unsigned int ext02);        // Get file extension from RRES_DATA_RAW properties (unsigned int) 
+-static unsigned int *ComputeMD5(unsigned char *data, int size);                          // Compute MD5 hash code, returns 4 integers array (static)
++static unsigned int *ComputeMD5RRES(unsigned char *data, int size);                          // Compute MD5 hash code, returns 4 integers array (static)
+ 
+ //----------------------------------------------------------------------------------
+ // Module Functions Definition
+ //----------------------------------------------------------------------------------
+ 
++// Set base directory for externally linked data
++void SetBaseDirectory(const char *baseDirectory)
++{
++    baseDir = baseDirectory;
++}
++
+ // Load raw data from rres resource
+ void *LoadDataFromResource(rresResourceChunk chunk, unsigned int *size)
+ {
+@@ -596,7 +602,7 @@ int UnpackResourceChunk(rresResourceChunk *chunk)
+ 
+             // Verify MD5 to check if data decryption worked
+             unsigned int decryptMD5[4] = { 0 };
+-            unsigned int *md5Ptr = ComputeMD5(decryptedData, chunk->info.packedSize - 16 - 16);
++            unsigned int *md5Ptr = ComputeMD5RRES(decryptedData, chunk->info.packedSize - 16 - 16);
+             for (int i = 0; i < 4; i++) decryptMD5[i] = md5Ptr[i];
+ 
+             // Wipe secrets if they are no longer needed
+@@ -976,7 +982,7 @@ static const char *GetExtensionFromProps(unsigned int ext01, unsigned int ext02)
+ }
+ 
+ // Compute MD5 hash code, returns 4 integers array (static)
+-static unsigned int *ComputeMD5(unsigned char *data, int size)
++static unsigned int *ComputeMD5RRES(unsigned char *data, int size)
+ {
+ #define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
+ 
