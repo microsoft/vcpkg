@@ -4,32 +4,28 @@
 #   - dynamic CRT: intel_thread, static CRT: sequential
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/e1efd9db-a5ef-4fb7-a66d-19fd33d2a263/intel-onemkl-2026.2.0.886_offline.exe # windows
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/97415287-271a-4d14-967f-72e2d9ceeb1e/intel-onemkl-2026.2.0.890_offline.sh # linux
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/4cf78d70-c895-48d2-8b8c-c45d28672aa0/intel-onemkl-2026.2.1.14_offline.exe # windows
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/1c5e2581-850f-464c-8a24-2a195656b067/intel-onemkl-2026.2.1.13_offline.sh # linux
 set(sha "")
-set(mkl_version 2026.2.0)
+set(mkl_version 2026.2.1)
+set(mkl_openmp_version 2026.2.0)
 set(mkl_short_version 2026.2)
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   # nop
 elseif(VCPKG_TARGET_IS_WINDOWS)
-  set(filename intel-onemkl-2026.2.0.886_offline.exe)
-  set(magic_number e1efd9db-a5ef-4fb7-a66d-19fd33d2a263)
-  set(sha eb94cc1923ea1b400cce4e476f1fa763dc2f4eb3192138f76f4eceb09307f9367b423d90bc787ecf280bb85d7a7b200b1f9e5929b4216f968065a97e9823d8b1)
+  set(filename intel-onemkl-2026.2.1.14_offline.exe)
+  set(magic_number 4cf78d70-c895-48d2-8b8c-c45d28672aa0)
+  set(sha 0775d1956e6224445da70f0f72be74e6bdd6d14e101fe29a7eaf033ce3443269161523e282b1fab22e243db2845841042841e4da2b2640abd02896a527489e48)
   set(package_infix "win")
   set(package_libdir "lib")
   set(runtime_dir "bin")
 elseif(VCPKG_TARGET_IS_LINUX)
-  set(filename intel-onemkl-2026.2.0.890_offline.sh)
-  set(magic_number 97415287-271a-4d14-967f-72e2d9ceeb1e)
-  set(sha 6e2e239ca8c2a9c62d4a5a7def4906ab719a6a04777e4b777e27f57ac0559d1229a1a372a981ac19d5020931cc7551b601152cd1f32815dac47c31ec4b20b88a)
+  set(filename intel-onemkl-2026.2.1.13_offline.sh)
+  set(magic_number 1c5e2581-850f-464c-8a24-2a195656b067)
+  set(sha b367bb683c45dd6e8305d46d0ff2043a68c6fb02fba6d3cecd4cc0c4432fd19b36a34faaf881d257dd05de7d172f91015fcf2b4b9a16d8612d68e0b79195d9b0)
   set(package_infix "lin")
   set(package_libdir "lib")
   set(runtime_dir "lib")
-endif()
-
-if(NOT sha)
-  message(WARNING "${PORT} is empty for ${TARGET_TRIPLET}.")
-  return()
 endif()
 
 vcpkg_download_distfile(installer_path
@@ -114,7 +110,7 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY "${extract_1_dir}"
     LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
 )
-file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=${mkl_version}+*")
+file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=${mkl_openmp_version}+*")
 cmake_path(GET package_path STEM LAST_ONLY packstem)
 message(STATUS "Extracting ${packstem}")
 vcpkg_execute_required_process(
