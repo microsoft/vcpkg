@@ -1,0 +1,23 @@
+diff --git a/src/llcpp.cpp b/src/llcpp.cpp
+index 5f6e0d4..7f4e1c2 100644
+--- a/src/llcpp.cpp
++++ b/src/llcpp.cpp
+@@ -1,6 +1,18 @@
+ #include <llcpp/llcpp.hpp>
++#ifdef _WIN32
++#include <winsock2.h>
++#include <ws2tcpip.h>
++#include <io.h>
++#define close closesocket
++#define read _read
++#define write _write
++#define popen _popen
++#define pclose _pclose
++using ssize_t = int;
++#else
+ #include <arpa/inet.h>
+ #include <netdb.h>
+ #include <sys/socket.h>
+ #include <unistd.h>
++#endif
+ #include <algorithm>
