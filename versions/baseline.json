@@ -10329,7 +10329,7 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.5.4",
+      "baseline": "5.5.5",
       "port-version": 0
     },
     "tesults-cpp": {

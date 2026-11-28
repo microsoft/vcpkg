@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 c1dd838f8c9cbba585d969c1c5edba52d1aa77dac2057775271f5bb8e22c0550f723d1de362e15263e2c540ae1175b08bff36c5a545dd5f84906c468036b4556
+    SHA512 550ec98393e213b49e530e5f3c5f0153c85eeb2bc885d1453320e13aecd37eec2b9260bb411bc78b76592c9ca8c39c35f765bebe04336bc5d1e3eb4b3fc258bb
     PATCHES
         fix_static_link_icu.patch
         fix-link-include-path.patch
