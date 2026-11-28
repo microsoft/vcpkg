@@ -9466,7 +9466,7 @@
     },
     "sentry-native": {
       "baseline": "0.17.6",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-dmon": {
       "baseline": "2026-02-23",

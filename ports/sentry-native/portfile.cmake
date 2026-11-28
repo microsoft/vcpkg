@@ -17,21 +17,20 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
 vcpkg_list(SET options)
+set(sentry_backend native)
 
 if(NOT "backend" IN_LIST FEATURES)
-    vcpkg_list(APPEND options "-DSENTRY_BACKEND=none")
-elseif("wer" IN_LIST FEATURES)
-    vcpkg_list(APPEND options "-DSENTRY_BACKEND=crashpad")
+    set(sentry_backend none)
 elseif(DEFINED SENTRY_BACKEND)
-    # Legacy, possible override from triplet, but cannot handle dependencies
-    vcpkg_list(APPEND options "-DSENTRY_BACKEND=${SENTRY_BACKEND}")
+    set(sentry_backend "${SENTRY_BACKEND}")
 endif()
+vcpkg_list(APPEND options "-DSENTRY_BACKEND=${sentry_backend}")
 
 if(NOT "transport" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT=none")
 endif()
 
-if("wer" IN_LIST FEATURES)
+if("wer" IN_LIST FEATURES AND sentry_backend STREQUAL "crashpad")
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_CRASHPAD_USE_WER=ON")
 endif()
 
@@ -81,6 +80,26 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/crashpad_handler${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES crashpad_handler AUTO_CLEAN)
+endif()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/sentry-crash${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    # Native's WER module is loaded by WerFault, not linked by SDK consumers.
+    # Keep it beside the crash helper, including for static-library triplets.
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/sentry-wer.dll")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/sentry-wer.dll"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/sentry-wer.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}" OPTIONAL)
+        file(REMOVE
+            "${CURRENT_PACKAGES_DIR}/bin/sentry-wer.dll"
+            "${CURRENT_PACKAGES_DIR}/bin/sentry-wer.pdb"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/sentry-wer.dll"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/sentry-wer.pdb"
+            "${CURRENT_PACKAGES_DIR}/lib/sentry-wer.lib"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/sentry-wer.lib"
+        )
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES sentry-crash AUTO_CLEAN)
 endif()
 
 vcpkg_install_copyright(
