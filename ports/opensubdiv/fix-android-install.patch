@@ -1,0 +1,13 @@
+diff --git a/opensubdiv/osd/CMakeLists.txt b/opensubdiv/osd/CMakeLists.txt
+index b23f4b46..20fd3f22 100644
+--- a/opensubdiv/osd/CMakeLists.txt
++++ b/opensubdiv/osd/CMakeLists.txt
+@@ -423,7 +423,7 @@ install(
+         GROUP_READ
+         WORLD_READ )
+ 
+-if (ANDROID)
++if (FALSE AND ANDROID)
+     install(
+         FILES
+             Android.mk

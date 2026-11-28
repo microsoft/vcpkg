@@ -7717,8 +7717,8 @@
       "port-version": 2
     },
     "opensubdiv": {
-      "baseline": "3.5.0",
-      "port-version": 3
+      "baseline": "3.8.0",
+      "port-version": 0
     },
     "opentelemetry-cpp": {
       "baseline": "1.30.0",
@@ -10778,7 +10778,7 @@
     },
     "usd": {
       "baseline": "26.8",
-      "port-version": 2
+      "port-version": 3
     },
     "usearch": {
       "baseline": "2.25.3",
