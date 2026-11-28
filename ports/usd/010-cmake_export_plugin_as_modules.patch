@@ -1,8 +1,8 @@
 diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
-index 6a3cff1343..67912a498e 100644
+index 3b06a87d14..b9862d6bfe 100644
 --- a/cmake/macros/Private.cmake
 +++ b/cmake/macros/Private.cmake
-@@ -1244,11 +1244,16 @@ function(_pxr_library NAME)
+@@ -1253,11 +1253,16 @@ function(_pxr_library NAME)
  
      else()
          # Building an explicitly shared library or plugin.
@@ -24,7 +24,7 @@ index 6a3cff1343..67912a498e 100644
          )
          if(PXR_PY_UNDEFINED_DYNAMIC_LOOKUP)
              # When not explicitly linking to the python lib we need to allow
-@@ -1473,6 +1478,7 @@ function(_pxr_library NAME)
+@@ -1482,6 +1487,7 @@ function(_pxr_library NAME)
          if(isPlugin)
              install(
                  TARGETS ${NAME}

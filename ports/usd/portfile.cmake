@@ -4,8 +4,10 @@ set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 # Proper support for a true static usd build is left as a future port improvement.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-# zero-pad version components to two digits
+# zero-pad date version components to two digits
 string(REPLACE "." ";" version_components ${VERSION})
+list(GET version_components -1 patch_version_component)
+list(POP_BACK version_components)
 foreach(component IN LISTS version_components)
     string(LENGTH ${component} component_length)
     if(component_length LESS 2)
@@ -14,13 +16,14 @@ foreach(component IN LISTS version_components)
         list(APPEND USD_VERSION "${component}")
     endif()
 endforeach()
+list(APPEND USD_VERSION "${patch_version_component}")
 string(JOIN "." USD_VERSION ${USD_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 82f7bb4f77b295be79cd36f591f242276d36c0d589b0fca383344c27e70daf7e29151bf587528bb2fc2b2a8b974387a253993ace3caf5f79ae70f9ebbc71cf1a
+    SHA512 515911bb5dcd18511115855ba10dc0578cfd2104e124bd838c9cb5727901d1188ed5ee215ac9e5a47cfef62a178aeb6972e6a7e3d15bb9d166454830e8ddcca0
     HEAD_REF release
     PATCHES
         003-fix-dep.patch
@@ -34,8 +37,6 @@ vcpkg_from_github(
 # Changes accompanying 003-fix-dep.patch
 file(REMOVE
     "${SOURCE_PATH}/cmake/modules/FindOpenColorIO.cmake"
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp"
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.h"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
