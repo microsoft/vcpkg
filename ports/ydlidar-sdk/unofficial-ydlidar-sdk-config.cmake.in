@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+if(NOT WIN32)
+    find_dependency(Threads)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-ydlidar-sdk-targets.cmake")
+
+check_required_components(unofficial-ydlidar-sdk)
