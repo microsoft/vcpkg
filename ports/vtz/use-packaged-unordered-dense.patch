@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d3b4ec9..f3f1ddf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -222,9 +222,7 @@ target_sources(
+ 
+ set_target_properties(vtz PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
+ 
+-add_library(ankerl_unordered_dense INTERFACE)
+-target_include_directories(ankerl_unordered_dense INTERFACE etc/3rd/ankerl)
+-add_library(unordered_dense::unordered_dense ALIAS ankerl_unordered_dense)
++find_package(unordered_dense CONFIG REQUIRED)
+ 
+ add_library(vtz_impl STATIC $<TARGET_OBJECTS:vtz_objects>)
+ target_compile_definitions(vtz_impl PUBLIC VTZ_STATIC_DEFINE)
+diff --git a/include/impl/vtz/tz_cache.h b/include/impl/vtz/tz_cache.h
+index 510f290..75f90f8 100644
+--- a/include/impl/vtz/tz_cache.h
++++ b/include/impl/vtz/tz_cache.h
+@@ -317,7 +317,8 @@ namespace vtz {
+         , rule_cache()
+         , data()
+         , zoneinfo_dir( std::move( zoneinfo_dir ) ) {
+-            data.links = link_map( known_links.begin(), known_links.end() );
++            for( auto const& link : known_links )
++                data.links.try_emplace( link.alias, link.canonical );
+         }
+ 
+ 
+diff --git a/include/impl/vtz/tz_reader.cpp b/include/impl/vtz/tz_reader.cpp
+index 49a313f..100534b 100644
+--- a/include/impl/vtz/tz_reader.cpp
++++ b/include/impl/vtz/tz_reader.cpp
+@@ -29,7 +29,7 @@ struct ankerl::unordered_dense::hash<vtz::zone_abbr> {
+         -> uint64_t {
+         static_assert(
+             std::has_unique_object_representations_v<vtz::zone_abbr> );
+-        return detail::wyhash::hash( &x, sizeof( x ) );
++        return detail::hash_bytes( &x, sizeof( x ) );
+     }
+ };
+ 
