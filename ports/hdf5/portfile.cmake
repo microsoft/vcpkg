@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${VERSION}"
-    SHA512 b009572b70eba02fa0963119f202da202cdcf20a3b4c01a94c5618e8b612033c0b8dc23664ccb0c2a2ebbdab427ad96ba8163ff8eb0356bb093617d37a9932f8
+    SHA512 19d8bccd63b4114caff4e0cb16728a92500b7364d19fb23219a2961dae05c4e14567606ff529c5942b35e497c126e8de261673f94f38a4d9389942ec3b6ba088
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
@@ -12,6 +12,7 @@ vcpkg_from_github(
         mpi-flags.diff
         win-compile-flags.diff
         arm64-msvc-ice.diff
+        android-pthread-cancel.diff
 )
 
 set(HDF5_ALLOW_UNSUPPORTED OFF)
