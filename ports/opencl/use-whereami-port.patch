@@ -1,0 +1,53 @@
+diff --git a/cmake/Dependencies/whereami/whereami.cmake b/cmake/Dependencies/whereami/whereami.cmake
+index 4c76971..e5520d5 100644
+--- a/cmake/Dependencies/whereami/whereami.cmake
++++ b/cmake/Dependencies/whereami/whereami.cmake
+@@ -1,15 +1,2 @@
+-cmake_minimum_required(VERSION 3.11)
+-include(FetchContent)
+-FetchContent_Declare(
+-  whereami-external
+-  GIT_REPOSITORY https://github.com/gpakosz/whereami.git
+-  GIT_TAG        ba364cd54fd431c76c045393b6522b4bff547f50 # master @ 2023.04.20.
+-)
+-FetchContent_MakeAvailable(whereami-external)
+-add_library(whereami IMPORTED INTERFACE)
+-target_include_directories(whereami
+-    INTERFACE "${whereami-external_SOURCE_DIR}/src"
+-)
+-target_sources(whereami
+-  INTERFACE "${whereami-external_SOURCE_DIR}/src/whereami.c"
+-)
++find_package(unofficial-whereami CONFIG REQUIRED)
++find_path(WHEREAMI_INCLUDE_DIR whereami.h REQUIRED)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 3d6a420..82ec0fa 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -30,6 +30,8 @@ foreach(UTIL_LIB_NAME IN ITEMS Utils UtilsCpp)
+   )
+ 
+   target_include_directories(${UTIL_LIB_TARGET}
++    PRIVATE
++      "${WHEREAMI_INCLUDE_DIR}"
+     PUBLIC
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+@@ -37,7 +39,7 @@ foreach(UTIL_LIB_NAME IN ITEMS Utils UtilsCpp)
+   )
+   target_link_libraries(${UTIL_LIB_TARGET}
+     PRIVATE
+-      $<BUILD_INTERFACE:whereami>
++      unofficial::whereami::whereami
+     PUBLIC
+       ${UTIL_LIB_DEPS}
+       OpenCL::OpenCL
+@@ -84,7 +86,7 @@ foreach(UTIL_LIB_NAME IN ITEMS Utils UtilsCpp)
+   )
+   file(
+     WRITE ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/cmake/OpenCL${UTIL_LIB_NAME}/OpenCL${UTIL_LIB_NAME}Config.cmake
+-    "include(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCL${UTIL_LIB_NAME}Targets.cmake\")"
++    "include(CMakeFindDependencyMacro)\nfind_dependency(unofficial-whereami CONFIG)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCL${UTIL_LIB_NAME}Targets.cmake\")"
+   )
+ 
+   set(config_package_location ${CMAKE_INSTALL_DATADIR}/cmake/OpenCL${UTIL_LIB_NAME})
