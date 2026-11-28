@@ -1,0 +1,35 @@
+diff --git a/cmake/LibraryConfigurations.cmake b/cmake/LibraryConfigurations.cmake
+index ada3ad9..2be83ff 100644
+--- a/cmake/LibraryConfigurations.cmake
++++ b/cmake/LibraryConfigurations.cmake
+@@ -43,8 +43,8 @@ if (${PLATFORM} STREQUAL "Desktop")
+         # Need to force OpenGL 3.3 on OS X
+         # See: https://github.com/raysan5/raylib/issues/341
+         set(GRAPHICS "GRAPHICS_API_OPENGL_33")
+-        find_library(OPENGL_LIBRARY OpenGL)
+-        set(LIBS_PRIVATE ${OPENGL_LIBRARY})
++        # Link the framework by name, so that the absolute SDK path doesn't end up in the exported targets
++        set(LIBS_PRIVATE "-framework OpenGL")
+         link_libraries("${LIBS_PRIVATE}")
+         if (NOT CMAKE_SYSTEM STRLESS "Darwin-18.0.0")
+             add_definitions(-DGL_SILENCE_DEPRECATION)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 81bfe6f..b57e663 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -116,6 +116,15 @@ if (NOT BUILD_SHARED_LIBS)
+     # we avoid having them privately.
+     list(REMOVE_ITEM raylib_install_private_libs SDL3::SDL3 SDL2::SDL2)
+ 
++    if (UNIX AND NOT APPLE AND PLATFORM STREQUAL "Desktop" AND TARGET OpenGL::GL)
++        list(REMOVE_ITEM raylib_install_private_libs ${OPENGL_LIBRARIES})
++        list(APPEND raylib_install_private_libs OpenGL::GL)
++        if (TARGET OpenGL::GLU)
++            list(APPEND raylib_install_private_libs OpenGL::GLU)
++        endif()
++        set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(OpenGL)")
++    endif()
++
+     if (NOT glfw3_FOUND)
+         list(REMOVE_ITEM raylib_install_private_libs glfw)
+ 
