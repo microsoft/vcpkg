@@ -53,6 +53,7 @@ PORT_LIST = [
     "kplotting",
     "kquickcharts",
     "kservice",
+    "kstatusnotifieritem",
     "ktexttemplate",
     "ktextwidgets",
     "kwallet",

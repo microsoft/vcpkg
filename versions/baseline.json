@@ -4732,6 +4732,10 @@
       "baseline": "6.32.0",
       "port-version": 0
     },
+    "kstatusnotifieritem": {
+      "baseline": "6.32.0",
+      "port-version": 0
+    },
     "ktexttemplate": {
       "baseline": "6.32.0",
       "port-version": 0
