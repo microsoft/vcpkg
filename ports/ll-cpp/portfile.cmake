@@ -31,11 +31,24 @@ vcpkg_cmake_configure(
         -DLLCPP_BUILD_RUNTIME=OFF
         -DLLCPP_BUILD_EXAMPLES=OFF
         -DLLCPP_BUILD_TESTS=OFF
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME llcpp CONFIG_PATH lib/cmake/ll-cpp)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
+foreach(_llcpp_lib_dir
+        "${CURRENT_PACKAGES_DIR}/debug/lib"
+        "${CURRENT_PACKAGES_DIR}/lib")
+    if(IS_DIRECTORY "${_llcpp_lib_dir}")
+        file(GLOB _llcpp_lib_entries "${_llcpp_lib_dir}/*")
+        if(NOT _llcpp_lib_entries)
+            file(REMOVE_RECURSE "${_llcpp_lib_dir}")
+        endif()
+    endif()
+endforeach()
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
