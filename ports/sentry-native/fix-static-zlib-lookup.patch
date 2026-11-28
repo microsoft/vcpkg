@@ -1,0 +1,13 @@
+diff --git a/sentry-config.cmake.in b/sentry-config.cmake.in
+index 73ac151..f497d95 100644
+--- a/sentry-config.cmake.in
++++ b/sentry-config.cmake.in
+@@ -12,7 +12,7 @@ set(SENTRY_LIBUNWIND_SYSTEM @SENTRY_LIBUNWIND_SYSTEM@)
+ set(CRASHPAD_ZLIB_SYSTEM @CRASHPAD_ZLIB_SYSTEM@)
+ 
+ if(NOT SENTRY_BUILD_SHARED_LIBS)
+-	if(SENTRY_TRANSPORT_COMPRESSION OR CRASHPAD_ZLIB_SYSTEM)
++	if(SENTRY_TRANSPORT_COMPRESSION OR (SENTRY_BACKEND STREQUAL "crashpad" AND CRASHPAD_ZLIB_SYSTEM))
+ 		find_dependency(ZLIB)
+ 	endif()
+ 	if(SENTRY_BACKEND STREQUAL "breakpad" AND SENTRY_BREAKPAD_SYSTEM)
