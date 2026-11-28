@@ -49,6 +49,7 @@ vcpkg_from_github(
     # On update check headers against opengl-registry
     PATCHES
         001-fix-builder-error.patch
+        004-packed-attribute-layout.patch # https://github.com/google/angle/commit/bbf320aa343f7cb9b3dff790828b258710b3c20f
 )
 
 # Generate angle_commit.h
