@@ -1,0 +1,3 @@
+multichain-address-validator is a header-only C++17 library and can be used directly via:
+
+    #include <allswap/address_validator.hpp>
