@@ -1,8 +1,8 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS"
-        "PATCHES"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS;RAW_ACCESS_URL"
+        "PATCHES;RAW_INCLUDE_MAPPING"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -194,5 +194,30 @@ SHA is in the history. For example, you may be able to fix this error by changin
         NAME "${arg_URL}"
         DOWNLOAD_LOCATION "git+${arg_URL}@${spdx_ref}"
     )
+
+    # Sourcelink can only be enabled for generic git repos if the URL for raw retrieval is provided.
+    # - The provided string must fully-specify the access URL for a given file, including
+    #   the wildcard '*' which is where the relative path within the repo is provided.
+    #
+    # - The format of this string varies substantially.  Some examples:
+    #   - github:    "${github_raw_url}/${arg_REPO}/${arg_REF}/*"
+    #   - gitlab:    "${arg_GITLAB_URL}/${arg_REPO}/-/raw/${arg_REF}/*"
+    #   - bitbucket: "https://bitbucket.com/${org_name}/${repo_name}/raw/${ref_to_use}/*"
+    #   - self-hosted bitbucket: "${baseUrl}/projects/${project_name}/repos/${repo_name}/raw/*?at=${arg_REF}"
+    # 
+    if(DEFINED arg_RAW_ACCESS_URL)
+        string(FIND "${arg_RAW_ACCESS_URL}" "*" found_wildcard)
+        if (${found_wildcard} EQUAL "-1")
+            message(FATAL_ERROR "RAW_ACCESS_URL was provided, but does not contain required '*' character: ${arg_RAW_ACCESS_URL}")
+        endif()
+
+        vcpkg_write_sourcelink_file(
+            SOURCE_PATH "${SOURCE_PATH}"
+            SERVER_PATH "${arg_RAW_ACCESS_URL}"
+            RAW_SEARCH_REPO_NAME "${PORT}"
+            RAW_INCLUDE_MAPPING ${arg_RAW_INCLUDE_MAPPING}
+        )
+    endif()
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

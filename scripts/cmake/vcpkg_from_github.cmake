@@ -1,8 +1,8 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "USE_TARBALL_API"
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
-        "PATCHES")
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;GITHUB_HOST_RAW;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_github was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -25,9 +25,16 @@ function(vcpkg_from_github)
     if(NOT DEFINED arg_GITHUB_HOST)
         set(github_host "https://github.com")
         set(github_api_url "https://api.github.com")
+        set(github_raw_url "https://raw.githubusercontent.com")
     else()
         set(github_host "${arg_GITHUB_HOST}")
         set(github_api_url "${arg_GITHUB_HOST}/api/v3")
+        if(NOT DEFINED arg_GITHUB_HOST_RAW)
+            message(STATUS "vcpkg_from_github using default RAW URL because GITHUB_HOST_RAW is not specified: ${arg_GITHUB_HOST}/raw")
+            set(github_raw_url "${arg_GITHUB_HOST}/raw")
+        else()
+            set(github_raw_url "${arg_GITHUB_HOST_RAW}")
+        endif()
     endif()
 
     set(headers_param "")
@@ -137,5 +144,49 @@ Error was: ${head_version_err}
         DOWNLOAD_LOCATION "git+${github_host}/${arg_REPO}@${ref_to_use}"
         SHA512 "${arg_SHA512}"
     )
+
+    # Explicit mappings override automatic detection and the Boost special case.
+    if(DEFINED arg_RAW_INCLUDE_MAPPING)
+        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    elseif("${org_name}" STREQUAL "boostorg" AND IS_DIRECTORY "${SOURCE_PATH}/include/boost")
+        # These top-level Boost namespaces are shared by multiple module repositories. Avoid overlapping
+        # wildcards at their root; map immediate subdirectories where they are unambiguous.
+        set(shared_boost_namespaces detail exception functional graph numeric pending property_map utility)
+        # This subtree is present in both graph and iterator; leave it unmapped rather than emit duplicate keys.
+        set(shared_boost_subdirectories pending/detail)
+        file(GLOB boost_entries LIST_DIRECTORIES true RELATIVE "${SOURCE_PATH}/include/boost"
+            "${SOURCE_PATH}/include/boost/*")
+        foreach(entry IN LISTS boost_entries)
+            if(IS_DIRECTORY "${SOURCE_PATH}/include/boost/${entry}")
+                if(entry STREQUAL repo_name OR NOT entry IN_LIST shared_boost_namespaces)
+                    list(APPEND raw_include_mapping "boost/${entry}/*" "include/boost/${entry}/*")
+                else()
+                    file(GLOB boost_subdirectories LIST_DIRECTORIES true
+                        RELATIVE "${SOURCE_PATH}/include/boost/${entry}"
+                        "${SOURCE_PATH}/include/boost/${entry}/*")
+                    foreach(subdirectory IN LISTS boost_subdirectories)
+                        set(boost_subdirectory "${entry}/${subdirectory}")
+                        if(IS_DIRECTORY "${SOURCE_PATH}/include/boost/${boost_subdirectory}" AND
+                            NOT boost_subdirectory IN_LIST shared_boost_subdirectories)
+                            list(APPEND raw_include_mapping
+                                "boost/${boost_subdirectory}/*"
+                                "include/boost/${boost_subdirectory}/*")
+                        endif()
+                    endforeach()
+                endif()
+            else()
+                # Only loose files at the root need exact keys; directory wildcards cover nested headers.
+                list(APPEND raw_include_mapping "boost/${entry}" "include/boost/${entry}")
+            endif()
+        endforeach()
+    endif()
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}"
+        SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
+        RAW_INCLUDE_MAPPING ${raw_include_mapping}
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

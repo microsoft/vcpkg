@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Stand-in for a C++ project that provides only the properties used by the Source Link support. -->
+  <PropertyGroup>
+    <Platform>x64</Platform>
+    <VCToolsVersion>14.15.26726.0</VCToolsVersion>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+    <VcpkgTriplet>x64-windows</VcpkgTriplet>
+    <IntDir>$(TestRoot)\obj\</IntDir>
+  </PropertyGroup>
+  <Import Project="$(VcpkgScripts)\buildsystems\msbuild\vcpkg.targets" />
+  <ItemGroup>
+    <Link Include="placeholder" />
+  </ItemGroup>
+  <Target Name="WriteLinkOptions" DependsOnTargets="VcpkgSourcelinkPrep">
+    <WriteLinesToFile File="$(IntDir)link-options.txt" Lines="@(Link->'%(AdditionalOptions)')" Overwrite="true" />
+  </Target>
+  <Target Name="CheckMissingFragment">
+    <CombineSourceLink Fragments="$(TestRoot)\missing.json" InstalledTripletDirectory="$(TestRoot)">
+      <Output TaskParameter="Content" PropertyName="MissingContent" />
+    </CombineSourceLink>
+    <Error Condition="'$(MissingContent)' != '{&quot;documents&quot;:{}}'" Text="Missing fragment must yield an empty mapping." />
+  </Target>
+</Project>
